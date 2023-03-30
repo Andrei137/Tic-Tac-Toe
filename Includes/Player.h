@@ -13,7 +13,7 @@ class Player
     static int m_draws;
 
 public:
-    Player(char a_symbol, const str& a_name = "Unknown");
+    explicit Player(char a_symbol, const str& a_name = "Unknown");
     Player(const Player& a_other);
     Player& operator=(const Player& other);
     ~Player();
