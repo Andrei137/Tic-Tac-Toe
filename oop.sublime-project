@@ -1,0 +1,71 @@
+{
+	"folders":
+	[
+		{
+			"path": "./"
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "oop - all",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "all"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - clean",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "clean"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - oop",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "oop"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - oop/fast",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "oop/fast"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - edit_cache",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "edit_cache"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - rebuild_cache",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "rebuild_cache"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - list_install_components",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "list_install_components"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - install",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "install"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - install/local",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "install/local"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "oop - install/strip",
+			"cmd": ["C:/Mingw/bin/mingw32-make.exe", "-f", "Makefile", "install/strip"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		}
+	]
+}
