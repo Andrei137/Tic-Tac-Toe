@@ -20,7 +20,7 @@ public:
 
     char get_value() const;
     str get_free_pos() const;
-    bool is_occupied() const;
+    [[maybe_unused]] bool is_occupied() const;
 
     void set_value(char);
     void set_free_pos(const str&);

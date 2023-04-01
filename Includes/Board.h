@@ -36,7 +36,7 @@ public:
     friend std::ostream& operator<<(std::ostream&, const Board&);
 
     Square get_cell(int, int) const;
-    char get_winner() const;
+    [[maybe_unused]] char get_winner() const;
 
     void set_cell(int, int, char);
     void set_winner(char);
