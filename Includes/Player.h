@@ -13,20 +13,20 @@ class Player
     static int m_draws;
 
 public:
-    explicit Player(char a_symbol, const str& a_name = "Unknown");
-    Player(const Player& a_other);
-    Player& operator=(const Player& other);
-    ~Player();
+    Player() = default;
+    explicit Player(char, str);
+    ~Player() = default;
 
-    friend std::ostream& operator<<(std::ostream& a_out, const Player& a_player);
+    friend std::ostream& operator<<(std::ostream&, const Player&);
 
     const str& get_name() const;
     char get_symbol() const;
     int get_wins() const;
     static int get_draws();
 
-    void set_name(const str& a_name);
-    void set_symbol(char a_symbol);
+    void set_name(const str&);
+    void set_symbol(char);
+    
     void add_win();
     static void add_draw();
     static void reset_draws();

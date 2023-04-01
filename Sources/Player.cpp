@@ -1,27 +1,17 @@
 #include "../Includes/Player.h"
-#include <fstream>
 
-int Player::m_draws = 0;
+int Player::m_draws{0};
 
-Player::Player(char a_symbol, const str& a_name)
-    : m_symbol(a_symbol), m_name(a_name), m_wins(0)
+Player::Player(char a_symbol, str a_name)
+    : m_symbol(a_symbol), m_name(std::move(a_name)), m_wins(0)
 {
 }
 
-Player::Player(const Player& a_other) = default;
-
-Player& Player::operator=(const Player& other)
+[[maybe_unused]] std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
 {
-    if (this != &other) 
-    {
-        m_name = other.m_name;
-        m_symbol = other.m_symbol;
-        m_wins = other.m_wins;
-    }
-    return *this;
+    a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << std::endl;
+    return a_out;
 }
-
-Player::~Player() = default;
 
 const str& Player::get_name() const
 {
@@ -66,10 +56,4 @@ void Player::add_draw()
 void Player::reset_draws()
 {
     m_draws = 0;
-}
-
-std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
-{
-    a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << std::endl;
-    return a_out;
 }
