@@ -44,7 +44,7 @@ void Square::set_free_pos(const str& a_free_pos)
     m_free_pos = a_free_pos;
 }
 
-void Square::set_occupied(bool a_occupied)
+[[maybe_unused]] void Square::set_occupied(bool a_occupied)
 {
     m_occupied = a_occupied;
 }

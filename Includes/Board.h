@@ -39,5 +39,5 @@ public:
     [[maybe_unused]] char get_winner() const;
 
     void set_cell(int, int, char);
-    void set_winner(char);
+    [[maybe_unused]] void set_winner(char);
 };

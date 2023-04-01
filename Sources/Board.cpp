@@ -183,7 +183,7 @@ Square Board::get_cell(int a_row, int a_col) const
     return m_cells[a_row][a_col];
 }
 
-char Board::get_winner() const
+[[maybe_unused]] char Board::get_winner() const
 {
     return m_winner;
 }
@@ -200,7 +200,7 @@ void Board::set_cell(int a_row, int a_col, char a_value)
     m_cells[a_row][a_col].set_occupied(true);
 }
 
-void Board::set_winner(char a_winner)
+[[maybe_unused]] void Board::set_winner(char a_winner)
 {
     m_winner = a_winner;
 }
