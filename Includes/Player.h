@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-typedef std::string str;
+using str = std::string;
 
 class Player 
 {
@@ -14,7 +14,7 @@ class Player
 
 public:
     Player() = default;
-    explicit Player(char, str);
+    explicit Player(char);
     ~Player() = default;
 
     friend std::ostream& operator<<(std::ostream&, const Player&);

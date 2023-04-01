@@ -4,8 +4,6 @@
 #include <iostream>
 #include <string>
 
-typedef std::string str;
-
 class Board
 {
     int m_size{};
@@ -40,4 +38,9 @@ public:
 
     void set_cell(int, int, char);
     [[maybe_unused]] void set_winner(char);
+
+    bool valid_move(int, int) const;
+    bool win(char) const;
+    bool draw() const;
+    bool game_over() const;
 };

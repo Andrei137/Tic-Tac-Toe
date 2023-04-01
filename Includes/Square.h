@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-typedef std::string str;
+using str = std::string;
 
 class Square
 {
@@ -20,7 +20,7 @@ public:
 
     char get_value() const;
     str get_free_pos() const;
-    [[maybe_unused]] bool is_occupied() const;
+    bool is_occupied() const;
 
     void set_value(char);
     void set_free_pos(const str&);

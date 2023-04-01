@@ -204,3 +204,84 @@ void Board::set_cell(int a_row, int a_col, char a_value)
 {
     m_winner = a_winner;
 }
+
+bool Board::valid_move(int a_row, int a_col) const
+{
+    return m_cells[a_row][a_col].is_occupied() == false;
+}
+
+bool Board::win(char a_player) const
+{
+    for (int i = 0; i < m_size; ++i) 
+    {
+        int count{0};
+        for (int j = 0; j < m_size; ++j) 
+        {
+            if (m_cells[i][j].get_value() == a_player) 
+            {
+                ++count;
+            }
+        }
+        if (count == m_size) 
+        {
+            return true;
+        }
+    }
+    for (int j = 0; j < m_size; ++j) 
+    {
+        int count{0};
+        for (int i = 0; i < m_size; ++i) 
+        {
+            if (m_cells[i][j].get_value() == a_player) 
+            {
+                ++count;
+            }
+        }
+        if (count == m_size)
+        {
+            return true;
+        }
+    }
+    int count{0};
+    for (int i = 0; i < m_size; ++i) 
+    {
+        if (m_cells[i][i].get_value() == a_player) 
+        {
+            ++count;
+        }
+    }
+    if (count == m_size) 
+    {
+        return true;
+    }
+    count = 0;
+    for (int i = 0; i < m_size; ++i) 
+    {
+        if (m_cells[i][m_size - 1 - i].get_value() == a_player) 
+        {
+            ++count;
+        }
+    }
+    return count == m_size;
+}
+
+bool Board::draw() const
+{
+    int count{0};
+    for (int i = 0; i < m_size; ++i) 
+    {
+        for (int j = 0; j < m_size; ++j) 
+        {
+            if (m_cells[i][j].get_value() == 'X' || m_cells[i][j].get_value() == 'O') 
+            {
+                ++count;
+            }
+        }
+    }
+    return count == m_size * m_size;
+}
+
+bool Board::game_over() const
+{
+    return win('X') || win('O') || draw();
+}
