@@ -40,21 +40,51 @@
 
 #ifdef __cplusplus
     /// Common C++ headers
+    #include <ctime>  // for nanosleep
     #include <iostream>
     #include <string>
     #include <cstdio> // for getch()
+    #include <cstdlib> // for std::getenv
     /// Namespace forward declarations
     namespace rlutil {
         RLUTIL_INLINE void locate(int x, int y);
     }
 #else
+    #define _POSIX_C_SOURCE 199309L
+    #include <time.h>  // for nanosleep
     #include <stdio.h> // for getch() / printf()
+    #include <stdlib.h> // for getenv()
     #include <string.h> // for strlen()
     RLUTIL_INLINE void locate(int x, int y); // Forward declare for C to avoid warnings
 #endif // __cplusplus
 
+int runs_on_ci() {
+    return
+    #ifdef __cplusplus
+    std::getenv("GITHUB_ACTIONS") != nullptr;
+    #else
+    getenv("GITHUB_ACTIONS") != NULL;
+    #endif  
+}
+
 #ifdef _WIN32
+    #ifndef WIN32_LEAN_AND_MEAN
+        #define WIN32_LEAN_AND_MEAN 1
+        #define LOCAL_WIN32_LEAN_AND_MEAN 1
+    #endif
+    #ifndef NOMINMAX 
+        #define NOMINMAX  1
+        #define LOCAL_NOMINMAX 1
+    #endif
     #include <windows.h>  // for WinAPI and Sleep()
+    // cleanup
+    #ifdef LOCAL_WIN32_LEAN_AND_MEAN
+        #undef WIN32_LEAN_AND_MEAN
+    #endif
+    #ifdef LOCAL_NOMINMAX
+        #undef NOMINMAX
+    #endif
+
     #define _NO_OLDNAMES  // for MinGW compatibility
     #include <conio.h>    // for getch() and kbhit()
     #define getch _getch
@@ -70,6 +100,9 @@
 /// Get character without waiting for Return to be pressed.
 /// Windows has this in conio.h
 RLUTIL_INLINE int getch(void) {
+    if(runs_on_ci())
+        return getchar();
+
     // Here be magic.
     struct termios oldt, newt;
     int ch;
@@ -86,6 +119,9 @@ RLUTIL_INLINE int getch(void) {
 /// Determines if keyboard has been hit.
 /// Windows has this in conio.h
 RLUTIL_INLINE int kbhit(void) {
+    if(runs_on_ci())
+        return 1;
+
     // Here be dragons.
     static struct termios oldt, newt;
     int cnt = 0;
@@ -344,6 +380,9 @@ enum {
 /// Note:
 /// Only Arrows, Esc, Enter and Space are currently working properly.
 RLUTIL_INLINE int getkey(void) {
+    if(runs_on_ci())
+        return getchar();
+
     #ifndef _WIN32
     int cnt = kbhit(); // for ANSI escapes processing
     #endif
@@ -528,6 +567,9 @@ RLUTIL_INLINE void resetColor(void) {
 /// Function: cls
 /// Clears screen, resets all attributes and moves cursor home.
 RLUTIL_INLINE void cls(void) {
+    if(runs_on_ci())
+        return;
+
 #if defined(_WIN32) && !defined(RLUTIL_USE_ANSI)
     // Based on https://msdn.microsoft.com/en-us/library/windows/desktop/ms682022%28v=vs.85%29.aspx
     const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -637,9 +679,16 @@ RLUTIL_INLINE void msleep(unsigned int ms) {
 #ifdef _WIN32
     Sleep(ms);
 #else
+    // https://stackoverflow.com/a/55860234
+    struct timespec ts;
+    ts.tv_sec = ms / 1000000ul;            // whole seconds
+    ts.tv_nsec = (ms % 1000000ul) * 1000;  // remainder, in nanoseconds
+    nanosleep(&ts, NULL);
+
+    // usleep gives warnings in C code; seems to be deprecated/legacy
     // usleep argument must be under 1 000 000
-    if (ms > 1000) sleep(ms/1000000);
-    usleep((ms % 1000000) * 1000);
+    // if (ms > 1000) sleep(ms/1000000);
+    // usleep((ms % 1000000) * 1000);
 #endif
 }
 
@@ -716,12 +765,12 @@ RLUTIL_INLINE void anykey(RLUTIL_STRING_T msg) {
     getch();
 }
 
-RLUTIL_INLINE void setConsoleTitle(const RLUTIL_STRING_T& title) {
-    const char * true_title =
 #ifdef __cplusplus
-        title.c_str();
+RLUTIL_INLINE void setConsoleTitle(const RLUTIL_STRING_T & title) {
+    const char * true_title = title.c_str();
 #else // __cplusplus
-        title;
+RLUTIL_INLINE void setConsoleTitle(RLUTIL_STRING_T title) {
+    const char * true_title = title;
 #endif // __cplusplus
 #if defined(_WIN32) && !defined(RLUTIL_USE_ANSI)
     SetConsoleTitleA(true_title);
