@@ -44,7 +44,7 @@ str get_input()
     while (true)
     {
         auto current_time = std::chrono::steady_clock::now();
-        if (std::chrono::duration_cast<std::chrono::seconds>(current_time - last_input_time).count() >= 1)
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_input_time).count() >= 275)
         {
             if (!input_string.empty())
             {
@@ -90,7 +90,7 @@ str get_input()
             last_input_time = current_time;
         }
 #endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(75));
     }
 #ifndef _WIN32
     termios_settings.c_lflag |= ICANON | ECHO;
@@ -116,14 +116,22 @@ void Game::move(int a_turn)
     {
         std::cout << *this;
         rlutil::hidecursor();
+        str temp_player{};
         if (a_turn % 2 == 1)
         {
-            std::cout << "\n-> (" << m_player1.get_symbol() << ") " << m_player1.get_name() << "\'s Turn";
+            temp_player = m_player1.get_name();
+            std::cout << "\n-> (" << m_player1.get_symbol() << ") " << temp_player << "\'";
         }
         else
         {
-            std::cout << "\n-> (" << m_player2.get_symbol() << ") " << m_player2.get_name() << "\'s Turn";
+            temp_player = m_player2.get_name();
+            std::cout << "\n-> (" << m_player1.get_symbol() << ") " << temp_player << "\'";
         }
+        if (temp_player[temp_player.size() - 1] != 's')
+            {
+                std::cout << 's' ;
+            }
+            std::cout << " Turn";
         str s{};
         s = get_input();
         int index{ std::stoi(s) };
@@ -135,8 +143,7 @@ void Game::move(int a_turn)
         std::pair<int, int> temp{ convert(index) };
         row = temp.first;
         col = temp.second;
-        Square sq{ m_board.get_cell(row, col) };
-        if (sq.is_occupied())
+        if (!m_board.valid_move(row, col))
         {
             row = col = -1;
         }
@@ -177,6 +184,19 @@ void Game::play()
         }
     }
     std::cout << *this;
-    std::cout << "Game Over\n";
+    char winner{ m_board.get_winner() };
+    if (winner == 'X')
+    {
+        std::cout << '\n' << m_player1.get_name() << " wins\n";
+    }
+    else if (winner == 'O')
+    {
+        std::cout << '\n' << m_player2.get_name() << " wins\n";
+    }
+    else
+    {
+        std::cout << "\nIt's a draw\n";
+    }
+    std::cout << "Game Over\n\n";
     rlutil::showcursor();
 }

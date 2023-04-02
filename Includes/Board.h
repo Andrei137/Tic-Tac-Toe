@@ -35,10 +35,10 @@ public:
 
     int get_size() const;
     Square get_cell(int, int) const;
-    [[maybe_unused]] char get_winner() const;
+    char get_winner() const;
 
     void set_cell(int, int, char);
-    [[maybe_unused]] void set_winner(char);
+    void set_winner(char);
 
     bool valid_move(int, int) const;
     bool win(char) const;

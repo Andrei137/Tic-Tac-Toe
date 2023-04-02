@@ -32,27 +32,32 @@ int Player::get_draws()
     return m_draws;
 }
 
-[[maybe_unused]] void Player::set_name(const str& a_name)
+void Player::set_name(const str& a_name)
 {
     m_name = a_name;
 }
 
-[[maybe_unused]] void Player::set_symbol(char a_symbol)
+void Player::set_symbol(char a_symbol)
 {
     m_symbol = a_symbol;
 }
 
-[[maybe_unused]] void Player::add_win()
+void Player::add_win()
 {
     ++m_wins;
 }
 
-[[maybe_unused]] void Player::add_draw()
+void Player::add_draw()
 {
     ++m_draws;
 }
 
-[[maybe_unused]] void Player::reset_draws()
+void Player::reset_wins()
+{
+    m_wins = 0;
+}
+
+void Player::reset_draws()
 {
     m_draws = 0;
 }

@@ -24,10 +24,12 @@ public:
     int get_wins() const;
     static int get_draws();
 
-    [[maybe_unused]] void set_name(const str&);
-    [[maybe_unused]] void set_symbol(char);
+    void set_name(const str&);
+    void set_symbol(char);
     
-    [[maybe_unused]] void add_win();
-    [[maybe_unused]] static void add_draw();
-    [[maybe_unused]] static void reset_draws();
+    void add_win();
+    static void add_draw();
+
+    void reset_wins();
+    static void reset_draws();
 };
