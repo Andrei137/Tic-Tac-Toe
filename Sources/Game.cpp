@@ -1,5 +1,5 @@
 #include "../Includes/Game.h"
-#include "../Ext/Rlutil.h"
+
 
 Game::Game(int a_size) : m_board(a_size)
 {
@@ -73,13 +73,11 @@ str Game::get_input(int a_timeout)
         {
             if (input.size() + num_chars > 255) 
             {
-                tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
                 return "0";
             }
             input.append(buffer, num_chars);
             if (input.back() < '0' || input.back() > '9')
             {
-                tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
                 return "0";
             }
             else
