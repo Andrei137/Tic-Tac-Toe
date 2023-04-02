@@ -31,24 +31,24 @@ short Board::nr_digits(int a_n)
 }
 
 template <typename T>
-void Board::display_aux(const str& a_s1, const str& a_s2, const T* c, bool empty) const
+void Board::display_aux(const str& a_prefix, const str& a_separator, const T* a_ch, bool a_empty) const
 {
-    if (empty)
+    if (a_empty)
     {
-        std::cout << a_s1;
+        std::cout << a_prefix;
         for (int i = 0; i < m_size - 1; ++i)
         {
-            std::cout << a_s2;
+            std::cout << a_separator;
         }
     }
     else
     {
-        std::cout << a_s1;
+        std::cout << a_prefix;
         for (int i = 0; i < m_size - 1; ++i)
         {
-            std::cout << c[i] << a_s2;
+            std::cout << a_ch[i] << a_separator;
         }
-        std::cout << c[m_size - 1];
+        std::cout << a_ch[m_size - 1];
     }
 }
 
