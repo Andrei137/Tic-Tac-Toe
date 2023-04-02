@@ -62,7 +62,7 @@ str Game::get_input()
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO);
     newt.c_cc[VMIN] = 0;
-    newt.c_cc[VTIME] = timeout;
+    newt.c_cc[VTIME] = 1;
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     while (elapsed_time < 1000)
     {
@@ -82,7 +82,7 @@ str Game::get_input()
         }
         if (input_started)
         {
-            this_thread::sleep_for(chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
             elapsed_time += 125;
         }
     }
