@@ -177,4 +177,6 @@ void Game::play()
         }
     }
     std::cout << *this;
+    std::cout << "Game Over\n";
+    rlutil::showcursor();
 }
