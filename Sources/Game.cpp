@@ -1,6 +1,5 @@
 #include "../Includes/Game.h"
 #include "../Ext/Rlutil.h"
-#include <cstring>
 
 Game::Game(int a_size) : m_board(a_size)
 {
@@ -29,37 +28,6 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     a_out << a_game.m_board << '\n';
     return a_out;
 }
-
-#ifdef _WIN32
-str Game::get_input(int a_timeout)
-{
-    str input;
-    bool input_started{false};
-    int elapsed_time{0};
-    while (elapsed_time < a_timeout * 1000)
-    {
-        if (_kbhit())
-        {
-            char c = _getch();
-            if (c < '0' || c > '9')
-            {
-                return "0";
-            }
-            else
-            {
-                input += c;
-                input_started = true;
-            }
-        }
-        if (input_started)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(75));
-            elapsed_time += 125;
-        }
-    }
-    return input;
-}
-#endif 
 
 std::pair<int, int> Game::convert(int a_index)
 {
@@ -91,33 +59,25 @@ void Game::move(int a_turn)
         {
             std::cout << 's' ;
         }
-        std::cout << " Turn";
+        std::cout << " Turn : ";
+        str s{};
+        std::cin >> s;
         int index{0};
-        #ifdef _WIN32
-            str s{ get_input(1) };
-            if (s == "404")
-            {
-                m_board.set_winner('E');
-                return;
-            }
-            try
-            {
-                index = std::stoi(s);
-            }
-            catch (const std::invalid_argument&)
-            {
-                row = col = -1;
-                continue;
-            }
-        #else
-            std::cin >> index;
-            if (index == 404)
-            {
-                m_board.set_winner('E');
-                return;
-            }
-        #endif
-        if (index > m_board.get_size() * m_board.get_size() || index < 1)
+        try
+        {
+            index = std::stoi(s);
+        }   
+        catch (std::invalid_argument&)
+        {
+            index = 0;
+            row = col = -1;
+        }
+        if (index == 404)
+        {
+            m_board.set_winner('E');
+            return;
+        }
+        else if (index > m_board.get_size() * m_board.get_size() || index < 1)
         {
             row = col = -1;
             continue;
