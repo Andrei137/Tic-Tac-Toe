@@ -82,18 +82,20 @@ void Board::display_2(int a_line) const
     for (int i = 0; i < m_size; ++i)
     {
         ch2[i] = { m_cells[a_line][i].get_value() };
+        #ifndef _WIN32
+            if (ch2[i] != 'X' && ch2[i] != 'O')
+            {
+                ch2[i] = ' ';
+            }
+        #endif
     }
     if (m_winner == '-')
     {
-        #ifdef _WIN32
-            display_aux("        ", "  |  ", ch2, false);
-        #else
-            display_aux("        ", "   |  ", ch2, false);
-        #endif
+        display_aux("        ", "  |  ", ch2, false);
     }
     else
     {
-        display_aux("\n  ", "  |  ", ch2, false);
+         display_aux("\n  ", "  |  ", ch2, false);
     }
     delete[] ch2;
 }
