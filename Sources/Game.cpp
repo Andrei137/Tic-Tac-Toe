@@ -29,76 +29,66 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-str get_input()
+str Game::get_input()
 {
-    str  input_string{};
-    auto last_input_time = std::chrono::steady_clock::now();
-#ifndef _WIN32
-    struct termios termios_settings;
-    tcgetattr(STDIN_FILENO, &termios_settings);
-    termios_settings.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &termios_settings);
-    int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
-#endif
-    while (true)
-    {
-        auto current_time = std::chrono::steady_clock::now();
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_input_time).count() >= 275)
-        {
-            if (!input_string.empty())
-            {
-                break;
-            }
-            last_input_time = current_time;
-        }
+    str input{};
+    bool input_started{false};
+    int elapsed_time{0};
 #ifdef _WIN32
+    while (elapsed_time < 1000)
+    {
         if (_kbhit())
         {
             char c = _getch();
-            if (c < '0' || c > '9')
-            {   
-                return "0";
-            }
-            else
-            {
-                input_string += c;
-            }
-            last_input_time = current_time;
-        }
-#else
-        char c;
-        int num_read = read(STDIN_FILENO, &c, sizeof(c));
-        if (num_read == -1)
-        {
-            if (errno != EAGAIN && errno != EWOULDBLOCK)
-            {
-                perror("read");
-                exit(1);
-            }
-        }
-        else if (num_read == 1)
-        {
-            if (c < '0' || c > '9')
+            if (c > '9' || c < '0')
             {
                 return "0";
             }
             else
             {
-                input_string += c;
+                input += c;
+                input_started = true;
             }
-            last_input_time = current_time;
         }
-#endif
-        std::this_thread::sleep_for(std::chrono::milliseconds(75));
+        if (input_started)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            elapsed_time += 125;
+        }
     }
-#ifndef _WIN32
-    termios_settings.c_lflag |= ICANON | ECHO;
-    tcsetattr(STDIN_FILENO, TCSANOW, &termios_settings);
-    fcntl(STDIN_FILENO, F_SETFL, flags);
+#else
+    struct termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    newt.c_cc[VMIN] = 0;
+    newt.c_cc[VTIME] = timeout;
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    while (elapsed_time < 1000)
+    {
+        char buffer[256];
+        int num_chars = read(STDIN_FILENO, buffer, sizeof(buffer));
+        if (num_chars > 0)
+        {
+            input.append(buffer, num_chars);
+            if (input.back() == '\n')
+            {
+                break;
+            }
+            else
+            {
+                input_started = true;
+            }
+        }
+        if (input_started)
+        {
+            this_thread::sleep_for(chrono::milliseconds(50));
+            elapsed_time += 125;
+        }
+    }
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 #endif
-    std::cout << std::endl;
-    return input_string;
+    return input;
 }
 
 std::pair<int, int> Game::convert(int a_index)
@@ -128,13 +118,21 @@ void Game::move(int a_turn)
             std::cout << "\n-> (" << m_player1.get_symbol() << ") " << temp_player << "\'";
         }
         if (temp_player[temp_player.size() - 1] != 's')
-            {
-                std::cout << 's' ;
-            }
-            std::cout << " Turn";
-        str s{};
-        s = get_input();
-        int index{ std::stoi(s) };
+        {
+            std::cout << 's' ;
+        }
+        std::cout << " Turn";
+        str s{ get_input() };
+        int index{0};
+        try
+        {
+            index = std::stoi(s);
+        }
+        catch (const std::invalid_argument& e)
+        {
+            row = col = -1;
+            continue;
+        }
         if (index > m_board.get_size() * m_board.get_size() || index < 1)
         {
             row = col = -1;
@@ -198,5 +196,11 @@ void Game::play()
         std::cout << "\nIt's a draw\n";
     }
     std::cout << "Game Over\n\n";
+    // De implementat reset
+    m_player1.set_symbol('O');
+    m_player2.set_symbol('X');
+    m_player1.reset_wins();
+    m_player2.reset_wins();
+    Player::reset_draws();
     rlutil::showcursor();
 }

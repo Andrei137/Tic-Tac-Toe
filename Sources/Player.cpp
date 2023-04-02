@@ -6,7 +6,7 @@ Player::Player(char a_symbol) : m_symbol(a_symbol), m_name("Unknown"), m_wins(0)
 {
 }
 
-[[maybe_unused]] std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
+std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
 {
     a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << std::endl;
     return a_out;

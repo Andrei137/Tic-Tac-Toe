@@ -3,7 +3,7 @@
 void Board::allocate_memory()
 {
     m_cells = new Square*[m_size];
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
         m_cells[i] = new Square[m_size];
     }
@@ -11,7 +11,7 @@ void Board::allocate_memory()
 
 void Board::deallocate_memory()
 {
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
         delete[] m_cells[i];
     }
@@ -25,7 +25,8 @@ short Board::nr_digits(int a_n)
     do
     {
         ++nr;
-    } while (a_n /= 10);
+    }
+    while (a_n /= 10);
     return nr;
 }
 
@@ -111,9 +112,9 @@ Board::Board(int a_size) : m_size(a_size), m_cells(nullptr), m_winner('-')
 {
     allocate_memory();
     int nr{1}, digits_max{ nr_digits(m_size * m_size) };
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
-        for (int j = 0; j < m_size; ++j) 
+        for (int j = 0; j < m_size; ++j)
         {
             std::string s{};
             if (digits_max == 1)
@@ -134,9 +135,9 @@ Board::Board(int a_size) : m_size(a_size), m_cells(nullptr), m_winner('-')
 Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(nullptr), m_winner(a_other.m_winner)
 {
     allocate_memory();
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
-        for (int j = 0; j < m_size; ++j) 
+        for (int j = 0; j < m_size; ++j)
         {
             m_cells[i][j] = a_other.m_cells[i][j];
         }
@@ -150,15 +151,15 @@ Board::~Board()
 
 Board& Board::operator=(const Board& a_other)
 {
-    if (this != &a_other) 
+    if (this != &a_other)
     {
         deallocate_memory();
         m_size = a_other.m_size;
         m_winner = a_other.m_winner;
         allocate_memory();
-        for (int i = 0; i < m_size; ++i) 
+        for (int i = 0; i < m_size; ++i)
         {
-            for (int j = 0; j < m_size; ++j) 
+            for (int j = 0; j < m_size; ++j)
             {
                 m_cells[i][j] = a_other.m_cells[i][j];
             }
@@ -190,12 +191,7 @@ int Board::get_size() const
     return m_size;
 }
 
-Square Board::get_cell(int a_row, int a_col) const
-{
-    return m_cells[a_row][a_col];
-}
-
-[[maybe_unused]] char Board::get_winner() const
+char Board::get_winner() const
 {
     return m_winner;
 }
@@ -212,7 +208,7 @@ void Board::set_cell(int a_row, int a_col, char a_value)
     m_cells[a_row][a_col].set_occupied(true);
 }
 
-[[maybe_unused]] void Board::set_winner(char a_winner)
+void Board::set_winner(char a_winner)
 {
     m_winner = a_winner;
 }
@@ -224,27 +220,27 @@ bool Board::valid_move(int a_row, int a_col) const
 
 bool Board::win(char a_player) const
 {
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
         int count{0};
-        for (int j = 0; j < m_size; ++j) 
+        for (int j = 0; j < m_size; ++j)
         {
-            if (m_cells[i][j].get_value() == a_player) 
+            if (m_cells[i][j].get_value() == a_player)
             {
                 ++count;
             }
         }
-        if (count == m_size) 
+        if (count == m_size)
         {
             return true;
         }
     }
-    for (int j = 0; j < m_size; ++j) 
+    for (int j = 0; j < m_size; ++j)
     {
         int count{0};
-        for (int i = 0; i < m_size; ++i) 
+        for (int i = 0; i < m_size; ++i)
         {
-            if (m_cells[i][j].get_value() == a_player) 
+            if (m_cells[i][j].get_value() == a_player)
             {
                 ++count;
             }
@@ -255,21 +251,21 @@ bool Board::win(char a_player) const
         }
     }
     int count{0};
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
-        if (m_cells[i][i].get_value() == a_player) 
+        if (m_cells[i][i].get_value() == a_player)
         {
             ++count;
         }
     }
-    if (count == m_size) 
+    if (count == m_size)
     {
         return true;
     }
     count = 0;
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
-        if (m_cells[i][m_size - 1 - i].get_value() == a_player) 
+        if (m_cells[i][m_size - 1 - i].get_value() == a_player)
         {
             ++count;
         }
@@ -280,11 +276,11 @@ bool Board::win(char a_player) const
 bool Board::draw() const
 {
     int count{0};
-    for (int i = 0; i < m_size; ++i) 
+    for (int i = 0; i < m_size; ++i)
     {
-        for (int j = 0; j < m_size; ++j) 
+        for (int j = 0; j < m_size; ++j)
         {
-            if (m_cells[i][j].get_value() == 'X' || m_cells[i][j].get_value() == 'O') 
+            if (m_cells[i][j].get_value() == 'X' || m_cells[i][j].get_value() == 'O')
             {
                 ++count;
             }
