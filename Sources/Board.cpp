@@ -85,7 +85,11 @@ void Board::display_2(int a_line) const
     }
     if (m_winner == '-')
     {
-        display_aux("        ", "  |  ", ch2, false);
+        #ifdef _WIN32
+            display_aux("        ", "  |  ", ch2, false);
+        #else
+            display_aux("        ", "   |  ", ch2, false);
+        #endif
     }
     else
     {

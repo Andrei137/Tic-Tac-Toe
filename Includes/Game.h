@@ -1,15 +1,11 @@
 #include "Board.h"
 #include "Player.h"
-
 #include <chrono>
 #include <thread>
 
 #ifdef _WIN32
 #define CTRL(c) ((c) & 037)
 #include <conio.h>
-#else
-#include <termios.h>
-#include <unistd.h>
 #endif
 
 class Game

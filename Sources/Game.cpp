@@ -35,7 +35,6 @@ str Game::get_input(int a_timeout)
     str input;
     bool input_started{false};
     int elapsed_time{0};
-#ifdef _WIN32
     while (elapsed_time < a_timeout * 1000)
     {
         if (_kbhit())
@@ -57,43 +56,6 @@ str Game::get_input(int a_timeout)
             elapsed_time += 125;
         }
     }
-#else
-    struct termios oldt, newt;
-    tcgetattr(STDIN_FILENO, &oldt);
-    memset(&newt, 0, sizeof(newt));
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    newt.c_cc[VMIN] = 0;
-    newt.c_cc[VTIME] = a_timeout;
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    while (elapsed_time < a_timeout * 1000)
-    {
-        char buffer[256];
-        int num_chars = read(STDIN_FILENO, buffer, sizeof(buffer));
-        if (num_chars > 0)
-        {
-            if (input.size() + num_chars > 255) 
-            {
-                return "0";
-            }
-            input.append(buffer, num_chars);
-            if (input.back() < '0' || input.back() > '9')
-            {
-                return "0";
-            }
-            else
-            {
-                input_started = true;
-            }
-        }
-        if (input_started)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(75));
-            elapsed_time += 125;
-        }
-    }
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-#endif
     return input;
 }
 
@@ -128,22 +90,31 @@ void Game::move(int a_turn)
             std::cout << 's' ;
         }
         std::cout << " Turn";
-        str s{ get_input(1) };
-        if (s == "404")
-        {
-            m_board.set_winner('E');
-            return;
-        }
-        int index{0};
-        try
-        {
-            index = std::stoi(s);
-        }
-        catch (const std::invalid_argument&)
-        {
-            row = col = -1;
-            continue;
-        }
+        #ifdef _WIN32
+            str s{ get_input(1) };
+            if (s == "404")
+            {
+                m_board.set_winner('E');
+                return;
+            }
+            int index{0};
+            try
+            {
+                index = std::stoi(s);
+            }
+            catch (const std::invalid_argument&)
+            {
+                row = col = -1;
+                continue;
+            }
+        #else
+            std::cin >> index;
+            if (index == 404)
+            {
+                m_board.set_winner('E');
+                return;
+            }
+        #endif
         if (index > m_board.get_size() * m_board.get_size() || index < 1)
         {
             row = col = -1;
