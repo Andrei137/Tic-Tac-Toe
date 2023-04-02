@@ -70,7 +70,6 @@ void Game::move(int a_turn)
         catch (std::invalid_argument&)
         {
             index = 0;
-            row = col = -1;
         }
         if (index == 404)
         {
