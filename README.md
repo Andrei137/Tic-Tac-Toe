@@ -1,9 +1,12 @@
 # OOP Template
 
+## Descriere
+Joc de X si O in care grid-ul poate avea dimensiune variata (ex : 4x4, 10x10 etc). Momentan doar versiunea PvP este disponibila.
+
 ### Tema 0
 
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
+- [x] Nume proiect (poate fi schimbat ulterior)
+- [x] Scurtă descriere a temei alese, ce v-ați propus să implementați
 
 ## Tema 1
 
