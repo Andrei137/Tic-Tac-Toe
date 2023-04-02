@@ -29,18 +29,18 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-str Game::get_input()
+str Game::get_input(int a_timeout)
 {
-    str input{};
+    str input;
     bool input_started{false};
     int elapsed_time{0};
 #ifdef _WIN32
-    while (elapsed_time < 1000)
+    while (elapsed_time < a_timeout * 1000)
     {
         if (_kbhit())
         {
             char c = _getch();
-            if (c > '9' || c < '0')
+            if (c < '0' || c > '9')
             {
                 return "0";
             }
@@ -52,7 +52,7 @@ str Game::get_input()
         }
         if (input_started)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            std::this_thread::sleep_for(std::chrono::milliseconds(75));
             elapsed_time += 125;
         }
     }
@@ -61,19 +61,19 @@ str Game::get_input()
     tcgetattr(STDIN_FILENO, &oldt);
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO);
-    newt.c_cc[VMIN]{0};
-    newt.c_cc[VTIME]{1};
+    newt.c_cc[VMIN] = 0;
+    newt.c_cc[VTIME] = a_timeout;
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    while (elapsed_time < 1000)
+    while (elapsed_time < a_timeout * 1000)
     {
         char buffer[256];
         int num_chars = read(STDIN_FILENO, buffer, sizeof(buffer));
         if (num_chars > 0)
         {
             input.append(buffer, num_chars);
-            if (input.back() == '\n')
+            if (input.back() < '0' || input.back() > '9')
             {
-                break;
+                return "0";
             }
             else
             {
@@ -82,8 +82,8 @@ str Game::get_input()
         }
         if (input_started)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-            elapsed_time += 125;
+            std::this_thread::sleep_for(std::chrono::milliseconds(75));
+            elapsed_time += 123;
         }
     }
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
@@ -107,7 +107,7 @@ void Game::move(int a_turn)
         std::cout << *this;
         rlutil::hidecursor();
         str temp_player{};
-        if (a_turn % 2 == 1)
+        if (a_turn % 2)
         {
             temp_player = m_player1.get_name();
             std::cout << "\n-> (" << m_player1.get_symbol() << ") " << temp_player << "\'";
@@ -115,14 +115,19 @@ void Game::move(int a_turn)
         else
         {
             temp_player = m_player2.get_name();
-            std::cout << "\n-> (" << m_player1.get_symbol() << ") " << temp_player << "\'";
+            std::cout << "\n-> (" << m_player2.get_symbol() << ") " << temp_player << "\'";
         }
         if (temp_player[temp_player.size() - 1] != 's')
         {
             std::cout << 's' ;
         }
         std::cout << " Turn";
-        str s{ get_input() };
+        str s{ get_input(1) };
+        if (s == "404")
+        {
+            m_board.set_winner('E');
+            return;
+        }
         int index{0};
         try
         {
@@ -146,7 +151,7 @@ void Game::move(int a_turn)
             row = col = -1;
         }
     }
-    if (a_turn % 2 == 1)
+    if (a_turn % 2)
     {
         m_board.set_cell(row, col, m_player1.get_symbol());
     }
@@ -163,6 +168,12 @@ void Game::play()
     while (!m_board.game_over())
     {
         move(turn++);
+        if (m_board.get_winner() == 'E')
+        {
+            rlutil::showcursor();
+            rlutil::cls();
+            return;
+        }
     }
     if (m_board.draw())
     {
@@ -170,7 +181,7 @@ void Game::play()
     }
     else
     {
-        if (turn % 2 == 1)
+        if (turn % 2)
         {
             m_board.set_winner(m_player1.get_symbol());
             m_player1.add_win();

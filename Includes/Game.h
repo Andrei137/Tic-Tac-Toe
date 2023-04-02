@@ -5,6 +5,7 @@
 #include <thread>
 
 #ifdef _WIN32
+#define CTRL(c) ((c) & 037)
 #include <conio.h>
 #else
 #include <termios.h>
@@ -27,7 +28,7 @@ public:
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
     
-    static str get_input();
+    static str get_input(int);
     std::pair<int, int> convert(int);
     void move(int);
     void play();
