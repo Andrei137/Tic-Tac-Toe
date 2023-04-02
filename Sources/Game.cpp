@@ -70,6 +70,10 @@ str Game::get_input(int a_timeout)
         int num_chars = read(STDIN_FILENO, buffer, sizeof(buffer));
         if (num_chars > 0)
         {
+            if (input.size() + num_chars > 255) 
+            {
+                return "0";
+            }
             input.append(buffer, num_chars);
             if (input.back() < '0' || input.back() > '9')
             {
@@ -83,7 +87,7 @@ str Game::get_input(int a_timeout)
         if (input_started)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(75));
-            elapsed_time += 123;
+            elapsed_time += 125;
         }
     }
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
@@ -133,7 +137,7 @@ void Game::move(int a_turn)
         {
             index = std::stoi(s);
         }
-        catch (const std::invalid_argument& e)
+        catch (const std::invalid_argument&)
         {
             row = col = -1;
             continue;
