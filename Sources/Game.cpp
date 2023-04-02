@@ -1,5 +1,6 @@
 #include "../Includes/Game.h"
 #include "../Ext/Rlutil.h"
+#include <cstring>
 
 Game::Game(int a_size) : m_board(a_size)
 {
