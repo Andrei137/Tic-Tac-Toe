@@ -30,6 +30,7 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
+#ifdef _WIN32
 str Game::get_input(int a_timeout)
 {
     str input;
@@ -58,6 +59,7 @@ str Game::get_input(int a_timeout)
     }
     return input;
 }
+#endif 
 
 std::pair<int, int> Game::convert(int a_index)
 {
@@ -66,7 +68,6 @@ std::pair<int, int> Game::convert(int a_index)
     return std::make_pair(temp / size, temp % size);
 }
 
-#ifdef _WIN32
 void Game::move(int a_turn)
 {
     int row{ -1};
@@ -138,7 +139,6 @@ void Game::move(int a_turn)
         m_board.set_cell(row, col, m_player2.get_symbol());
     }
 }
-#endif
 
 void Game::play()
 {
