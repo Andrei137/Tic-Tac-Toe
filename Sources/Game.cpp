@@ -59,6 +59,7 @@ str Game::get_input(int a_timeout)
 #else
     struct termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
+    memset(&newt, 0, sizeof(newt));
     newt = oldt;
     newt.c_lflag &= ~(ICANON | ECHO);
     newt.c_cc[VMIN] = 0;
@@ -72,11 +73,13 @@ str Game::get_input(int a_timeout)
         {
             if (input.size() + num_chars > 255) 
             {
+                tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
                 return "0";
             }
             input.append(buffer, num_chars);
             if (input.back() < '0' || input.back() > '9')
             {
+                tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
                 return "0";
             }
             else
