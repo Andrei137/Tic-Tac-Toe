@@ -66,6 +66,7 @@ std::pair<int, int> Game::convert(int a_index)
     return std::make_pair(temp / size, temp % size);
 }
 
+#ifdef _WIN32
 void Game::move(int a_turn)
 {
     int row{ -1};
@@ -90,6 +91,7 @@ void Game::move(int a_turn)
             std::cout << 's' ;
         }
         std::cout << " Turn";
+        int index{0};
         #ifdef _WIN32
             str s{ get_input(1) };
             if (s == "404")
@@ -97,7 +99,6 @@ void Game::move(int a_turn)
                 m_board.set_winner('E');
                 return;
             }
-            int index{0};
             try
             {
                 index = std::stoi(s);
@@ -137,6 +138,7 @@ void Game::move(int a_turn)
         m_board.set_cell(row, col, m_player2.get_symbol());
     }
 }
+#endif
 
 void Game::play()
 {
