@@ -67,23 +67,30 @@ void Board::display_1() const
 
 void Board::display_2(int a_line) const
 {
-    str* ch1 = new str[m_size];
-    for (int i = 0; i < m_size; ++i)
-    {
-        ch1[i] = { m_cells[a_line][i].get_free_pos() };
-    }
-    display_aux("\n ", " | ", ch1, false);
-    delete[] ch1;
     if (m_winner == '-')
     {
-        char* ch2 = new char[m_size];
+        str* ch1 = new str[m_size];
         for (int i = 0; i < m_size; ++i)
         {
-            ch2[i] = { m_cells[a_line][i].get_value() };
+            ch1[i] = { m_cells[a_line][i].get_free_pos() };
         }
-        display_aux("        ", "  |  ", ch2, false);
-        delete[] ch2;
+        display_aux("\n ", " | ", ch1, false);
+        delete[] ch1;
     }
+    char* ch2 = new char[m_size];
+    for (int i = 0; i < m_size; ++i)
+    {
+        ch2[i] = { m_cells[a_line][i].get_value() };
+    }
+    if (m_winner == '-')
+    {
+        display_aux("        ", "  |  ", ch2, false);
+    }
+    else
+    {
+        display_aux("\n  ", "  |  ", ch2, false);
+    }
+    delete[] ch2;
 }
 
 void Board::display_3() const
@@ -176,6 +183,11 @@ std::ostream& operator<< (std::ostream& a_out, const Board& a_board)
         }
     }
     return a_out;
+}
+
+int Board::get_size() const
+{
+    return m_size;
 }
 
 Square Board::get_cell(int a_row, int a_col) const

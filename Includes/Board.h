@@ -33,6 +33,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream&, const Board&);
 
+    int get_size() const;
     Square get_cell(int, int) const;
     [[maybe_unused]] char get_winner() const;
 
