@@ -37,11 +37,6 @@ void Player::set_name(const str& a_name)
     m_name = a_name;
 }
 
-void Player::set_symbol(char a_symbol)
-{
-    m_symbol = a_symbol;
-}
-
 void Player::set_wins(int a_wins)
 {
     m_wins = a_wins;

@@ -256,6 +256,9 @@ void Game::play(bool a_reseted)
         else if (ch == 'n')
         {
             rlutil::cls();
+            m_player1.reset_wins();
+            m_player2.reset_wins();
+            Player::reset_draws();
             return;
         }
         else
