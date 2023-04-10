@@ -59,7 +59,7 @@ int Game::read_input(int a_s)
             }
         }
     }
-    return std::stoi(num);
+    return std::accumulate(num.begin(), num.end(), 0, [](int acc, char c) { return acc * 10 + (c - '0'); });
 }
 
 std::pair<int, int> Game::convert(int a_index)
