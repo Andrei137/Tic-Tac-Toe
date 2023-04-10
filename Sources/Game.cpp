@@ -29,6 +29,39 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
+int Game::read_input(int a_ms) 
+{
+    int num{ 0 };
+    time_t start, end;
+    bool started{ false };
+    while (true) 
+    {
+        if (kbhit()) 
+        {
+            char c = getch();
+            if (isdigit(c)) 
+            {
+                if (!started) 
+                {
+                    time(&start);
+                    started = true;
+                }
+                num = num * 10 + (c - '0');
+            }
+        }
+        if (started) 
+        {
+            time(&end);
+            double diff = difftime(end, start) * 1000;
+            if (diff >= a_ms) 
+            {
+                break;
+            }
+        }
+    }
+    return num;
+}
+
 std::pair<int, int> Game::convert(int a_index)
 {
     int temp{ a_index - 1 };
@@ -36,11 +69,9 @@ std::pair<int, int> Game::convert(int a_index)
     return std::make_pair(temp / size, temp % size);
 }
 
-void Game::move(int a_turn)
+void Game::move(int a_turn, int& a_row, int& a_col)
 {
-    int row{ -1};
-    int col{ -1};
-    while (row == -1 || col == -1)
+    while ((a_row == -1 && a_col == -1) || !m_board.valid_move(a_row, a_col))
     {
         std::cout << *this;
         rlutil::hidecursor();
@@ -59,18 +90,7 @@ void Game::move(int a_turn)
         {
             std::cout << 's' ;
         }
-        std::cout << " Turn : ";
-        str s{};
-        std::cin >> s;
-        int index{0};
-        try
-        {
-            index = std::stoi(s);
-        }   
-        catch (std::invalid_argument&)
-        {
-            index = 0;
-        }
+        int index{ read_input(1000) };
         if (index == 404)
         {
             m_board.set_winner('E');
@@ -78,47 +98,59 @@ void Game::move(int a_turn)
         }
         else if (index > m_board.get_size() * m_board.get_size() || index < 1)
         {
-            row = col = -1;
+            a_row = a_col = -1;
             continue;
         }
         std::pair<int, int> temp{ convert(index) };
-        row = temp.first;
-        col = temp.second;
-        if (!m_board.valid_move(row, col))
+        a_row = temp.first;
+        a_col = temp.second;
+        if (!m_board.valid_move(a_row, a_col))
         {
-            row = col = -1;
+            a_row = a_col = -1;
         }
     }
     if (a_turn % 2)
     {
-        m_board.set_cell(row, col, m_player1.get_symbol());
+        m_board.set_cell(a_row, a_col, m_player1.get_symbol());
     }
     else
     {
-        m_board.set_cell(row, col, m_player2.get_symbol());
+        m_board.set_cell(a_row, a_col, m_player2.get_symbol());
     }
 }
 
 void Game::play()
 {
     std::cin >> *this;
-    int turn{1};
-    while (!m_board.game_over())
+    int turn{ 1 };
+    int row{ -1 };
+    int col{ -1 };
+    char player{ 'X' };
+    while (true)
     {
-        move(turn++);
-        if (m_board.get_winner() == 'E')
+        move(turn++, row, col);
+        if (m_board.game_over(player, row, col))
+        {
+            break;
+        }
+        else if (m_board.get_winner() == 'E')
         {
             rlutil::showcursor();
             rlutil::cls();
             return;
         }
+        if (player == 'X')
+        {
+            player = 'O';
+        }
+        else
+        {
+            player = 'X';
+        }
     }
-    if (m_board.draw())
+    if (m_board.win(player, row, col))
     {
-        Player::add_draw();
-    }
-    else
-    {
+        --turn;
         if (turn % 2)
         {
             m_board.set_winner(m_player1.get_symbol());
@@ -129,6 +161,10 @@ void Game::play()
             m_board.set_winner(m_player2.get_symbol());
             m_player2.add_win();
         }
+    }
+    else
+    {
+        Player::add_draw();
     }
     std::cout << *this;
     char winner{ m_board.get_winner() };

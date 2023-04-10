@@ -40,7 +40,11 @@ public:
     void set_winner(char);
     
     bool valid_move(int, int) const;
-    bool win(char) const;
+    bool win_col(char, int, int) const;
+    bool win_row(char, int, int) const;
+    bool win_diag1(char, int, int) const; 
+    bool win_diag2(char, int, int) const;
+    bool win(char, int, int) const;
     bool draw() const;
-    bool game_over() const;
+    bool game_over(char, int, int) const;
 };

@@ -222,59 +222,188 @@ bool Board::valid_move(int a_row, int a_col) const
     return m_cells[a_row][a_col].is_occupied() == false;
 }
 
-bool Board::win(char a_player) const
+bool Board::win_col(char a_player, int a_row, int a_col) const
 {
-    for (int i = 0; i < m_size; ++i)
+    int count{ 1 };
+    for (int i = a_row - 1; i >= 0; --i)
     {
-        int count{0};
-        for (int j = 0; j < m_size; ++j)
-        {
-            if (m_cells[i][j].get_value() == a_player)
-            {
-                ++count;
-            }
-        }
-        if (count == m_size)
-        {
-            return true;
-        }
-    }
-    for (int j = 0; j < m_size; ++j)
-    {
-        int count{0};
-        for (int i = 0; i < m_size; ++i)
-        {
-            if (m_cells[i][j].get_value() == a_player)
-            {
-                ++count;
-            }
-        }
-        if (count == m_size)
-        {
-            return true;
-        }
-    }
-    int count{0};
-    for (int i = 0; i < m_size; ++i)
-    {
-        if (m_cells[i][i].get_value() == a_player)
+        if (m_cells[i][a_col].get_value() == a_player)
         {
             ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
         }
     }
-    if (count == m_size)
+    if (m_size == count || (m_size > 3 && count == 4))
     {
         return true;
     }
-    count = 0;
-    for (int i = 0; i < m_size; ++i)
+    for (int i = a_row + 1; i < m_size; ++i)
     {
-        if (m_cells[i][m_size - 1 - i].get_value() == a_player)
+        if (m_cells[i][a_col].get_value() == a_player)
         {
             ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
         }
     }
-    return count == m_size;
+    return false;
+}
+
+bool Board::win_row(char a_player, int a_row, int a_col) const
+{
+    int count{ 1 };
+    for (int j = a_col - 1; j >= 0; --j)
+    {
+        if (m_cells[a_row][j].get_value() == a_player)
+        {
+            ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (m_size == count || (m_size > 3 && count == 4))
+    {
+        return true;
+    }
+    for (int j = a_col + 1; j < m_size; ++j)
+    {
+        if (m_cells[a_row][j].get_value() == a_player)
+        {
+            ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    return false;
+}
+
+bool Board::win_diag1(char a_player, int a_row, int a_col) const
+{
+    int count{ 1 };
+    int i{ a_row - 1 };
+    int j{ a_col - 1 };
+    while (i >= 0 && j >= 0)
+    {
+        if (m_cells[i][j].get_value() == a_player)
+        {
+            ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
+        }
+        --i;
+        --j;
+    }
+    if (m_size == count || (m_size > 3 && count == 4))
+    {
+        return true;
+    }
+    i = a_row + 1;
+    j = a_col + 1;
+    while (i < m_size && j < m_size)
+    {
+        if (m_cells[i][j].get_value() == a_player)
+        {
+            ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
+        }
+        ++i;
+        ++j;
+    }
+    return false;
+}
+
+bool Board::win_diag2(char a_player, int a_row, int a_col) const
+{
+    int count{ 1 };
+    int i{ a_row - 1 };
+    int j{ a_col + 1 };
+    while (i >= 0 && j < m_size)
+    {
+        if (m_cells[i][j].get_value() == a_player)
+        {
+            ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
+        }
+        --i;
+        ++j;
+    }
+    if (m_size == count || (m_size > 3 && count == 4))
+    {
+        return true;
+    }
+    i = a_row + 1;
+    j = a_col - 1;
+    while (i < m_size && j >= 0)
+    {
+        if (m_cells[i][j].get_value() == a_player)
+        {
+            ++count;
+            if (m_size == count || (m_size > 3 && count == 4))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            break;
+        }
+        ++i;
+        --j;
+    }
+    return false;
+}
+
+bool Board::win(char a_player, int a_row, int a_col) const
+{
+    return win_row(a_player, a_row, a_col) || 
+           win_col(a_player, a_row, a_col) || 
+           win_diag1(a_player, a_row, a_col) || 
+           win_diag2(a_player, a_row, a_col);
 }
 
 bool Board::draw() const
@@ -293,7 +422,11 @@ bool Board::draw() const
     return count == m_size * m_size;
 }
 
-bool Board::game_over() const
+bool Board::game_over(char a_player, int a_row, int a_col) const
 {
-    return win('X') || win('O') || draw();
+    if (a_row == -1 && a_col == -1)
+    {
+        return false;
+    }
+    return win(a_player, a_row, a_col) || draw();
 }
