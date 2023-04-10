@@ -17,7 +17,7 @@ public:
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
 
-    int read_input(int);
+    int read_input(int, int);
     std::pair<int, int> convert(int);
     void move(int, int&, int&);
     void play();

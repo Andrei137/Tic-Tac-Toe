@@ -29,39 +29,61 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-int Game::read_input(int a_s)
+int Game::read_input(int a_s, int a_idle_s) 
 {
     str num{};
-    time_t start{}, end{};
-    bool started{ false };
-    time(&start);
-    while (true)
+    time_t start{}, end{}, idle_start{};
+    bool started{ false }, idle_started{ false };
+    while (true) 
     {
-        if (kbhit())
+        // check for input
+        if (kbhit()) 
         {
             char c = getch();
-            if (isdigit(c))
+            if (isdigit(c)) 
             {
-                if (!started)
+                if (!started) 
                 {
+                    time(&start);
                     started = true;
                 }
                 num += c;
+                // reset idle timer if input received
+                if (idle_started) 
+                {
+                    time(&idle_start);
+                    idle_started = false;
+                }
             }
         }
-        time(&end);
-        double diff = difftime(end, start);
-        if (diff >= a_s * 60)
+        // check for idle time
+        else 
         {
-            return 404;
+            if (!idle_started) 
+            {
+                time(&idle_start);
+                idle_started = true;
+            }
+            time(&end);
+            double diff = difftime(end, idle_start);
+            if (diff >= a_idle_s) 
+            {
+                return 404;
+            }
         }
-        if (started && num.size() > 0 && !kbhit())
+        // check for timeout
+        if (started) 
         {
-            break;
+            time(&end);
+            double diff = difftime(end, start);
+            if (diff >= a_s) 
+            {
+                break;
+            }
         }
     }
     int n{ 0 };
-    for (const auto& ch : num)
+    for (const auto& ch : num) 
     {
         n = n * 10 + (ch - '0');
     }
@@ -96,7 +118,7 @@ void Game::move(int a_turn, int& a_row, int& a_col)
         {
             std::cout << 's' ;
         }
-        int index{ read_input(1) };
+        int index{ read_input(1, 45) };
         if (index == 404)
         {
             m_board.set_winner('E');
