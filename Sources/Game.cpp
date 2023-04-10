@@ -31,8 +31,8 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
 
 int Game::read_input(int a_ms) 
 {
-    int num{ 0 };
-    time_t start, end;
+    str num{};
+    time_t start{}, end{};
     bool started{ false };
     while (true) 
     {
@@ -46,7 +46,7 @@ int Game::read_input(int a_ms)
                     time(&start);
                     started = true;
                 }
-                num = num * 10 + (c - '0');
+                num += c;
             }
         }
         if (started) 
@@ -59,7 +59,14 @@ int Game::read_input(int a_ms)
             }
         }
     }
-    return num;
+    try
+    {
+        return std::stoi(num);
+    }
+    catch (...)
+    {
+        return 404;
+    }
 }
 
 std::pair<int, int> Game::convert(int a_index)
