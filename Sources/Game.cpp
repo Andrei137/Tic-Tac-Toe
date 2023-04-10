@@ -36,7 +36,6 @@ int Game::read_input(int a_s, int a_idle_s)
     bool started{ false }, idle_started{ false };
     while (true) 
     {
-        // check for input
         if (kbhit()) 
         {
             char c = getch();
@@ -48,15 +47,17 @@ int Game::read_input(int a_s, int a_idle_s)
                     started = true;
                 }
                 num += c;
-                // reset idle timer if input received
                 if (idle_started) 
                 {
                     time(&idle_start);
                     idle_started = false;
                 }
+                else if (num.size() > 3) 
+                {
+                    return 404;
+                }
             }
         }
-        // check for idle time
         else 
         {
             if (!idle_started) 
@@ -66,12 +67,11 @@ int Game::read_input(int a_s, int a_idle_s)
             }
             time(&end);
             double diff = difftime(end, idle_start);
-            if (diff >= a_idle_s) 
+            if (diff >= a_idle_s || num.size() > 3)
             {
                 return 404;
             }
         }
-        // check for timeout
         if (started) 
         {
             time(&end);
@@ -118,7 +118,8 @@ void Game::move(int a_turn, int& a_row, int& a_col)
         {
             std::cout << 's' ;
         }
-        int index{ read_input(1, 45) };
+        std::cout << " Turn";
+        int index{ read_input(1, 10) };
         if (index == 404)
         {
             m_board.set_winner('E');
