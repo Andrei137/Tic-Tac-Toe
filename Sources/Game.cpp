@@ -59,7 +59,12 @@ int Game::read_input(int a_s)
             }
         }
     }
-    return std::accumulate(num.begin(), num.end(), 0, [](int acc, char c) { return acc * 10 + (c - '0'); });
+    int n{ 0 };
+    for (const auto& ch : num) 
+    {
+        n = n * 10 + (ch - '0');
+    }
+    return n;
 }
 
 std::pair<int, int> Game::convert(int a_index)
