@@ -25,7 +25,6 @@ public:
     static int get_draws();
     
     void set_name(const str&);
-    void set_symbol(char);
     void set_wins(int);
     
     void add_win();
