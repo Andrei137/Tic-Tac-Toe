@@ -38,7 +38,8 @@ public:
     
     void set_cell(int, int, char);
     void set_winner(char);
-    
+
+    void reset();
     bool valid_move(int, int) const;
     bool win_col(char, int, int) const;
     bool win_row(char, int, int) const;

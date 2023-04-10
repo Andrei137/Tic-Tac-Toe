@@ -20,5 +20,5 @@ public:
     int read_input(int, int);
     std::pair<int, int> convert(int);
     void move(int, int&, int&);
-    void play();
+    void play(bool);
 };

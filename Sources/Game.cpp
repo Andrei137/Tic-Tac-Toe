@@ -148,9 +148,14 @@ void Game::move(int a_turn, int& a_row, int& a_col)
     }
 }
 
-void Game::play()
+void Game::play(bool a_reseted)
 {
-    std::cin >> *this;
+    // TODO: implementare meniu principal
+    if (a_reseted)
+    {
+        std::cin >> *this;
+    }
+    m_board.reset();
     int turn{ 1 };
     int row{ -1 };
     int col{ -1 };
@@ -210,11 +215,52 @@ void Game::play()
         std::cout << "\nIt's a draw\n";
     }
     std::cout << "Game Over\n\n";
-    // De implementat reset
-    m_player1.set_symbol('O');
-    m_player2.set_symbol('X');
-    m_player1.reset_wins();
-    m_player2.reset_wins();
-    Player::reset_draws();
+    std::cout << "Want To Replay? (y)es (n)o\n";
     rlutil::showcursor();
+    char ch{ '-' };
+    // TODO: implementare mai multe optiuni de replay
+    while (ch == '-')
+    {
+        ch = getch();
+        if (ch == 'y')
+        {
+            std::cout << "Want To Switch Sides? (y)es (n)o\n";
+            char ch1{ '-' };
+            while (ch1 == '-')
+            {
+                ch1 = getch();
+                if (ch1 == 'y')
+                {
+                    rlutil::cls();
+                    // TODO : implementare swap
+                    str aux_name{ m_player1.get_name() };
+                    m_player1.set_name(m_player2.get_name());
+                    m_player2.set_name(aux_name);
+                    int aux_wins{ m_player1.get_wins() };
+                    m_player1.set_wins(m_player2.get_wins());
+                    m_player2.set_wins(aux_wins);
+                    play(0);
+                }
+                else if (ch1 == 'n')
+                {
+                    rlutil::cls();
+                    play(0);
+                }
+                else
+                {
+                    ch1 = '-';
+                }
+            }
+            play(0);
+        }
+        else if (ch == 'n')
+        {
+            rlutil::cls();
+            return;
+        }
+        else
+        {
+            ch = '-';
+        }
+    }
 }

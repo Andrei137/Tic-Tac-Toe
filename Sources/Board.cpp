@@ -217,6 +217,33 @@ void Board::set_winner(char a_winner)
     m_winner = a_winner;
 }
 
+void Board::reset()
+{
+    m_winner = '-';
+    for (int i = 0; i < m_size; ++i)
+    {
+        for (int j = 0; j < m_size; ++j)
+        {
+            m_cells[i][j].set_value(' ');
+            m_cells[i][j].set_occupied(false);
+            int nr{ i * m_size + j + 1 };
+            std::string s{};
+            if (nr_digits(m_size * m_size) == 1)
+            {
+                s = " ";
+            }
+            int digits{ nr_digits(nr) };
+            while (digits < nr_digits(m_size * m_size))
+            {
+                s += " ";
+                ++digits;
+            }
+            m_cells[i][j].set_free_pos(s + std::to_string(nr) + " ");
+        }
+    }
+}
+
+
 bool Board::valid_move(int a_row, int a_col) const
 {
     return m_cells[a_row][a_col].is_occupied() == false;

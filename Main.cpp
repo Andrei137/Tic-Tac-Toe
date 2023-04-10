@@ -3,6 +3,6 @@
 int main()
 {
     Game game{3};
-    game.play();
+    game.play(1);
     return 0;
 }
