@@ -29,38 +29,39 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-int Game::read_input(int a_s) 
+int Game::read_input(int a_s)
 {
     str num{};
     time_t start{}, end{};
     bool started{ false };
-    while (true) 
+    time(&start);
+    while (true)
     {
-        if (kbhit()) 
+        if (kbhit())
         {
             char c = getch();
-            if (isdigit(c)) 
+            if (isdigit(c))
             {
-                if (!started) 
+                if (!started)
                 {
-                    time(&start);
                     started = true;
                 }
                 num += c;
             }
         }
-        if (started) 
+        time(&end);
+        double diff = difftime(end, start);
+        if (diff >= a_s * 60)
         {
-            time(&end);
-            double diff = difftime(end, start);
-            if (diff >= a_s) 
-            {
-                break;
-            }
+            return 404;
+        }
+        if (started && num.size() > 0 && !kbhit())
+        {
+            break;
         }
     }
     int n{ 0 };
-    for (const auto& ch : num) 
+    for (const auto& ch : num)
     {
         n = n * 10 + (ch - '0');
     }
