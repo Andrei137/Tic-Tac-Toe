@@ -29,7 +29,7 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-int Game::read_input(int a_ms) 
+int Game::read_input(int a_s) 
 {
     str num{};
     time_t start{}, end{};
@@ -52,21 +52,14 @@ int Game::read_input(int a_ms)
         if (started) 
         {
             time(&end);
-            double diff = difftime(end, start) * 1000;
-            if (diff >= a_ms) 
+            double diff = difftime(end, start);
+            if (diff >= a_s) 
             {
                 break;
             }
         }
     }
-    try
-    {
-        return std::stoi(num);
-    }
-    catch (...)
-    {
-        return 404;
-    }
+    return std::stoi(num);
 }
 
 std::pair<int, int> Game::convert(int a_index)
@@ -97,7 +90,7 @@ void Game::move(int a_turn, int& a_row, int& a_col)
         {
             std::cout << 's' ;
         }
-        int index{ read_input(1000) };
+        int index{ read_input(1) };
         if (index == 404)
         {
             m_board.set_winner('E');
