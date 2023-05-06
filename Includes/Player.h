@@ -1,24 +1,30 @@
 #pragma once
 
+#include "Board.h"
 #include <fstream>
+#include <memory>
 #include <string>
 
 using str = std::string;
 
 class Player
 {
+protected:
     char m_symbol{};
     str m_name{};
     int m_wins{};
     static int m_draws;
     
 public:
-    Player() = default;
     explicit Player(char);
-    ~Player() = default;
-    
+    virtual ~Player() = default;
+    virtual std::pair<int, int> get_move(Board) const = 0;
+    virtual std::unique_ptr<Player> clone() const = 0;
+
     friend std::ostream& operator<<(std::ostream&, const Player&);
-    
+
+    static std::pair<int, int> convert(int, int);
+
     const str& get_name() const;
     char get_symbol() const;
     int get_wins() const;

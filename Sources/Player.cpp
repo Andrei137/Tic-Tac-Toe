@@ -6,8 +6,15 @@ Player::Player(char a_symbol) : m_symbol(a_symbol), m_name("Unknown"), m_wins(0)
 
 std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
 {
-    a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << std::endl;
+    a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << '\n';
     return a_out;
+}
+
+std::pair<int, int> Player::convert(int a_index, int a_board_size)
+{
+    int temp{ a_index - 1 };
+    int size{ a_board_size };
+    return std::make_pair(temp / size, temp % size);
 }
 
 const str& Player::get_name() const

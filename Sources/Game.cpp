@@ -1,17 +1,11 @@
 #include "../Includes/Game.h"
-#include <Rlutil.h>
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('2')
+Game::Game(int a_size) : m_board(a_size), m_gamemode('2'), m_reseted(true)
 {
-    m_players[0] = new Player('X');
-    m_players[1] = new Player('O');
+    m_players[0] = new Human('X');
 }
 
-Game::~Game()
-{
-    delete m_players[0];
-    delete m_players[1];
-}
+Game::~Game() = default;
 
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
@@ -24,8 +18,6 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
     std::cout << "-> (" << a_game.m_players[1]->get_symbol() << ") Insert name : ";
     a_in >> temp;
     a_game.m_players[1]->set_name(temp);
-    // std::cout << "-> Insert the size of the table (from 3 to 10) : ";
-    // a_in >> temp;
     rlutil::cls();
     return a_in;
 }
@@ -40,133 +32,11 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-int Game::read_input(int a_s, int a_idle_s) 
+std::pair<int, int> Game::move(int a_turn, Board& board, std::array<Player*, 2>& players)
 {
-    str num{};
-    time_t start{}, end{}, idle_start{};
-    bool started{ false }, idle_started{ false };
-    while (true) 
-    {
-        if (kbhit()) 
-        {
-            char c = getch();
-            if (isdigit(c)) 
-            {
-                if (!started) 
-                {
-                    time(&start);
-                    started = true;
-                }
-                num += c;
-                if (idle_started) 
-                {
-                    time(&idle_start);
-                    idle_started = false;
-                }
-                else if (num.size() > 5) 
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        else 
-        {
-            if (!idle_started) 
-            {
-                time(&idle_start);
-                idle_started = true;
-            }
-            time(&end);
-            double diff = difftime(end, idle_start);
-            if (diff >= a_idle_s)
-            {
-                return 0;
-            }
-            else if (num.size() > 5)
-            {
-                return -1;
-            }
-        }
-        if (started) 
-        {
-            time(&end);
-            double diff = difftime(end, start);
-            if (diff >= a_s) 
-            {
-                break;
-            }
-        }
-    }
-    int n{ 0 };
-    for (const auto& ch : num) 
-    {
-        n = n * 10 + (ch - '0');
-    }
-    return n;
-}
-
-std::pair<int, int> Game::convert(int a_index)
-{
-    int temp{ a_index - 1 };
-    int size{ m_board.get_size() };
-    return std::make_pair(temp / size, temp % size);
-}
-
-void Game::move(int a_turn, int& a_row, int& a_col)
-{
-    int invalid_moves{ 0 };
-    while ((a_row == -1 && a_col == -1) || !m_board.valid_move(a_row, a_col))
-    {
-        std::cout << *this;
-        rlutil::hidecursor();
-        str temp_player{};
-        if (a_turn % 2)
-        {
-            temp_player = m_players[0]->get_name();
-            std::cout << "\n-> (" << m_players[0]->get_symbol() << ") " << temp_player << "\'";
-        }
-        else
-        {
-            temp_player = m_players[1]->get_name();
-            std::cout << "\n-> (" << m_players[1]->get_symbol() << ") " << temp_player << "\'";
-        }
-        if (temp_player[temp_player.size() - 1] != 's')
-        {
-            std::cout << 's' ;
-        }
-        std::cout << " Turn";
-        int index{ read_input(1, 60) };
-        if (index == 0 || invalid_moves == 10)
-        {
-            m_board.set_winner('E');
-            return;
-        }
-        else if (index > m_board.get_size() * m_board.get_size() || index < 1)
-        {
-            a_row = a_col = -1;
-            ++invalid_moves;
-            continue;
-        }
-        std::pair<int, int> temp{ convert(index) };
-        a_row = temp.first;
-        a_col = temp.second;
-        if (!m_board.valid_move(a_row, a_col))
-        {
-            a_row = a_col = -1;
-        }
-    }
-    if (a_turn % 2)
-    {
-        m_board.set_cell(a_row, a_col, m_players[0]->get_symbol());
-    }
-    else
-    {
-        m_board.set_cell(a_row, a_col, m_players[1]->get_symbol());
-    }
+    std::pair<int, int> temp{ players[1 - a_turn % 2]->get_move(board) };
+    board.set_cell(temp.first, temp.second, players[1 - a_turn % 2]->get_symbol());
+    return temp;
 }
 
 void Game::print_logo()
@@ -179,7 +49,7 @@ void Game::print_logo()
     std::cout << "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
 }
 
-void Game::play(bool a_reseted)
+void Game::play()
 {
     if (m_gamemode == '-')
     {
@@ -193,21 +63,29 @@ void Game::play(bool a_reseted)
         m_gamemode = getch();
     }
     // TODO: Implement AI pt 1 
-    if (m_gamemode == '1' || m_gamemode == '2')
+    if (m_gamemode == '1')
     {
-        if (a_reseted)
+        // m_players[1] = new Computer('O');
+        rlutil::cls();
+        std::cout << "In development...\n";
+        return;
+    }
+    else if (m_gamemode == '2')
+    {
+        m_players[1] = new Human('O');
+        if (m_reseted)
         {
             std::cin >> *this;
         }
         m_board.reset();
         int turn{ 1 };
-        int row{ -1 };
-        int col{ -1 };
+        std::pair<int, int> temp{ -1, -1 };
         char player{ 'X' };
         while (true)
         {
-            move(turn++, row, col);
-            if (m_board.game_over(player, row, col))
+            std::cout << *this;
+            temp = move(turn++, m_board, m_players);
+            if (m_board.game_over(player, temp.first, temp.second))
             {
                 break;
             }
@@ -226,19 +104,11 @@ void Game::play(bool a_reseted)
                 player = 'X';
             }
         }
-        if (m_board.win(player, row, col))
+        if (m_board.win(player, temp.first, temp.second))
         {
             --turn;
-            if (turn % 2)
-            {
-                m_board.set_winner(m_players[0]->get_symbol());
-                m_players[0]->add_win();
-            }
-            else
-            {
-                m_board.set_winner(m_players[1]->get_symbol());
-                m_players[1]->add_win();
-            }
+            m_board.set_winner(m_players[1 - turn % 2]->get_symbol());
+            m_players[0]->add_win();
         }
         else
         {
@@ -246,27 +116,24 @@ void Game::play(bool a_reseted)
         }
         std::cout << *this;
         char winner{ m_board.get_winner() };
-        if (winner == 'X')
-        {
-            std::cout << '\n' << m_players[0]->get_name() << " wins!\n";
-        }
-        else if (winner == 'O')
-        {
-            std::cout << '\n' << m_players[1]->get_name() << " wins!\n";
-        }
-        else
+        if (winner != 'X' && winner != 'O')
         {
             std::cout << "\nIt's a draw!\n";
         }
-        std::cout << "Game Over!\n\n";
-        std::cout << "Want To Replay? [Y]es [N]o";
+        else
+        {
+            std::cout << '\n' << m_players[(winner != 'X')]->get_name() << " wins!\n";
+        }
+        std::cout << "Game over!\n\n";
+        std::cout << "Want to replay? [y]es [n]o";
         char replay_decision{};
         replay_decision = getch();
         rlutil::cls();
         if (replay_decision == 'y')
         {
-            std::cout << "Want To Replay? Yes\n";
-            std::cout << "Want To Switch Sides? [Y]es [N]o";
+            m_reseted = false;
+            std::cout << "Want to replay? yes\n";
+            std::cout << "Want to switch sides? [y]es [n]o";
             char sides_decision{};
             sides_decision = getch();
             rlutil::cls();
@@ -278,11 +145,11 @@ void Game::play(bool a_reseted)
                 int aux_wins{ m_players[0]->get_wins() };
                 m_players[0]->set_wins(m_players[1]->get_wins());
                 m_players[1]->set_wins(aux_wins);
-                play(false);
+                play();
             }
             else if (sides_decision == 'n')
             {
-                play(false);
+                play();
             }
             else
             {
@@ -291,30 +158,31 @@ void Game::play(bool a_reseted)
         }
         else if (replay_decision == 'n')
         {
+            m_reseted = true;
             m_players[0]->reset_wins();
             m_players[1]->reset_wins();
             Player::reset_draws();
-            std::cout << "Want To Replay? No\n";
-            std::cout << "Want To Change Players? [Y]es [N]o\n";
+            std::cout << "Want to replay? no\n";
+            std::cout << "Want to change players? [y]es [n]o\n";
             char change_players_decision{};
             change_players_decision = getch();
             rlutil::cls();
             if (change_players_decision == 'y')
             {
-                play(true);
+                play();
             }
             else if (change_players_decision == 'n')
             {
-                std::cout << "Want To Replay? No\n";
-                std::cout << "Want To Change Players? No\n";
-                std::cout << "Want To Change Gamemode? [Y]es [N]o\n";
+                std::cout << "Want to replay? no\n";
+                std::cout << "Want to change players? no\n";
+                std::cout << "Want to change gamemode? [y]es [n]o\n";
                 char change_gamemode_decision{};
                 change_gamemode_decision = getch();
                 rlutil::cls();
                 if (change_gamemode_decision == 'y')
                 {
                     m_gamemode = '-';
-                    play(true);
+                    play();
                 }
                 else
                 {

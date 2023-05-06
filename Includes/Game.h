@@ -1,5 +1,7 @@
+#pragma once
+
 #include "Board.h"
-#include "Player.h"
+#include "Human.h"
 #include <array>
 
 class Game
@@ -7,6 +9,7 @@ class Game
     std::array<Player*, 2> m_players{};
     Board m_board{};
     char m_gamemode{};
+    bool m_reseted{};
     
 public:
     Game() = default;
@@ -18,9 +21,7 @@ public:
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
 
-    int read_input(int, int);
-    std::pair<int, int> convert(int);
-    void move(int, int&, int&);
-    void print_logo();
-    void play(bool);
+    static void print_logo();
+    static std::pair<int, int> move(int a_turn, Board&, std::array<Player*, 2>&);
+    void play();
 };
