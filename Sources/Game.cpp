@@ -1,19 +1,29 @@
 #include "../Includes/Game.h"
 #include <Rlutil.h>
 
-Game::Game(int a_size) : m_board(a_size) {}
+Game::Game(int a_size) : m_board(a_size) 
+{
+    m_players[0] = new Player('X');
+    m_players[1] = new Player('O');
+}
+
+Game::~Game()
+{
+    delete m_players[0];
+    delete m_players[1];
+}
 
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
     rlutil::cls();
     rlutil::showcursor();
-    std::cout << "-> (" << a_game.m_player1.get_symbol() << ") Insert name : ";
+    std::cout << "-> (" << a_game.m_players[0]->get_symbol() << ") Insert name : ";
     str temp{};
     a_in >> temp;
-    a_game.m_player1.set_name(temp);
-    std::cout << "-> (" << a_game.m_player2.get_symbol() << ") Insert name : ";
+    a_game.m_players[0]->set_name(temp);
+    std::cout << "-> (" << a_game.m_players[1]->get_symbol() << ") Insert name : ";
     a_in >> temp;
-    a_game.m_player2.set_name(temp);
+    a_game.m_players[1]->set_name(temp);
     rlutil::cls();
     return a_in;
 }
@@ -21,8 +31,8 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
 std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
 {
     rlutil::cls();
-    a_out << "(" << a_game.m_player1.get_symbol() << ") " << a_game.m_player1.get_name() << " : " << a_game.m_player1.get_wins() << " - ";
-    a_out << "(" << a_game.m_player2.get_symbol() << ") " << a_game.m_player2.get_name() << " : " << a_game.m_player2.get_wins() << ' ';
+    a_out << "(" << a_game.m_players[0]->get_symbol() << ") " << a_game.m_players[0]->get_name() << " : " << a_game.m_players[0]->get_wins() << " - ";
+    a_out << "(" << a_game.m_players[1]->get_symbol() << ") " << a_game.m_players[1]->get_name() << " : " << a_game.m_players[1]->get_wins() << ' ';
     a_out << "[Draws : " << Player::get_draws() << "]\n";
     a_out << a_game.m_board << '\n';
     return a_out;
@@ -105,13 +115,13 @@ void Game::move(int a_turn, int& a_row, int& a_col)
         str temp_player{};
         if (a_turn % 2)
         {
-            temp_player = m_player1.get_name();
-            std::cout << "\n-> (" << m_player1.get_symbol() << ") " << temp_player << "\'";
+            temp_player = m_players[0]->get_name();
+            std::cout << "\n-> (" << m_players[0]->get_symbol() << ") " << temp_player << "\'";
         }
         else
         {
-            temp_player = m_player2.get_name();
-            std::cout << "\n-> (" << m_player2.get_symbol() << ") " << temp_player << "\'";
+            temp_player = m_players[1]->get_name();
+            std::cout << "\n-> (" << m_players[1]->get_symbol() << ") " << temp_player << "\'";
         }
         if (temp_player[temp_player.size() - 1] != 's')
         {
@@ -139,11 +149,11 @@ void Game::move(int a_turn, int& a_row, int& a_col)
     }
     if (a_turn % 2)
     {
-        m_board.set_cell(a_row, a_col, m_player1.get_symbol());
+        m_board.set_cell(a_row, a_col, m_players[0]->get_symbol());
     }
     else
     {
-        m_board.set_cell(a_row, a_col, m_player2.get_symbol());
+        m_board.set_cell(a_row, a_col, m_players[1]->get_symbol());
     }
 }
 
@@ -232,13 +242,13 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                 --turn;
                 if (turn % 2)
                 {
-                    m_board.set_winner(m_player1.get_symbol());
-                    m_player1.add_win();
+                    m_board.set_winner(m_players[0]->get_symbol());
+                    m_players[0]->add_win();
                 }
                 else
                 {
-                    m_board.set_winner(m_player2.get_symbol());
-                    m_player2.add_win();
+                    m_board.set_winner(m_players[1]->get_symbol());
+                    m_players[1]->add_win();
                 }
             }
             else
@@ -249,11 +259,11 @@ void Game::play(bool a_reseted, char a_preselected_choice)
             char winner{ m_board.get_winner() };
             if (winner == 'X')
             {
-                std::cout << '\n' << m_player1.get_name() << " wins!\n";
+                std::cout << '\n' << m_players[0]->get_name() << " wins!\n";
             }
             else if (winner == 'O')
             {
-                std::cout << '\n' << m_player2.get_name() << " wins!\n";
+                std::cout << '\n' << m_players[1]->get_name() << " wins!\n";
             }
             else
             {
@@ -292,12 +302,12 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                         if (sides_decision == 'y')
                         {
                             rlutil::cls();
-                            str aux_name{ m_player1.get_name() };
-                            m_player1.set_name(m_player2.get_name());
-                            m_player2.set_name(aux_name);
-                            int aux_wins{ m_player1.get_wins() };
-                            m_player1.set_wins(m_player2.get_wins());
-                            m_player2.set_wins(aux_wins);
+                            str aux_name{ m_players[0]->get_name() };
+                            m_players[0]->set_name(m_players[1]->get_name());
+                            m_players[1]->set_name(aux_name);
+                            int aux_wins{ m_players[0]->get_wins() };
+                            m_players[0]->set_wins(m_players[1]->get_wins());
+                            m_players[1]->set_wins(aux_wins);
                             play(0, '2');
                         }
                         else if (sides_decision == 'n')
@@ -315,8 +325,8 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                 else if (replay_decision == 'n')
                 {
                     rlutil::cls();
-                    m_player1.reset_wins();
-                    m_player2.reset_wins();
+                    m_players[0]->reset_wins();
+                    m_players[1]->reset_wins();
                     Player::reset_draws();
                     std::cout << "Want To Replay? No\n";
                     std::cout << "Want To Change Players? [Y]es [N]o\n";

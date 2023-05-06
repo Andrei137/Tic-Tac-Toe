@@ -1,10 +1,10 @@
 #include "Board.h"
 #include "Player.h"
+#include <array>
 
 class Game
 {
-    Player m_player1{'X'};
-    Player m_player2{'O'};
+    std::array<Player*, 2> m_players{};
     Board m_board{};
     
 public:
@@ -12,7 +12,7 @@ public:
     explicit Game(int);
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
-    ~Game() = default;
+    ~Game();
     
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
