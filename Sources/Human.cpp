@@ -68,7 +68,7 @@ std::pair<int, int> Human::get_move(Board& a_board) const
     std::cout << " Turn";
     int invalid_moves{ 0 };
     int row{ -1 }, col{ -1 };
-    while ((row == -1 && col == -1) || !a_board.valid_move(row, col))
+    while (row == -1 && col == -1)
     {
         int index{ read_input() };
         if (index == 0 || invalid_moves == 10)
@@ -79,8 +79,8 @@ std::pair<int, int> Human::get_move(Board& a_board) const
         }
         else if (index > a_board.get_size() * a_board.get_size() || index < 1)
         {
-            row = col = -1;
             ++invalid_moves;
+            row = col = -1;
             continue;
         }
         std::pair<int, int> temp{ convert(index, a_board.get_size()) };
@@ -88,6 +88,7 @@ std::pair<int, int> Human::get_move(Board& a_board) const
         col = temp.second;
         if (!a_board.valid_move(row, col))
         {
+            ++invalid_moves;
             row = col = -1;
         }
     }
