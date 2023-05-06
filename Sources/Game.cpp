@@ -190,7 +190,9 @@ void Game::play(bool a_reseted, char a_preselected_choice)
         }
         if (gamemode_decision == '1')
         {
-            // TODO : Implement AI Solver
+            // TODO : Implement AI 
+            rlutil::cls();
+            return;
         }
         else if (gamemode_decision == '2')
         {
