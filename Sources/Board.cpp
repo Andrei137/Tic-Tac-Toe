@@ -1,19 +1,5 @@
 #include "../Includes/Board.h"
 
-void Board::allocate_memory()
-{
-    m_cells.resize(m_size);
-    for (int i = 0; i < m_size; ++i)
-    {
-        m_cells[i].resize(m_size);
-    }
-}
-
-void Board::deallocate_memory()
-{
-    m_cells.clear();
-}
-
 Board::Board(int a_size) : m_size(a_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner('-')
 {
     int nr{1}, digits_max{ nr_digits(m_size * m_size) };
@@ -50,7 +36,7 @@ Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(m_size, std
 
 Board::~Board()
 {
-    deallocate_memory();
+    m_cells.clear();
 }
 
 Board& Board::operator=(const Board& a_other)

@@ -11,9 +11,6 @@ class Board
     std::vector<std::vector<Square>> m_cells{};
     char m_winner{};
     
-    void allocate_memory();
-    void deallocate_memory();
-    
     static short nr_digits(int);
     
     template <typename T>
