@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Player.h"
-#include <Rlutil.h>
+#include <rlutil.h>
 
 class Human : public Player
 {
