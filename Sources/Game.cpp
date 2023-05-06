@@ -177,13 +177,12 @@ void Game::move(int a_turn, int& a_row, int& a_col)
 //                  "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
 // }
 
-void Game::play(bool a_reseted/*, char a_preselected_choice*/)
+void Game::play(bool a_reseted, char a_preselected_choice)
 {
-    /*
     if (a_preselected_choice == '-')
     {
         rlutil::cls();
-        print_logo();
+        // print_logo();
         std::cout << "[1] Player vs Computer\n";
         std::cout << "[2] Player vs Player\n";
         // TODO : Implement Leaderboard
@@ -191,24 +190,18 @@ void Game::play(bool a_reseted/*, char a_preselected_choice*/)
         std::cout << "[0] Exit\n\n";
         std::cout << "Option: ";
     }
-    char gamemode_decision{};
     if (a_preselected_choice == '-')
     {
-        gamemode_decision = getch();
+        a_preselected_choice = getch();
     }
-    else
+    // if (gamemode_decision == '1')
+    // {
+    //     // TODO : Implement AI 
+    //     rlutil::cls();
+    //     return;
+    // }
+    if (a_preselected_choice == '2')
     {
-        gamemode_decision = a_preselected_choice;
-    }
-    if (gamemode_decision == '1')
-    {
-        // TODO : Implement AI 
-        rlutil::cls();
-        return;
-    }
-    else if (gamemode_decision == '2')
-    {
-        */
         if (a_reseted)
         {
             std::cin >> *this;
@@ -292,11 +285,11 @@ void Game::play(bool a_reseted/*, char a_preselected_choice*/)
                 int aux_wins{ m_players[0]->get_wins() };
                 m_players[0]->set_wins(m_players[1]->get_wins());
                 m_players[1]->set_wins(aux_wins);
-                play(0/*, '2'*/);
+                play(0, '2');
             }
             else if (sides_decision == 'n')
             {
-                play(0/*, '2'*/);
+                play(0, '2');
             }
             else
             {
@@ -315,7 +308,7 @@ void Game::play(bool a_reseted/*, char a_preselected_choice*/)
             rlutil::cls();
             if (change_players_decision == 'y')
             {
-                play(1/*, '2'*/);
+                play(1, '2');
             }
             else if (change_players_decision == 'n')
             {
@@ -327,7 +320,7 @@ void Game::play(bool a_reseted/*, char a_preselected_choice*/)
                 rlutil::cls();
                 if (change_gamemode_decision == 'y')
                 {
-                    play(1/*, '-'*/);
+                    play(1, '-');
                 }
                 else
                 {
@@ -343,12 +336,10 @@ void Game::play(bool a_reseted/*, char a_preselected_choice*/)
         {
             return;
         }
-    /*
     }
     else
     {
         rlutil::cls();
         return;
     }
-    */
 }

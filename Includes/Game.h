@@ -21,5 +21,5 @@ public:
     std::pair<int, int> convert(int);
     void move(int, int&, int&);
     void print_logo();
-    void play(bool/*, char*/);
+    void play(bool, char);
 };
