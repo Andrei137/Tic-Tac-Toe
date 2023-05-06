@@ -2,6 +2,7 @@
 
 Human::Human(char a_symbol) : Player(a_symbol) {}
 
+/*
 int Human::read_input()
 {
     str num{};
@@ -55,6 +56,7 @@ int Human::read_input()
     }
     return n;
 }
+*/
 
 std::pair<int, int> Human::get_move(Board& a_board) const
 {
@@ -65,12 +67,13 @@ std::pair<int, int> Human::get_move(Board& a_board) const
     {
         std::cout << 's';
     }
-    std::cout << " Turn";
+    std::cout << " Turn : ";
     int invalid_moves{ 0 };
     int row{ -1 }, col{ -1 };
     while (row == -1 && col == -1)
     {
-        int index{ read_input() };
+        int index{};
+        std::cin >> index;
         if (index == 0 || invalid_moves == 10)
         {
             rlutil::cls();

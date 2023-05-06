@@ -135,7 +135,7 @@ void Game::play()
             char replay_decision{};
             replay_decision = getch();
             rlutil::cls();
-            if (replay_decision == 'y')
+            if (replay_decision != 'n')
             {
                 m_reseted = false;
                 std::cout << "Want to replay? yes\n";
@@ -143,7 +143,7 @@ void Game::play()
                 char sides_decision{};
                 sides_decision = getch();
                 rlutil::cls();
-                if (sides_decision == 'y')
+                if (sides_decision != 'n')
                 {
                     str temp_name{ m_players[0]->get_name() };
                     m_players[0]->set_name(m_players[1]->get_name());
