@@ -2,6 +2,16 @@
 
 Human::Human(char a_symbol) : Player(a_symbol) {}
 
+Human& Human::operator=(const Human& a_other)
+{
+    if (this == &a_other) 
+    {
+        return *this;
+    }
+    Player::operator=(a_other);
+    return *this;
+}
+
 /*
 int Human::read_input()
 {

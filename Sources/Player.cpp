@@ -4,6 +4,20 @@ int Player::m_draws{0};
 
 Player::Player(char a_symbol) : m_symbol(a_symbol), m_name("Unknown"), m_wins(0) {}
 
+Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m_wins) {}
+
+Player& Player::operator=(const Player& a_other)
+{
+    if (this == &a_other) 
+    {
+        return *this;
+    }
+    m_symbol = a_other.m_symbol;
+    m_name = a_other.m_name;
+    m_wins = a_other.m_wins;
+    return *this;
+}
+
 std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
 {
     a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << '\n';
@@ -35,6 +49,11 @@ int Player::get_wins() const
 int Player::get_draws()
 {
     return m_draws;
+}
+
+void Player::set_symbol(const char& a_symbol)
+{
+    m_symbol = a_symbol;
 }
 
 void Player::set_name(const str& a_name)

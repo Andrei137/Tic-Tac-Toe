@@ -163,12 +163,11 @@ void Game::play()
                         rlutil::cls();
                         if (sides_decision == 'y')
                         {
-                            str temp_name{ m_players[0]->get_name() };
-                            m_players[0]->set_name(m_players[1]->get_name());
-                            m_players[1]->set_name(temp_name);
-                            int temp_wins{ m_players[0]->get_wins() };
-                            m_players[0]->set_wins(m_players[1]->get_wins());
-                            m_players[1]->set_wins(temp_wins);
+                            std::shared_ptr<Player> temp{ m_players[0] };
+                            m_players[0] = m_players[1];
+                            m_players[1] = temp;
+                            m_players[0]->set_symbol('X');
+                            m_players[1]->set_symbol('O');
                         }
                         else if (sides_decision != 'n')
                         {

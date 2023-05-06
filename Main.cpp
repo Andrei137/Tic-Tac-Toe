@@ -2,7 +2,7 @@
 
 int main()
 {
-    Game game{4};
+    Game game{3};
     game.play();
     return 0;
 }

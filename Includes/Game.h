@@ -21,6 +21,7 @@ public:
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
 
+    void swap();
     static void print_logo();
     void play();
 };

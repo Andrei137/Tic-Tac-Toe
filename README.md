@@ -36,7 +36,7 @@ Joc de X si O in care grid-ul poate avea dimensiune variata (ex : 4x4, 10x10 etc
   - [x] apelarea constructorului din clasa de bază din constructori din derivate
   - [x] smart pointers
   - [ ] `dynamic_cast`
-- [ ] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
+- [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
 - [ ] excepții
   - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
   - [ ] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
