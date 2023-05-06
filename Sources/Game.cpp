@@ -3,7 +3,6 @@
 Game::Game(int a_size) : m_board(a_size), m_gamemode('2'), m_reseted(true)
 {
     m_players[0] = std::make_shared<Human>('X');
-    m_players[1] = std::make_shared<Human>('O');
 }
 
 Game::~Game() = default;
@@ -44,7 +43,6 @@ std::pair<int, int> Game::move(int a_turn, Board& board, std::array<std::shared_
     return temp;
 }
 
-
 void Game::print_logo()
 {
     std::cout << "\n _______ _        _______           _______ \n";
@@ -80,6 +78,7 @@ void Game::play()
     {
         if (m_reseted)
         {
+            m_players[1] = std::make_shared<Human>('O');
             std::cin >> *this;
         }
         m_board.reset();
@@ -90,15 +89,15 @@ void Game::play()
         {
             std::cout << *this;
             temp = move(turn++, m_board, m_players);
-            if (m_board.game_over(player, temp.first, temp.second))
-            {
-                break;
-            }
-            else if (m_board.get_winner() == 'E')
+            if (m_board.get_winner() == ' ')
             {
                 rlutil::showcursor();
                 rlutil::cls();
                 return;
+            }
+            else if (m_board.game_over(player, temp.first, temp.second))
+            {
+                break;
             }
             if (player == 'X')
             {
