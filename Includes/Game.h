@@ -6,7 +6,7 @@
 
 class Game
 {
-    std::array<Player*, 2> m_players{};
+    std::array<std::unique_ptr<Player>, 2> m_players{};
     Board m_board{};
     char m_gamemode{};
     bool m_reseted{};
@@ -21,7 +21,8 @@ public:
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
 
+    void swap_players();
     static void print_logo();
-    static std::pair<int, int> move(int a_turn, Board&, std::array<Player*, 2>&);
+    static std::pair<int, int> move(int a_turn, Board&, std::array<std::unique_ptr<Player>, 2>&);
     void play();
 };

@@ -2,7 +2,7 @@
 
 Game::Game(int a_size) : m_board(a_size), m_gamemode('2'), m_reseted(true)
 {
-    m_players[0] = new Human('X');
+    m_players[0] = std::make_unique<Human>('X');
 }
 
 Game::~Game() = default;
@@ -32,12 +32,20 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     return a_out;
 }
 
-std::pair<int, int> Game::move(int a_turn, Board& board, std::array<Player*, 2>& players)
+std::pair<int, int> Game::move(int a_turn, Board& board, std::array<std::unique_ptr<Player>, 2>& players)
 {
     std::pair<int, int> temp{ players[1 - a_turn % 2]->get_move(board) };
     board.set_cell(temp.first, temp.second, players[1 - a_turn % 2]->get_symbol());
     return temp;
 }
+
+void Game::swap_players() 
+{
+    std::unique_ptr<Player> temp_player_ptr = m_players[0]->clone();
+    m_players[0] = std::move(m_players[1]);
+    m_players[1] = std::move(temp_player_ptr);
+}
+
 
 void Game::print_logo()
 {
@@ -65,14 +73,14 @@ void Game::play()
     // TODO: Implement AI pt 1 
     if (m_gamemode == '1')
     {
-        // m_players[1] = new Computer('O');
+        // m_players[1] = std::male_unique<AI>('O');
         rlutil::cls();
         std::cout << "In development...\n";
         return;
     }
     else if (m_gamemode == '2')
     {
-        m_players[1] = new Human('O');
+        m_players[1] = std::make_unique<Human>('O');
         if (m_reseted)
         {
             std::cin >> *this;
@@ -139,12 +147,7 @@ void Game::play()
             rlutil::cls();
             if (sides_decision == 'y')
             {
-                str aux_name{ m_players[0]->get_name() };
-                m_players[0]->set_name(m_players[1]->get_name());
-                m_players[1]->set_name(aux_name);
-                int aux_wins{ m_players[0]->get_wins() };
-                m_players[0]->set_wins(m_players[1]->get_wins());
-                m_players[1]->set_wins(aux_wins);
+                swap_players();
                 play();
             }
             else if (sides_decision == 'n')
