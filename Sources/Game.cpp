@@ -1,7 +1,7 @@
 #include "../Includes/Game.h"
 #include <Rlutil.h>
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('-')
+Game::Game(int a_size) : m_board(a_size), m_gamemode('2')
 {
     m_players[0] = new Player('X');
     m_players[1] = new Player('O');
