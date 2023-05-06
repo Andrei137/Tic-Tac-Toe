@@ -34,11 +34,6 @@ Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(m_size, std
     }
 }
 
-Board::~Board()
-{
-    m_cells.clear();
-}
-
 Board& Board::operator=(const Board& a_other)
 {
     if (this != &a_other)
