@@ -61,11 +61,6 @@ void Player::set_name(const str& a_name)
     m_name = a_name;
 }
 
-void Player::set_wins(int a_wins)
-{
-    m_wins = a_wins;
-}
-
 void Player::add_win()
 {
     ++m_wins;

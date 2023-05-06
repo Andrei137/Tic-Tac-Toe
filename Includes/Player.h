@@ -34,7 +34,6 @@ public:
     
     void set_symbol(const char&);
     void set_name(const str&);
-    void set_wins(int);
 
     void add_win();
     static void add_draw();

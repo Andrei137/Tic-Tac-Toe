@@ -1,7 +1,7 @@
 # TicTacToe
 
 ### Descriere
-Joc de X si O in care grid-ul poate avea dimensiune variata (ex : 4x4, 10x10 etc). Momentan doar versiunea PvP este disponibila.
+Joc de X si O in care dimensiunea matricei variaza (ex. 3x3, 5x5, 7x7, etc.). Pentru orice dimeniune mai mare de 3, se adopta regula de la Connect Four. Momentan este implementat doar PvP. 
 
 ### Tema 0
 
