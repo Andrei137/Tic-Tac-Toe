@@ -68,8 +68,6 @@ std::pair<int, int> Human::get_move(Board& a_board) const
         std::cout << 's';
     }
     std::cout << " Turn : ";
-    // int invalid_moves{ 0 };
-    // int row{ -1 }, col{ -1 };
     int index{};
     std::cin >> index;
     if (index == 0)
@@ -77,30 +75,4 @@ std::pair<int, int> Human::get_move(Board& a_board) const
         return { -1, -1 };
     }
     return convert(index, a_board.get_size());
-    // while (row == -1 && col == -1)
-    // {
-    //     int index{};
-    //     std::cin >> index;
-    //     if (index == 0 || invalid_moves == 10)
-    //     {
-    //         rlutil::cls();
-    //         a_board.set_winner(' ');
-    //         return { -1, -1 };
-    //     }
-    //     else if (index > a_board.get_size() * a_board.get_size() || index < 1)
-    //     {
-    //         ++invalid_moves;
-    //         row = col = -1;
-    //         continue;
-    //     }
-    //     std::pair<int, int> temp{ convert(index, a_board.get_size()) };
-    //     row = temp.first;
-    //     col = temp.second;
-    //     if (!a_board.valid_move(row, col))
-    //     {
-    //         ++invalid_moves;
-    //         row = col = -1;
-    //     }
-    // }
-    // return { row, col };
 }
