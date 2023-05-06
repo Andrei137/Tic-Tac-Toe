@@ -1,7 +1,7 @@
 #include "../Includes/Game.h"
 #include <Rlutil.h>
 
-Game::Game(int a_size) : m_board(a_size) 
+Game::Game(int a_size) : m_board(a_size), m_gamemode('-')
 {
     m_players[0] = new Player('X');
     m_players[1] = new Player('O');
@@ -24,6 +24,8 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
     std::cout << "-> (" << a_game.m_players[1]->get_symbol() << ") Insert name : ";
     a_in >> temp;
     a_game.m_players[1]->set_name(temp);
+    // std::cout << "-> Insert the size of the table (from 3 to 10) : ";
+    // a_in >> temp;
     rlutil::cls();
     return a_in;
 }
@@ -167,40 +169,31 @@ void Game::move(int a_turn, int& a_row, int& a_col)
     }
 }
 
-// void Game::print_logo()
-// {
-//     std::cout << "\n _______ _        _______           _______ \n"
-//                  "|__   __(_)      |__   __|         |__   __| \n"
-//                  "   | |   _  ___     | | __ _  ___     | | ___   ___ \n"
-//                  "   | |  | |/ __|    | |/ _` |/ __|    | |/ _ \\ / _ \\ \n"
-//                  "   | |  | | (__     | | (_| | (__     | | (_) |  __/ \n"
-//                  "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
-// }
-
-void Game::play(bool a_reseted, char a_preselected_choice)
+void Game::print_logo()
 {
-    if (a_preselected_choice == '-')
+    std::cout << "\n _______ _        _______           _______ \n";
+    std::cout << "|__   __(_)      |__   __|         |__   __| \n";
+    std::cout << "   | |   _  ___     | | __ _  ___     | | ___   ___ \n";
+    std::cout << "   | |  | |/ __|    | |/ _` |/ __|    | |/ _ \\ / _ \\ \n";
+    std::cout << "   | |  | | (__     | | (_| | (__     | | (_) |  __/ \n";
+    std::cout << "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
+}
+
+void Game::play(bool a_reseted)
+{
+    if (m_gamemode == '-')
     {
         rlutil::cls();
-        // print_logo();
+        print_logo();
+        std::cout << "< Number Of Players >\n";
         std::cout << "[1] Player vs Computer\n";
         std::cout << "[2] Player vs Player\n";
-        // TODO : Implement Leaderboard
-        // std::cout << "[3] Leaderboard\n";
         std::cout << "[0] Exit\n\n";
         std::cout << "Option: ";
+        m_gamemode = getch();
     }
-    if (a_preselected_choice == '-')
-    {
-        a_preselected_choice = getch();
-    }
-    // if (gamemode_decision == '1')
-    // {
-    //     // TODO : Implement AI 
-    //     rlutil::cls();
-    //     return;
-    // }
-    if (a_preselected_choice == '2')
+    // TODO: Implement AI pt 1 
+    if (m_gamemode == '1' || m_gamemode == '2')
     {
         if (a_reseted)
         {
@@ -285,11 +278,11 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                 int aux_wins{ m_players[0]->get_wins() };
                 m_players[0]->set_wins(m_players[1]->get_wins());
                 m_players[1]->set_wins(aux_wins);
-                play(0, '2');
+                play(false);
             }
             else if (sides_decision == 'n')
             {
-                play(0, '2');
+                play(false);
             }
             else
             {
@@ -308,7 +301,7 @@ void Game::play(bool a_reseted, char a_preselected_choice)
             rlutil::cls();
             if (change_players_decision == 'y')
             {
-                play(1, '2');
+                play(true);
             }
             else if (change_players_decision == 'n')
             {
@@ -320,7 +313,8 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                 rlutil::cls();
                 if (change_gamemode_decision == 'y')
                 {
-                    play(1, '-');
+                    m_gamemode = '-';
+                    play(true);
                 }
                 else
                 {
