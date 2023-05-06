@@ -55,158 +55,156 @@ void Game::print_logo()
 
 void Game::play()
 {
-    if (m_gamemode == '-')
+    while (true)
     {
-        rlutil::cls();
-        print_logo();
-        std::cout << "< Number Of Players >\n";
-        std::cout << "[1] Player vs Computer\n";
-        std::cout << "[2] Player vs Player\n";
-        std::cout << "[0] Exit\n\n";
-        std::cout << "Option: ";
-        m_gamemode = getch();
-    }
-    // TODO: Implement AI pt 1 
-    if (m_gamemode == '1')
-    {
-        // m_players[1] = std::male_shared<AI>('O');
-        rlutil::cls();
-        std::cout << "In development...\n";
-        return;
-    }
-    else if (m_gamemode == '2')
-    {
-        if (m_reseted)
+        if (m_gamemode == '-')
         {
-            m_players[1] = std::make_shared<Human>('O');
-            std::cin >> *this;
-        }
-        m_board.reset();
-        int turn{ 1 };
-        std::pair<int, int> temp{ -1, -1 };
-        char player{ 'X' };
-        while (true)
-        {
-            std::cout << *this;
-            temp = move(turn++, m_board, m_players);
-            if (m_board.get_winner() == ' ')
-            {
-                rlutil::showcursor();
-                rlutil::cls();
-                return;
-            }
-            else if (m_board.game_over(player, temp.first, temp.second))
-            {
-                break;
-            }
-            if (player == 'X')
-            {
-                player = 'O';
-            }
-            else
-            {
-                player = 'X';
-            }
-        }
-        if (m_board.win(player, temp.first, temp.second))
-        {
-            --turn;
-            m_board.set_winner(m_players[1 - turn % 2]->get_symbol());
-            m_players[0]->add_win();
-        }
-        else
-        {
-            Player::add_draw();
-        }
-        std::cout << *this;
-        char winner{ m_board.get_winner() };
-        if (winner != 'X' && winner != 'O')
-        {
-            std::cout << "\nIt's a draw!\n";
-        }
-        else
-        {
-            std::cout << '\n' << m_players[(winner != 'X')]->get_name() << " wins!\n";
-        }
-        std::cout << "Game over!\n\n";
-        std::cout << "Want to replay? [y]es [n]o";
-        char replay_decision{};
-        replay_decision = getch();
-        rlutil::cls();
-        if (replay_decision == 'y')
-        {
-            m_reseted = false;
-            std::cout << "Want to replay? yes\n";
-            std::cout << "Want to switch sides? [y]es [n]o";
-            char sides_decision{};
-            sides_decision = getch();
             rlutil::cls();
-            if (sides_decision == 'y')
-            {
-                // swap names and wins
-                str temp_name{ m_players[0]->get_name() };
-                m_players[0]->set_name(m_players[1]->get_name());
-                m_players[1]->set_name(temp_name);
-                int temp_wins{ m_players[0]->get_wins() };
-                m_players[0]->set_wins(m_players[1]->get_wins());
-                m_players[1]->set_wins(temp_wins);
-                play();
-            }
-            else if (sides_decision == 'n')
-            {
-                play();
-            }
-            else
-            {
-                return;
-            }
+            print_logo();
+            std::cout << "< Number Of Players >\n";
+            std::cout << "[1] Player vs Computer\n";
+            std::cout << "[2] Player vs Player\n";
+            std::cout << "[0] Exit\n\n";
+            std::cout << "Option: ";
+            m_gamemode = getch();
         }
-        else if (replay_decision == 'n')
+        // TODO: Implement AI pt 1 
+        if (m_gamemode == '1')
         {
-            m_reseted = true;
-            m_players[0]->reset_wins();
-            m_players[1]->reset_wins();
-            Player::reset_draws();
-            std::cout << "Want to replay? no\n";
-            std::cout << "Want to change players? [y]es [n]o\n";
-            char change_players_decision{};
-            change_players_decision = getch();
+            // m_players[1] = std::male_shared<AI>('O');
             rlutil::cls();
-            if (change_players_decision == 'y')
+            std::cout << "In development...\n";
+            return;
+        }
+        else if (m_gamemode == '2')
+        {
+            if (m_reseted)
             {
-                play();
+                m_players[1] = std::make_shared<Human>('O');
+                std::cin >> *this;
             }
-            else if (change_players_decision == 'n')
+            m_board.reset();
+            int turn{ 1 };
+            std::pair<int, int> temp{ -1, -1 };
+            char player{ 'X' };
+            while (true)
             {
-                std::cout << "Want to replay? no\n";
-                std::cout << "Want to change players? no\n";
-                std::cout << "Want to change gamemode? [y]es [n]o\n";
-                char change_gamemode_decision{};
-                change_gamemode_decision = getch();
-                rlutil::cls();
-                if (change_gamemode_decision == 'y')
+                std::cout << *this;
+                temp = move(turn++, m_board, m_players);
+                if (m_board.get_winner() == ' ')
                 {
-                    m_gamemode = '-';
-                    play();
+                    rlutil::showcursor();
+                    rlutil::cls();
+                    return;
                 }
+                else if (m_board.game_over(player, temp.first, temp.second))
+                {
+                    break;
+                }
+                if (player == 'X')
+                {
+                    player = 'O';
+                }
+                else
+                {
+                    player = 'X';
+                }
+            }
+            if (m_board.win(player, temp.first, temp.second))
+            {
+                --turn;
+                m_board.set_winner(m_players[1 - turn % 2]->get_symbol());
+                m_players[0]->add_win();
+            }
+            else
+            {
+                Player::add_draw();
+            }
+            std::cout << *this;
+            char winner{ m_board.get_winner() };
+            if (winner != 'X' && winner != 'O')
+            {
+                std::cout << "\nIt's a draw!\n";
+            }
+            else
+            {
+                std::cout << '\n' << m_players[(winner != 'X')]->get_name() << " wins!\n";
+            }
+            std::cout << "Game over!\n\n";
+            std::cout << "Want to replay? [y]es [n]o";
+            char replay_decision{};
+            replay_decision = getch();
+            rlutil::cls();
+            if (replay_decision == 'y')
+            {
+                m_reseted = false;
+                std::cout << "Want to replay? yes\n";
+                std::cout << "Want to switch sides? [y]es [n]o";
+                char sides_decision{};
+                sides_decision = getch();
+                rlutil::cls();
+                if (sides_decision == 'y')
+                {
+                    str temp_name{ m_players[0]->get_name() };
+                    m_players[0]->set_name(m_players[1]->get_name());
+                    m_players[1]->set_name(temp_name);
+                    int temp_wins{ m_players[0]->get_wins() };
+                    m_players[0]->set_wins(m_players[1]->get_wins());
+                    m_players[1]->set_wins(temp_wins);
+                }
+                /*
                 else
                 {
                     return;
                 }
+                */
             }
-            else 
+            else /*if (replay_decision == 'n')*/
+            {
+                m_reseted = true;
+                m_players[0]->reset_wins();
+                m_players[1]->reset_wins();
+                Player::reset_draws();
+                std::cout << "Want to replay? no\n";
+                std::cout << "Want to change players? [y]es [n]o\n";
+                char change_players_decision{};
+                change_players_decision = getch();
+                rlutil::cls();
+                if (change_players_decision != 'y')
+                {
+                    std::cout << "Want to replay? no\n";
+                    std::cout << "Want to change players? no\n";
+                    std::cout << "Want to change gamemode? [y]es [n]o\n";
+                    char change_gamemode_decision{};
+                    change_gamemode_decision = getch();
+                    rlutil::cls();
+                    if (change_gamemode_decision == 'y')
+                    {
+                        m_gamemode = '-';
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                /*
+                else 
+                {
+                    return;
+                }
+                */
+            }
+            /*
+            else
             {
                 return;
             }
+            */
         }
         else
         {
+            rlutil::cls();
             return;
         }
-    }
-    else
-    {
-        rlutil::cls();
-        return;
     }
 }
