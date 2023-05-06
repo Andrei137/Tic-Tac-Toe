@@ -167,18 +167,19 @@ void Game::move(int a_turn, int& a_row, int& a_col)
     }
 }
 
-void Game::print_logo()
-{
-    std::cout << "\n _______ _        _______           _______ \n"
-                 "|__   __(_)      |__   __|         |__   __| \n"
-                 "   | |   _  ___     | | __ _  ___     | | ___   ___ \n"
-                 "   | |  | |/ __|    | |/ _` |/ __|    | |/ _ \\ / _ \\ \n"
-                 "   | |  | | (__     | | (_| | (__     | | (_) |  __/ \n"
-                 "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
-}
+// void Game::print_logo()
+// {
+//     std::cout << "\n _______ _        _______           _______ \n"
+//                  "|__   __(_)      |__   __|         |__   __| \n"
+//                  "   | |   _  ___     | | __ _  ___     | | ___   ___ \n"
+//                  "   | |  | |/ __|    | |/ _` |/ __|    | |/ _ \\ / _ \\ \n"
+//                  "   | |  | | (__     | | (_| | (__     | | (_) |  __/ \n"
+//                  "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
+// }
 
-void Game::play(bool a_reseted, char a_preselected_choice)
+void Game::play(bool a_reseted/*, char a_preselected_choice*/)
 {
+    /*
     if (a_preselected_choice == '-')
     {
         rlutil::cls();
@@ -207,6 +208,7 @@ void Game::play(bool a_reseted, char a_preselected_choice)
     }
     else if (gamemode_decision == '2')
     {
+        */
         if (a_reseted)
         {
             std::cin >> *this;
@@ -290,11 +292,11 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                 int aux_wins{ m_players[0]->get_wins() };
                 m_players[0]->set_wins(m_players[1]->get_wins());
                 m_players[1]->set_wins(aux_wins);
-                play(0, '2');
+                play(0/*, '2'*/);
             }
             else if (sides_decision == 'n')
             {
-                play(0, '2');
+                play(0/*, '2'*/);
             }
             else
             {
@@ -313,9 +315,9 @@ void Game::play(bool a_reseted, char a_preselected_choice)
             rlutil::cls();
             if (change_players_decision == 'y')
             {
-                play(1, '2');
+                play(1/*, '2'*/);
             }
-            else if (change_players_decision == 'y')
+            else if (change_players_decision == 'n')
             {
                 std::cout << "Want To Replay? No\n";
                 std::cout << "Want To Change Players? No\n";
@@ -325,7 +327,7 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                 rlutil::cls();
                 if (change_gamemode_decision == 'y')
                 {
-                    play(1, '-');
+                    play(1/*, '-'*/);
                 }
                 else
                 {
@@ -341,10 +343,12 @@ void Game::play(bool a_reseted, char a_preselected_choice)
         {
             return;
         }
+    /*
     }
     else
     {
         rlutil::cls();
         return;
     }
+    */
 }
