@@ -18,8 +18,9 @@ protected:
 public:
     explicit Player(char);
     virtual ~Player() = default;
+    // operator=
+
     virtual std::pair<int, int> get_move(Board) const = 0;
-    virtual std::unique_ptr<Player> clone() const = 0;
 
     friend std::ostream& operator<<(std::ostream&, const Player&);
 
