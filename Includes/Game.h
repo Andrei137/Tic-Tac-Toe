@@ -22,6 +22,5 @@ public:
     friend std::ostream& operator<<(std::ostream&, const Game&);
 
     static void print_logo();
-    static std::pair<int, int> move(int a_turn, Board&, std::array<std::shared_ptr<Player>, 2>&);
     void play();
 };
