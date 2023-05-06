@@ -172,8 +172,14 @@ void Game::play(bool a_reseted, char a_preselected_choice)
         std::cout << "\n\n-> ";
     }
     char gamemode_decision{ '-' };
+    int wrong_gamemode_input{ 0 };
     while (gamemode_decision == '-')
     {
+        if (wrong_gamemode_input == 10)
+        {
+            rlutil::cls();
+            return;
+        }
         if (a_preselected_choice == '-')
         {
             gamemode_decision = getch();
@@ -257,8 +263,14 @@ void Game::play(bool a_reseted, char a_preselected_choice)
             rlutil::cls();
             std::cout << "Want To Replay? [Y]es [N]o";
             char replay_decision{ '-' };
+            int wrong_replay_input{ 0 };
             while (replay_decision == '-')
             {
+                if (wrong_replay_input == 10)
+                {
+                    rlutil::cls();
+                    return;
+                }
                 replay_decision = getch();
                 if (replay_decision == 'y')
                 {
@@ -266,8 +278,14 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                     std::cout << "Want To Replay? Yes\n";
                     std::cout << "Want To Switch Sides? [Y]es [N]o";
                     char sides_decision{ '-' };
+                    int wrong_sides_input{ 0 };
                     while (sides_decision == '-')
                     {
+                        if (wrong_sides_input == 10)
+                        {
+                            rlutil::cls();
+                            return;
+                        }
                         sides_decision = getch();
                         if (sides_decision == 'y')
                         {
@@ -288,6 +306,7 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                         else
                         {
                             sides_decision = '-';
+                            ++wrong_sides_input;
                         }
                     }
                 }
@@ -297,31 +316,39 @@ void Game::play(bool a_reseted, char a_preselected_choice)
                     m_player1.reset_wins();
                     m_player2.reset_wins();
                     Player::reset_draws();
-                    char change_players_decision{ '-' };
                     std::cout << "Want To Replay? No\n";
                     std::cout << "Want To Change Players? [Y]es [N]o\n";
-                    while (change_players_decision == '-')
+                    char change_decision{ '-' };
+                    int wrong_change_input{ 0 };
+                    while (change_decision == '-')
                     {
-                        change_players_decision = getch();
-                        if (change_players_decision == 'y')
+                        if (wrong_change_input == 10)
+                        {
+                            rlutil::cls();
+                            return;
+                        }
+                        change_decision = getch();
+                        if (change_decision == 'y')
                         {
                             rlutil::cls();
                             play(1, '2');
                         }
-                        else if (change_players_decision == 'n')
+                        else if (change_decision == 'n')
                         {
                             rlutil::cls();
                             return;
                         }
                         else
                         {
-                            change_players_decision = '-';
+                            change_decision = '-';
+                            ++wrong_change_input;
                         }
                     }
                 }
                 else
                 {
                     replay_decision = '-';
+                    ++wrong_replay_input;
                 }
             }
         }
@@ -333,6 +360,7 @@ void Game::play(bool a_reseted, char a_preselected_choice)
         else
         {
             gamemode_decision = '-';
+            ++wrong_gamemode_input;
         }
     }
 }
