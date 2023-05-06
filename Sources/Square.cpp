@@ -1,10 +1,7 @@
 #include "../Includes/Square.h"
 
 Square::Square(char a_value, str a_free_pos, bool a_occupied)
-    : m_value(a_value), m_free_pos(std::move(a_free_pos)), m_occupied(a_occupied)
-{
-
-}
+    : m_value(a_value), m_free_pos(std::move(a_free_pos)), m_occupied(a_occupied) {}
 
 std::ostream& operator<<(std::ostream& a_out, const Square& a_square)
 {

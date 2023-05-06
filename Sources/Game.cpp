@@ -1,18 +1,17 @@
 #include "../Includes/Game.h"
 #include <Rlutil.h>
 
-Game::Game(int a_size) : m_board(a_size)
-{
-}
+Game::Game(int a_size) : m_board(a_size) {}
 
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
     rlutil::cls();
-    std::cout << "-> (" << a_game.m_player1.get_symbol() << ") Player one : ";
+    rlutil::showcursor();
+    std::cout << "-> (" << a_game.m_player1.get_symbol() << ") Insert name : ";
     str temp{};
     a_in >> temp;
     a_game.m_player1.set_name(temp);
-    std::cout << "-> (" << a_game.m_player2.get_symbol() << ") Player two : ";
+    std::cout << "-> (" << a_game.m_player2.get_symbol() << ") Insert name : ";
     a_in >> temp;
     a_game.m_player2.set_name(temp);
     rlutil::cls();
@@ -52,7 +51,7 @@ int Game::read_input(int a_s, int a_idle_s)
                     time(&idle_start);
                     idle_started = false;
                 }
-                else if (num.size() > 3) 
+                else if (num.size() > 5) 
                 {
                     return 404;
                 }
@@ -67,7 +66,7 @@ int Game::read_input(int a_s, int a_idle_s)
             }
             time(&end);
             double diff = difftime(end, idle_start);
-            if (diff >= a_idle_s || num.size() > 3)
+            if (diff >= a_idle_s || num.size() > 5)
             {
                 return 404;
             }
@@ -119,7 +118,7 @@ void Game::move(int a_turn, int& a_row, int& a_col)
             std::cout << 's' ;
         }
         std::cout << " Turn";
-        int index{ read_input(1, 10) };
+        int index{ read_input(1, 60) };
         if (index == 404)
         {
             m_board.set_winner('E');
@@ -148,122 +147,192 @@ void Game::move(int a_turn, int& a_row, int& a_col)
     }
 }
 
-void Game::play(bool a_reseted)
+void Game::print_logo()
 {
-    // TODO: implementare meniu principal
-    if (a_reseted)
+    std::cout << "\n _______ _        _______           _______ \n"
+                 "|__   __(_)      |__   __|         |__   __| \n"
+                 "   | |   _  ___     | | __ _  ___     | | ___   ___ \n"
+                 "   | |  | |/ __|    | |/ _` |/ __|    | |/ _ \\ / _ \\ \n"
+                 "   | |  | | (__     | | (_| | (__     | | (_) |  __/ \n"
+                 "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
+}
+
+void Game::play(bool a_reseted, char a_preselected_choice)
+{
+    if (a_preselected_choice == '-')
     {
-        std::cin >> *this;
+        rlutil::cls();
+        print_logo();
+        std::cout << "Select Game Mode : \n\n";
+        std::cout << "[1] Player vs Computer\n";
+        std::cout << "[2] Player vs Player\n";
+        // TODO : Implement Leaderboard
+        // std::cout << "[3] Leaderboard\n";
+        std::cout << "[3] Exit";
+        std::cout << "\n\n-> ";
     }
-    m_board.reset();
-    int turn{ 1 };
-    int row{ -1 };
-    int col{ -1 };
-    char player{ 'X' };
-    while (true)
+    char gamemode_decision{ '-' };
+    while (gamemode_decision == '-')
     {
-        move(turn++, row, col);
-        if (m_board.game_over(player, row, col))
+        if (a_preselected_choice == '-')
         {
-            break;
-        }
-        else if (m_board.get_winner() == 'E')
-        {
-            rlutil::showcursor();
-            rlutil::cls();
-            return;
-        }
-        if (player == 'X')
-        {
-            player = 'O';
-        }
-        else
-        {
-            player = 'X';
-        }
-    }
-    if (m_board.win(player, row, col))
-    {
-        --turn;
-        if (turn % 2)
-        {
-            m_board.set_winner(m_player1.get_symbol());
-            m_player1.add_win();
+            gamemode_decision = getch();
         }
         else
         {
-            m_board.set_winner(m_player2.get_symbol());
-            m_player2.add_win();
+            gamemode_decision = a_preselected_choice;
         }
-    }
-    else
-    {
-        Player::add_draw();
-    }
-    std::cout << *this;
-    char winner{ m_board.get_winner() };
-    if (winner == 'X')
-    {
-        std::cout << '\n' << m_player1.get_name() << " wins\n";
-    }
-    else if (winner == 'O')
-    {
-        std::cout << '\n' << m_player2.get_name() << " wins\n";
-    }
-    else
-    {
-        std::cout << "\nIt's a draw\n";
-    }
-    std::cout << "Game Over\n\n";
-    std::cout << "Want To Replay? (y)es (n)o\n";
-    rlutil::showcursor();
-    char ch{ '-' };
-    // TODO: implementare mai multe optiuni de replay
-    while (ch == '-')
-    {
-        ch = getch();
-        if (ch == 'y')
+        if (gamemode_decision == '1')
         {
-            std::cout << "Want To Switch Sides? (y)es (n)o\n";
-            char ch1{ '-' };
-            while (ch1 == '-')
+            // TODO : Implement AI Solver
+        }
+        else if (gamemode_decision == '2')
+        {
+            if (a_reseted)
             {
-                ch1 = getch();
-                if (ch1 == 'y')
+                std::cin >> *this;
+            }
+            m_board.reset();
+            int turn{ 1 };
+            int row{ -1 };
+            int col{ -1 };
+            char player{ 'X' };
+            while (true)
+            {
+                move(turn++, row, col);
+                if (m_board.game_over(player, row, col))
                 {
-                    rlutil::cls();
-                    // TODO : implementare swap
-                    str aux_name{ m_player1.get_name() };
-                    m_player1.set_name(m_player2.get_name());
-                    m_player2.set_name(aux_name);
-                    int aux_wins{ m_player1.get_wins() };
-                    m_player1.set_wins(m_player2.get_wins());
-                    m_player2.set_wins(aux_wins);
-                    play(0);
+                    break;
                 }
-                else if (ch1 == 'n')
+                else if (m_board.get_winner() == 'E')
                 {
+                    rlutil::showcursor();
                     rlutil::cls();
-                    play(0);
+                    return;
+                }
+                if (player == 'X')
+                {
+                    player = 'O';
                 }
                 else
                 {
-                    ch1 = '-';
+                    player = 'X';
                 }
             }
-            play(0);
+            if (m_board.win(player, row, col))
+            {
+                --turn;
+                if (turn % 2)
+                {
+                    m_board.set_winner(m_player1.get_symbol());
+                    m_player1.add_win();
+                }
+                else
+                {
+                    m_board.set_winner(m_player2.get_symbol());
+                    m_player2.add_win();
+                }
+            }
+            else
+            {
+                Player::add_draw();
+            }
+            std::cout << *this;
+            char winner{ m_board.get_winner() };
+            if (winner == 'X')
+            {
+                std::cout << '\n' << m_player1.get_name() << " wins!\n";
+            }
+            else if (winner == 'O')
+            {
+                std::cout << '\n' << m_player2.get_name() << " wins!\n";
+            }
+            else
+            {
+                std::cout << "\nIt's a draw!\n";
+            }
+            std::cout << "Game Over!\n\n";
+            std::cout << "Press Any Key To Continue...";
+            getch();
+            rlutil::cls();
+            std::cout << "Want To Replay? [Y]es [N]o";
+            char replay_decision{ '-' };
+            while (replay_decision == '-')
+            {
+                replay_decision = getch();
+                if (replay_decision == 'y')
+                {
+                    rlutil::cls();
+                    std::cout << "Want To Replay? Yes\n";
+                    std::cout << "Want To Switch Sides? [Y]es [N]o";
+                    char sides_decision{ '-' };
+                    while (sides_decision == '-')
+                    {
+                        sides_decision = getch();
+                        if (sides_decision == 'y')
+                        {
+                            rlutil::cls();
+                            str aux_name{ m_player1.get_name() };
+                            m_player1.set_name(m_player2.get_name());
+                            m_player2.set_name(aux_name);
+                            int aux_wins{ m_player1.get_wins() };
+                            m_player1.set_wins(m_player2.get_wins());
+                            m_player2.set_wins(aux_wins);
+                            play(0, '2');
+                        }
+                        else if (sides_decision == 'n')
+                        {
+                            rlutil::cls();
+                            play(0, '2');
+                        }
+                        else
+                        {
+                            sides_decision = '-';
+                        }
+                    }
+                }
+                else if (replay_decision == 'n')
+                {
+                    rlutil::cls();
+                    m_player1.reset_wins();
+                    m_player2.reset_wins();
+                    Player::reset_draws();
+                    char change_players_decision{ '-' };
+                    std::cout << "Want To Replay? No\n";
+                    std::cout << "Want To Change Players? [Y]es [N]o\n";
+                    while (change_players_decision == '-')
+                    {
+                        change_players_decision = getch();
+                        if (change_players_decision == 'y')
+                        {
+                            rlutil::cls();
+                            play(1, '2');
+                        }
+                        else if (change_players_decision == 'n')
+                        {
+                            rlutil::cls();
+                            return;
+                        }
+                        else
+                        {
+                            change_players_decision = '-';
+                        }
+                    }
+                }
+                else
+                {
+                    replay_decision = '-';
+                }
+            }
         }
-        else if (ch == 'n')
+        else if (gamemode_decision == '3')
         {
             rlutil::cls();
-            m_player1.reset_wins();
-            m_player2.reset_wins();
-            Player::reset_draws();
             return;
         }
         else
         {
-            ch = '-';
+            gamemode_decision = '-';
         }
     }
 }

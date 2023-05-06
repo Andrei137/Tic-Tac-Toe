@@ -3,11 +3,12 @@
 #include "Square.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Board
 {
     int m_size{};
-    Square** m_cells{};
+    std::vector<std::vector<Square>> m_cells{};
     char m_winner{};
     
     void allocate_memory();

@@ -2,21 +2,66 @@
 
 void Board::allocate_memory()
 {
-    m_cells = new Square*[m_size];
+    m_cells.resize(m_size);
     for (int i = 0; i < m_size; ++i)
     {
-        m_cells[i] = new Square[m_size];
+        m_cells[i].resize(m_size);
     }
 }
 
 void Board::deallocate_memory()
 {
+    m_cells.clear();
+}
+
+Board::Board(int a_size) : m_size(a_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner('-')
+{
+    int nr{1}, digits_max{ nr_digits(m_size * m_size) };
     for (int i = 0; i < m_size; ++i)
     {
-        delete[] m_cells[i];
+        for (int j = 0; j < m_size; ++j)
+        {
+            std::string s{};
+            if (digits_max == 1)
+            {
+                s = " ";
+            }
+            int digits{ nr_digits(nr) };
+            while (digits < digits_max)
+            {
+                s += " ";
+                ++digits;
+            }
+            m_cells[i][j].set_free_pos(s + std::to_string(nr++) + " ");
+        }
     }
-    delete[] m_cells;
-    m_cells = nullptr;
+}
+
+Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner(a_other.m_winner)
+{
+    for (int i = 0; i < m_size; ++i)
+    {
+        for (int j = 0; j < m_size; ++j)
+        {
+            m_cells[i][j] = a_other.m_cells[i][j];
+        }
+    }
+}
+
+Board::~Board()
+{
+    deallocate_memory();
+}
+
+Board& Board::operator=(const Board& a_other)
+{
+    if (this != &a_other)
+    {
+        m_size = a_other.m_size;
+        m_winner = a_other.m_winner;
+        m_cells = a_other.m_cells;
+    }
+    return *this;
 }
 
 short Board::nr_digits(int a_n)
@@ -112,66 +157,6 @@ void Board::display_3() const
     }
 }
 
-Board::Board(int a_size) : m_size(a_size), m_cells(nullptr), m_winner('-')
-{
-    allocate_memory();
-    int nr{1}, digits_max{ nr_digits(m_size * m_size) };
-    for (int i = 0; i < m_size; ++i)
-    {
-        for (int j = 0; j < m_size; ++j)
-        {
-            std::string s{};
-            if (digits_max == 1)
-            {
-                s = " ";
-            }
-            int digits{ nr_digits(nr) };
-            while (digits < digits_max)
-            {
-                s += " ";
-                ++digits;
-            }
-            m_cells[i][j].set_free_pos(s + std::to_string(nr++) + " ");
-        }
-    }
-}
-
-Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(nullptr), m_winner(a_other.m_winner)
-{
-    allocate_memory();
-    for (int i = 0; i < m_size; ++i)
-    {
-        for (int j = 0; j < m_size; ++j)
-        {
-            m_cells[i][j] = a_other.m_cells[i][j];
-        }
-    }
-}
-
-Board::~Board()
-{
-    deallocate_memory();
-}
-
-Board& Board::operator=(const Board& a_other)
-{
-    if (this != &a_other)
-    {
-        deallocate_memory();
-        m_size = a_other.m_size;
-        m_winner = a_other.m_winner;
-        allocate_memory();
-        for (int i = 0; i < m_size; ++i)
-        {
-            for (int j = 0; j < m_size; ++j)
-            {
-                m_cells[i][j] = a_other.m_cells[i][j];
-            }
-        }
-    }
-    return *this;
-}
-
 std::ostream& operator<< (std::ostream& a_out, const Board& a_board)
 {
     for (int i = 0; i < a_board.m_size; ++i)
@@ -242,7 +227,6 @@ void Board::reset()
         }
     }
 }
-
 
 bool Board::valid_move(int a_row, int a_col) const
 {

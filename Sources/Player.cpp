@@ -2,9 +2,7 @@
 
 int Player::m_draws{0};
 
-Player::Player(char a_symbol) : m_symbol(a_symbol), m_name("Unknown"), m_wins(0)
-{
-}
+Player::Player(char a_symbol) : m_symbol(a_symbol), m_name("Unknown"), m_wins(0) {}
 
 std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
 {
