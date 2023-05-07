@@ -68,13 +68,15 @@ void Game::play()
     {
         if (m_gamemode == '1')
         {
-            if (m_difficulty == '1')
+            // TODO m_difficulty == 2
+            if (m_difficulty == '1' || m_difficulty == '2')
             {
                 m_players[1] = std::make_shared<Randomizer>('O');
             }
             else
             {
                 std::cout << "In development!";
+                rlutil::cls();
                 return;
             }
         }
