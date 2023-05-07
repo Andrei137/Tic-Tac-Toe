@@ -3,7 +3,7 @@
 #include "Board.h"
 #include <fstream>
 #include <memory>
-#include <Rlutil.h>
+#include <rlutil.h>
 #include <string>
 
 using str = std::string;
