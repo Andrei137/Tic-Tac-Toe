@@ -3,6 +3,7 @@
 #include "Square.h"
 #include <iostream>
 #include <string>
+#include <Tabulate/table.hpp>
 #include <vector>
 
 class Board

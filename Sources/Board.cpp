@@ -1,5 +1,7 @@
 #include "../Includes/Board.h"
 
+using namespace tabulate;
+
 Board::Board(int a_size) : m_size(a_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner('-')
 {
     int nr{1}, digits_max{ nr_digits(m_size * m_size) };
@@ -140,19 +142,67 @@ void Board::display_3() const
 
 std::ostream& operator<< (std::ostream& a_out, const Board& a_board)
 {
+    // for (int i = 0; i < a_board.m_size; ++i)
+    // {
+    //     a_board.display_1();
+    //     a_board.display_2(i);
+    //     if (i != a_board.m_size - 1)
+    //     {
+    //         a_board.display_3();
+    //     }
+    //     else
+    //     {
+    //         a_board.display_1();
+    //     }
+    // }
+    a_out << "\n\n";
+    Table full_table, table_left, table_right;
+    full_table.format().font_style({FontStyle::bold}).font_align(FontAlign::center);
     for (int i = 0; i < a_board.m_size; ++i)
     {
-        a_board.display_1();
-        a_board.display_2(i);
-        if (i != a_board.m_size - 1)
+        str row_left{}, row_right{};
+        for (int j = 0; j < a_board.m_size - 1; ++j)
         {
-            a_board.display_3();
+            str cell{ a_board.m_cells[i][j].get_value() };
+            if (cell != "X" && cell != "O")
+            {
+                row_left += ". | ";
+                row_right += std::to_string(i * a_board.m_size + j + 1);
+                if (a_board.m_size > 3 && i * a_board.m_size + j + 1 < 10)
+                {
+                    row_right += " ";
+                }
+                row_right += " | ";
+            }
+            else
+            {
+                row_left += cell + " | ";
+                row_right += "-";
+                if (a_board.m_size > 3)
+                {
+                    row_right += " ";
+                }
+                row_right += " | ";
+            }
+        }
+        str cell{ a_board.m_cells[i][a_board.m_size - 1].get_value() };
+        if (cell != "X" && cell != "O")
+        {
+            row_left += ".";
+            row_right += std::to_string(i * a_board.m_size + a_board.m_size);
         }
         else
         {
-            a_board.display_1();
+            row_left += cell;
+            row_right += "-";
         }
+        table_left.add_row({ row_left });
+        table_right.add_row({ row_right });
+
     }
+    full_table.add_row({ table_left, table_right });
+    full_table.format().hide_border();
+    a_out << full_table;
     return a_out;
 }
 
