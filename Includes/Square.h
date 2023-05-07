@@ -19,7 +19,6 @@ public:
     friend std::ostream& operator<<(std::ostream&, const Square&);
     
     char get_value() const;
-    str get_free_pos() const;
     bool is_occupied() const;
     
     void set_value(char);

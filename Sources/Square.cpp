@@ -21,11 +21,6 @@ char Square::get_value() const
     return m_value;
 }
 
-str Square::get_free_pos() const
-{
-    return m_free_pos;
-}
-
 bool Square::is_occupied() const
 {
     return m_occupied;

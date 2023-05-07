@@ -113,7 +113,6 @@ set_custom_stdlib_and_sanitizers(${PROJECT_NAME} true)
 ###############################################################################
 
 # use SYSTEM so clang-tidy does not report warnings from these directories
-include_directories(Ext/Tabulate)
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE Ext)
 #target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 #target_link_directories(${PROJECT_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)

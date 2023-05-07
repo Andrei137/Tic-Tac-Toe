@@ -1,5 +1,5 @@
 #include "../Includes/Board.h"
-#include <Tabulate/table.hpp>
+#include <tabulate/table.hpp>
 
 using namespace tabulate;
 
