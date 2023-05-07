@@ -168,7 +168,7 @@ void Game::tictactoe()
         }
         else if (m_gamemode == '1')
         {
-            int wrong_input{0};
+            int wrong_input{ 0 };
             while (m_difficulty == '-')
             {
                 rlutil::cls();
@@ -182,7 +182,7 @@ void Game::tictactoe()
                 {
                     m_gamemode = '1';
                 }
-                else if (m_difficulty == '0')
+                if (m_difficulty == '0')
                 {
                     m_gamemode = '-';
                 }
@@ -224,7 +224,7 @@ void Game::tictactoe()
                         {
                             sides_decision = 'n';
                         }
-                        else if (sides_decision == 'y')
+                        if (sides_decision == 'y')
                         {
                             std::shared_ptr<Player> temp{ m_players[0] };
                             m_players[0] = m_players[1];
@@ -259,6 +259,10 @@ void Game::tictactoe()
                         {
                             change_players_decision = 'n';
                         }
+                        if (change_players_decision == 'y')
+                        {
+                            m_gamemode = '2';
+                        }
                         else if (change_players_decision == 'n')
                         {
                             char change_gamemode_decision{ '-' };
@@ -280,11 +284,11 @@ void Game::tictactoe()
                                 }
                             }
                         }
-                        else if (change_players_decision != 'y')
+                        else
                         {
                             rlutil::cls();
                             ++wrong_input;
-                            m_gamemode = '-';
+                            change_players_decision = '-';
                         }
                     }
                 }
