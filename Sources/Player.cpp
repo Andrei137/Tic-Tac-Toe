@@ -2,7 +2,7 @@
 
 int Player::m_draws{0};
 
-Player::Player(char a_symbol) : m_symbol(a_symbol), m_name("Unknown"), m_wins(0) {}
+Player::Player(char a_symbol) : m_symbol(a_symbol), m_wins(0) {}
 
 Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m_wins) {}
 

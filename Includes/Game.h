@@ -2,6 +2,7 @@
 
 #include "Board.h"
 #include "Human.h"
+#include "Randomizer.h"
 #include <array>
 
 class Game
@@ -9,6 +10,7 @@ class Game
     std::array<std::shared_ptr<Player>, 2> m_players{};
     Board m_board{};
     char m_gamemode{};
+    char m_difficulty{};
     bool m_reseted{};
     
 public:
@@ -23,5 +25,7 @@ public:
 
     void swap();
     static void print_logo();
+    void print_winner();
     void play();
+    void tictactoe();
 };

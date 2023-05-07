@@ -3,6 +3,6 @@
 int main()
 {
     Game game{3};
-    game.play();
+    game.tictactoe();
     return 0;
 }

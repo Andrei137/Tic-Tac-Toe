@@ -1,6 +1,9 @@
 #include "../Includes/Human.h"
 
-Human::Human(char a_symbol) : Player(a_symbol) {}
+Human::Human(char a_symbol) : Player(a_symbol) 
+{
+    this->set_name("Unknown");
+}
 
 Human& Human::operator=(const Human& a_other)
 {
@@ -70,7 +73,7 @@ int Human::read_input()
 
 std::pair<int, int> Human::get_move(Board& a_board) const
 {
-    rlutil::hidecursor();
+    rlutil::showcursor();
     str temp_player{};
     std::cout << "\n-> (" << m_symbol << ") " << m_name << "\'";
     if (m_name[m_name.size() - 1] != 's')

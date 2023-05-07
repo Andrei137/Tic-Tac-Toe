@@ -3,6 +3,7 @@
 #include "Board.h"
 #include <fstream>
 #include <memory>
+#include <Rlutil.h>
 #include <string>
 
 using str = std::string;
@@ -14,7 +15,7 @@ protected:
     str m_name{};
     int m_wins{};
     static int m_draws;
-    
+
 public:
     Player() = default;
     explicit Player(char);
