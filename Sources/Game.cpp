@@ -168,6 +168,7 @@ void Game::tictactoe()
         }
         else if (m_gamemode == '1')
         {
+            int wrong_input{0};
             while (m_difficulty == '-')
             {
                 rlutil::cls();
@@ -177,13 +178,18 @@ void Game::tictactoe()
                 std::cout << "[0] Go Back\n\n";
                 std::cout << "-> ";
                 std::cin >> m_difficulty;
-                if (m_difficulty == '0')
+                if (wrong_input == 10)
+                {
+                    m_gamemode = '1';
+                }
+                else if (m_difficulty == '0')
                 {
                     m_gamemode = '-';
                 }
                 else if (m_difficulty != '1' && m_difficulty != '2')
                 {
                     m_difficulty = '-';
+                    ++wrong_input;
                 }
             }
         }
@@ -191,16 +197,22 @@ void Game::tictactoe()
         {
             play();
             char replay_decision{ '-' };
+            int wrong_input{ 0 };
             while (replay_decision == '-')
             {
                 std::cout << "Want to replay? [y]es [n]o\n-> ";
                 // replay_decision = getch();
                 std::cin >> replay_decision;
                 rlutil::cls();
+                if (wrong_input == 10)
+                {
+                    replay_decision = 'y';
+                }
                 if (replay_decision == 'y')
                 {
                     m_reseted = false;
                     char sides_decision{ '-' };
+                    wrong_input = 0;
                     while (sides_decision == '-')
                     {
                         std::cout << "Want to replay? yes\n";
@@ -208,7 +220,11 @@ void Game::tictactoe()
                         // sides_decision = getch();
                         std::cin >> sides_decision;
                         rlutil::cls();
-                        if (sides_decision == 'y')
+                        if (wrong_input == 10)
+                        {
+                            sides_decision = 'y';
+                        }
+                        else if (sides_decision == 'y')
                         {
                             std::shared_ptr<Player> temp{ m_players[0] };
                             m_players[0] = m_players[1];
@@ -219,6 +235,7 @@ void Game::tictactoe()
                         else if (sides_decision != 'n')
                         {
                             rlutil::cls();
+                            ++wrong_input;
                             sides_decision = '-';
                         }
                     }
@@ -230,6 +247,7 @@ void Game::tictactoe()
                     m_players[0]->reset_wins();
                     Player::reset_draws();
                     char change_players_decision{ '-' };
+                    wrong_input = 0;
                     while (change_players_decision == '-')
                     {
                         std::cout << "Want to replay? no\n";
@@ -237,7 +255,11 @@ void Game::tictactoe()
                         // change_players_decision = getch();
                         std::cin >> change_players_decision;
                         rlutil::cls();
-                        if (change_players_decision == 'n')
+                        if (wrong_input == 10)
+                        {
+                            change_players_decision = 'y';
+                        }
+                        else if (change_players_decision == 'n')
                         {
                             char change_gamemode_decision{ '-' };
                             while (change_gamemode_decision == '-')
@@ -261,6 +283,7 @@ void Game::tictactoe()
                         else if (change_players_decision != 'y')
                         {
                             rlutil::cls();
+                            ++wrong_input;
                             m_gamemode = '-';
                         }
                     }
@@ -268,6 +291,7 @@ void Game::tictactoe()
                 else
                 {
                     rlutil::cls();
+                    ++wrong_input;
                     replay_decision = '-';
                 }
             }
