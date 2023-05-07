@@ -29,13 +29,13 @@ Joc de X si O in care dimensiunea matricei variaza (ex. 3x3, 5x5, 7x7, etc.). Pe
 
 #### Cerințe
 - [x] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri
+- [x] moșteniri
   - [x] clasă cu atribut de tip pointer la o clasă de bază cu derivate
   - [x] funcții virtuale (pure) apelate prin pointeri de bază din clasa de mai sus, constructori virtuali (clone)
     - minim o funcție virtuală va fi **specifică temei** (e.g. nu simple citiri/afișări)
   - [x] apelarea constructorului din clasa de bază din constructori din derivate
   - [x] smart pointers
-  - [ ] `dynamic_cast`
+  - [x] `dynamic_cast`
 - [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
 - [ ] excepții
   - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
