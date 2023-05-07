@@ -206,7 +206,7 @@ void Game::tictactoe()
                 rlutil::cls();
                 if (wrong_input == 10)
                 {
-                    replay_decision = 'y';
+                    replay_decision = 'n';
                 }
                 if (replay_decision == 'y')
                 {
@@ -222,7 +222,7 @@ void Game::tictactoe()
                         rlutil::cls();
                         if (wrong_input == 10)
                         {
-                            sides_decision = 'y';
+                            sides_decision = 'n';
                         }
                         else if (sides_decision == 'y')
                         {
@@ -257,7 +257,7 @@ void Game::tictactoe()
                         rlutil::cls();
                         if (wrong_input == 10)
                         {
-                            change_players_decision = 'y';
+                            change_players_decision = 'n';
                         }
                         else if (change_players_decision == 'n')
                         {
