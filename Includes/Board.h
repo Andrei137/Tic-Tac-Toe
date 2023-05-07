@@ -3,7 +3,6 @@
 #include "Square.h"
 #include <iostream>
 #include <string>
-#include <Tabulate/table.hpp>
 #include <vector>
 
 class Board
@@ -13,14 +12,6 @@ class Board
     char m_winner{};
     
     static short nr_digits(int);
-    
-    template <typename T>
-    void display_aux(const str&, const str&, const T*, bool) const;
-    
-    void display_1() const;
-    void display_2(int) const;
-    void display_3() const;
-    
     
 public:
     Board() = default;

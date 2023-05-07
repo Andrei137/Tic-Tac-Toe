@@ -1,4 +1,5 @@
 #include "../Includes/Board.h"
+#include <Tabulate/table.hpp>
 
 using namespace tabulate;
 
@@ -58,103 +59,8 @@ short Board::nr_digits(int a_n)
     return nr;
 }
 
-template <typename T>
-void Board::display_aux(const str& a_prefix, const str& a_separator, const T* a_ch, bool a_empty) const
-{
-    if (a_empty)
-    {
-        std::cout << a_prefix;
-        for (int i = 0; i < m_size - 1; ++i)
-        {
-            std::cout << a_separator;
-        }
-    }
-    else
-    {
-        std::cout << a_prefix;
-        for (int i = 0; i < m_size - 1; ++i)
-        {
-            std::cout << a_ch[i] << a_separator;
-        }
-        std::cout << a_ch[m_size - 1];
-    }
-}
-
-void Board::display_1() const
-{
-    str spaces{};
-    for (int i = 0; i < nr_digits(m_size * m_size) - 2; ++i)
-    {
-        spaces += " ";
-    }
-    display_aux<char>("\n     " + spaces, "|     " + spaces, nullptr, true);
-    if (m_winner == '-')
-    {
-        display_aux<char>("          ", "|     ", nullptr, true);
-    }
-}
-
-void Board::display_2(int a_line) const
-{
-    if (m_winner == '-')
-    {
-        str* ch1 = new str[m_size];
-        for (int i = 0; i < m_size; ++i)
-        {
-            ch1[i] = { m_cells[a_line][i].get_free_pos() };
-        }
-        display_aux("\n ", " | ", ch1, false);
-        delete[] ch1;
-    }
-    char* ch2 = new char[m_size];
-    for (int i = 0; i < m_size; ++i)
-    {
-        ch2[i] = { m_cells[a_line][i].get_value() };
-        if (ch2[i] != 'X' && ch2[i] != 'O')
-        {
-            ch2[i] = ' ';
-        }
-    }
-    if (m_winner == '-')
-    {
-        display_aux("        ", "  |  ", ch2, false);
-    }
-    else
-    {
-         display_aux("\n  ", "  |  ", ch2, false);
-    }
-    delete[] ch2;
-}
-
-void Board::display_3() const
-{
-    str underlines{};
-    for (int i = 0; i < nr_digits(m_size * m_size) - 2; ++i)
-    {
-        underlines += "_";
-    }
-    display_aux<char>("\n_____" + underlines, "|_____" + underlines, nullptr, true);
-    if (m_winner == '-')
-    {
-        display_aux<char>("     _____", "|_____", nullptr, true);
-    }
-}
-
 std::ostream& operator<< (std::ostream& a_out, const Board& a_board)
 {
-    // for (int i = 0; i < a_board.m_size; ++i)
-    // {
-    //     a_board.display_1();
-    //     a_board.display_2(i);
-    //     if (i != a_board.m_size - 1)
-    //     {
-    //         a_board.display_3();
-    //     }
-    //     else
-    //     {
-    //         a_board.display_1();
-    //     }
-    // }
     a_out << "\n\n";
     Table full_table, table_left, table_right;
     full_table.format().font_style({FontStyle::bold}).font_align(FontAlign::center);
