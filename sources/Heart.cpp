@@ -2,7 +2,7 @@
 
 #define elif else if
 
-std::array<str, 3> Heart::m_message{"THANK", "  U FOR", "PLAYING"};
+std::array<str, 3> Heart::m_message{"THANK", "  U FOR ", "PLAYING"};
 
 bool Heart::fast_check(float a_x, float a_value1, float a_value2, char a_sign)
 {
@@ -122,5 +122,6 @@ void Heart::print_full_heart()
         std::cout << '\n';
     }
     rlutil::setColor(7);
+    rlutil::msleep(100);
     std::cout << '\n';
 }
