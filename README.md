@@ -64,6 +64,7 @@
 
 ## Resurse
 
+- [Heart Model](https://github.com/liuyubobobo/heart-curve-cplusplus)
 - [Rlutil](https://github.com/tapio/rlutil)
 - [Tabulate](https://github.com/p-ranav/tabulate)
 - [TicTacToe Logo](https://github.com/umutambyi-gad/Tic-Tac-Toe)

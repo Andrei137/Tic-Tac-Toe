@@ -122,6 +122,7 @@ void Heart::print_full_heart()
         std::cout << '\n';
     }
     rlutil::setColor(7);
-    rlutil::msleep(100);
+    rlutil::msleep(50);
+    rlutil::locate(0, 0);
     std::cout << '\n';
 }
