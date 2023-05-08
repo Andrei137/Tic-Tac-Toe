@@ -1,4 +1,4 @@
-#include "../Includes/Square.h"
+#include "../includes/Square.h"
 
 Square::Square(char a_value, str a_free_pos, bool a_occupied)
     : m_value(a_value), m_free_pos(std::move(a_free_pos)), m_occupied(a_occupied) {}

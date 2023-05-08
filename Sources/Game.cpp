@@ -1,11 +1,16 @@
-#include "../Includes/Game.h"
+#include "../includes/Game.h"
 
 Game::Game(int a_size) : m_board(a_size), m_gamemode('-'), m_difficulty('-'), m_reseted(true)
 {
     m_players[0] = std::make_shared<Human>('X');
 }
 
-Game::~Game() = default;
+Game::~Game()
+{
+    rlutil::cls();
+    rlutil::showcursor();
+    Heart::print_full_heart();
+}
 
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
@@ -68,7 +73,7 @@ void Game::play()
     {
         if (m_gamemode == '1')
         {
-            // TODO m_difficulty == 2
+            // TODO: m_difficulty 2
             if (m_difficulty == '1' || m_difficulty == '2')
             {
                 m_players[1] = std::make_shared<Randomizer>('O');
@@ -148,6 +153,7 @@ void Game::tictactoe()
 {
     while (true)
     {
+        // TODO: exceptii pentru user input
         if (m_gamemode == '-')
         {
             rlutil::cls();
@@ -158,7 +164,6 @@ void Game::tictactoe()
             std::cout << "[2] Player vs Player\n";
             std::cout << "[0] Exit\n\n";
             std::cout << "-> ";
-            // m_gamemode = getch();
             std::cin >> m_gamemode;
         }
         if (m_gamemode == '0')
@@ -173,8 +178,8 @@ void Game::tictactoe()
             {
                 rlutil::cls();
                 std::cout << "< Difficulty >\n";
-                std::cout << "[1] Normal (Computer plays randomly)\n";
-                std::cout << "[2] Impossible (Computer plays perfectly)\n";
+                std::cout << "[1] Normal\n";
+                std::cout << "[2] Impossible\n";
                 std::cout << "[0] Go Back\n\n";
                 std::cout << "-> ";
                 std::cin >> m_difficulty;
@@ -201,7 +206,6 @@ void Game::tictactoe()
             while (replay_decision == '-')
             {
                 std::cout << "Want to replay? [y]es [n]o\n-> ";
-                // replay_decision = getch();
                 std::cin >> replay_decision;
                 rlutil::cls();
                 if (wrong_input == 10)
@@ -217,7 +221,6 @@ void Game::tictactoe()
                     {
                         std::cout << "Want to replay? yes\n";
                         std::cout << "Want to switch sides? [y]es [n]o\n-> ";
-                        // sides_decision = getch();
                         std::cin >> sides_decision;
                         rlutil::cls();
                         if (wrong_input == 10)
@@ -252,7 +255,6 @@ void Game::tictactoe()
                     {
                         std::cout << "Want to replay? no\n";
                         std::cout << "Want to change players? [y]es [n]o\n-> ";
-                        // change_players_decision = getch();
                         std::cin >> change_players_decision;
                         rlutil::cls();
                         if (wrong_input == 10)
@@ -271,7 +273,6 @@ void Game::tictactoe()
                                 std::cout << "Want to replay? no\n";
                                 std::cout << "Want to change players? no\n";
                                 std::cout << "Want to change gamemode? [y]es [n]o\n-> ";
-                                // change_gamemode_decision = getch();
                                 std::cin >> change_gamemode_decision;
                                 rlutil::cls();
                                 if (change_gamemode_decision == 'y')

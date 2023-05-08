@@ -1,4 +1,4 @@
-#include "../Includes/Player.h"
+#include "../includes/Player.h"
 
 int Player::m_draws{0};
 

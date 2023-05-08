@@ -1,4 +1,4 @@
-#include "../Includes/Randomizer.h"
+#include "../includes/Randomizer.h"
 
 Randomizer::Randomizer(char a_symbol) : AI(a_symbol) {}
 

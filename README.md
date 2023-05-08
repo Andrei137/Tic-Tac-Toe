@@ -1,7 +1,13 @@
 # TicTacToe
 
 ### Descriere
-Joc de X si O in care dimensiunea matricei variaza (ex. 3x3, 5x5, 7x7, etc.). Pentru orice dimeniune mai mare de 3, se adopta regula de la Connect Four. Momentan este implementat doar PvP. 
+- X si O pe matrice de dimensiuni variate (ex: 3x3, 5x5, 7x7).
+- Pentru dimeniunea 3, se pastreaza regulile clasice.
+- Pentru dimensiuni mai mari, se aplica regula de la Connect 4 pentru a adauga complexitate (se castiga daca se formeaza o linie de lungime 4).
+- Se poate juca intre 2 jucatori sau impotriva unui AI.
+- AI-ul are 2 trepte de dificultate
+  - Pe prima treapta, AI-ul ia deciziile aproape aleatoriu, dar stie sa ocupe pozitia necesara pentru a castiga / impedica castigul inamicului.
+  - A doua treapta este inca in lucru.
 
 ### Tema 0
 
@@ -57,4 +63,6 @@ Joc de X si O in care dimensiunea matricei variaza (ex. 3x3, 5x5, 7x7, etc.). Pe
 
 ## Resurse
 
-- adăugați trimiteri către resursele externe care v-au ajutat sau pe care le-ați folosit
+- [Rlutil](https://github.com/tapio/rlutil)
+- [Tabulate](https://github.com/p-ranav/tabulate)
+- [TicTacToe Logo](https://github.com/umutambyi-gad/Tic-Tac-Toe)

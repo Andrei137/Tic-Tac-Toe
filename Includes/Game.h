@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Board.h"
+#include "Heart.h"
 #include "Human.h"
 #include "Randomizer.h"
 #include <array>

@@ -1,4 +1,4 @@
-#include "../Includes/Board.h"
+#include "../includes/Board.h"
 #include <tabulate/table.hpp>
 
 using namespace tabulate;
