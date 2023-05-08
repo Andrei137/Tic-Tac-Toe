@@ -1,13 +1,14 @@
 # TicTacToe
 
 ### Descriere
+
 - X si O pe matrice de dimensiuni variate (ex: 3x3, 5x5, 7x7).
 - Pentru dimeniunea 3, se pastreaza regulile clasice.
 - Pentru dimensiuni mai mari, se aplica regula de la Connect 4 pentru a adauga complexitate (se castiga daca se formeaza o linie de lungime 4).
 - Se poate juca intre 2 jucatori sau impotriva unui AI.
 - AI-ul are 2 trepte de dificultate
-  - Pe prima treapta, AI-ul ia deciziile aproape aleatoriu, dar stie sa ocupe pozitia necesara pentru a castiga / impedica castigul inamicului.
-  - A doua treapta este inca in lucru.
+- Pe prima treapta, AI-ul ia deciziile aproape aleatoriu, dar stie sa ocupe pozitia necesara pentru a castiga / impedica castigul inamicului.
+- A doua treapta este inca in lucru.
 
 ### Tema 0
 
