@@ -6,9 +6,9 @@
 - Pentru dimeniunea 3, se pastreaza regulile clasice.
 - Pentru dimensiuni mai mari, se aplica regula de la Connect 4 pentru a adauga complexitate (se castiga daca se formeaza o linie de lungime 4).
 - Se poate juca intre 2 jucatori sau impotriva unui AI.
-- AI-ul are 2 trepte de dificultate
-- Pe prima treapta, AI-ul ia deciziile aproape aleatoriu, dar stie sa ocupe pozitia necesara pentru a castiga / impedica castigul inamicului.
-- A doua treapta este inca in lucru.
+- Se poate alege dificultatea AI-ului (Normal, Impossible).
+- Pe Normal, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
+- Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila (in lucru).
 
 ### Tema 0
 
