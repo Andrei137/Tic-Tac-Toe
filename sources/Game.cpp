@@ -12,19 +12,56 @@ Game::~Game()
     Heart::print_full_heart();
 }
 
+void Game::swap()
+{
+    std::shared_ptr<Player> temp{ m_players[0] };
+    m_players[0] = m_players[1];
+    m_players[1] = temp;
+    m_players[0]->set_symbol('X');
+    m_players[1]->set_symbol('O');
+}
+
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
-    rlutil::showcursor();
     rlutil::cls();
-    a_in >> a_game.m_players[0];
     const Human* human_ptr{ dynamic_cast<Human*>(a_game.m_players[1].get()) };
     if (human_ptr != nullptr)
     {
+        a_in >> a_game.m_players[0];
         rlutil::cls();
         std::cout << "(X) " << a_game.m_players[0]->get_name() << '\n';
         a_in >> a_game.m_players[1];
     }
-    rlutil::cls();
+    else
+    {
+        int random{};
+        if (a_game.m_difficulty != '?')
+        {
+            srand(time(0));
+            random = rand() % 2;
+        }
+        std::cout << "Choosing who goes first";
+        for (int i = 0; i < 3; ++i)
+        {
+            rlutil::msleep(100);
+            std::cout << '.';
+            rlutil::msleep(400);
+        }
+        rlutil::cls();
+        if (random == 1)
+        {
+            std::cout << "Computer goes first!\n\n";
+            a_game.swap();
+            a_in >> a_game.m_players[1];
+        }
+        else
+        {
+            std::cout << "Player goes first!\n\n";
+            a_in >> a_game.m_players[0];
+        }
+        rlutil::showcursor();
+        rlutil::cls();
+    }
     return a_in;
 }
 
@@ -70,6 +107,10 @@ void Game::play()
         if (m_gamemode == '1')
         {
             if (m_difficulty == '1')
+            {
+                m_players[1] = std::make_shared<Randomizer>('O');
+            }
+            else if (m_difficulty == '2')
             {
                 m_players[1] = std::make_shared<Randomizer>('O');
             }
@@ -227,13 +268,14 @@ void Game::tictactoe()
                     rlutil::cls();
                     rlutil::showcursor();
                     std::cout << "< Difficulty >\n";
-                    std::cout << "[1] Normal\n";
-                    std::cout << "[2] Impossible\n";
+                    std::cout << "[1] Easy\n";
+                    std::cout << "[2] Normal\n";
+                    std::cout << "[3] Impossible\n";
                     std::cout << "[0] Go Back\n\n";
                     std::cout << "-> ";
                     str temp{};
                     std::cin >> temp;
-                    if (temp != "0" && temp != "1" && temp != "2")
+                    if (temp != "0" && temp != "1" && temp != "2" && temp != "3")
                     {
                         throw difficulty_error();
                     }
@@ -312,11 +354,7 @@ void Game::tictactoe()
                 }
                 if (sides_decision == 'y')
                 {
-                    std::shared_ptr<Player> temp{ m_players[0] };
-                    m_players[0] = m_players[1];
-                    m_players[1] = temp;
-                    m_players[0]->set_symbol('X');
-                    m_players[1]->set_symbol('O');
+                    swap();
                 }
             }
             else
