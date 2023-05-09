@@ -6,7 +6,8 @@
 - Pentru dimeniunea 3, se pastreaza regulile clasice.
 - Pentru dimensiuni mai mari, se aplica regula de la Connect 4 pentru a adauga complexitate (se castiga daca se formeaza o linie de lungime 4).
 - Se poate juca intre 2 jucatori sau impotriva unui AI.
-- Se poate alege dificultatea AI-ului (Normal, Impossible).
+- Se poate alege dificultatea AI-ului (Easy, Normal, Impossible).
+- Pe Easy, AI-ul cauta pozitiile ocupate de adversar si incearca sa se plaseze pe pozitii libere din jurul lor, in ordinea sus, stanga, jos, dreapta. La prima mutare cu X se plaseaza in coltul stanga sus.
 - Pe Normal, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
 - Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila, algoritmul din spate fiind Minimax cu Alpha-Beta Pruning.
 
@@ -56,8 +57,8 @@
 - [x] funcții și atribute `static`
 - [x] STL
 - [x] cât mai multe `const`
-- [ ] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului
-- [ ] tag de `git`: de exemplu `v0.2`
+- [x] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului
+- [x] tag de `git`: de exemplu `v0.2`
 
 ## Tema 3
 

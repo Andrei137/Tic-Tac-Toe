@@ -108,7 +108,7 @@ void Game::play()
         {
             if (m_difficulty == '1')
             {
-                m_players[1] = std::make_shared<Randomizer>('O');
+                m_players[1] = std::make_shared<StickyNoob>('O');
             }
             else if (m_difficulty == '2')
             {
