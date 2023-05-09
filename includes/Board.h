@@ -10,8 +10,6 @@ class Board
     std::vector<std::vector<Square>> m_cells{};
     char m_winner{};
     
-    static short nr_digits(int);
-    
 public:
     Board() = default;
     explicit Board(int);

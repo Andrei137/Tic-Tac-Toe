@@ -27,17 +27,6 @@ Board& Board::operator=(const Board& a_other)
     return *this;
 }
 
-short Board::nr_digits(int a_n)
-{
-    short nr{0};
-    do
-    {
-        ++nr;
-    }
-    while (a_n /= 10);
-    return nr;
-}
-
 std::ostream& operator<< (std::ostream& a_out, const Board& a_board)
 {
     a_out << "\n\n";
