@@ -31,12 +31,12 @@ std::istream& operator>>(std::istream& a_in, std::shared_ptr<Player>& a_player)
             a_in >> temp;
             if (!std::regex_match(temp, name_pattern) || a_in.fail() || temp.size() > 20)
             {
-                throw NameInputException();
+                throw name_error();
             }
             a_player->m_name = temp;
             valid = true;
         }
-        catch (const NameInputException& err)
+        catch (const name_error& err)
         {
             rlutil::cls();
             std::cerr << err.what() << '\n';

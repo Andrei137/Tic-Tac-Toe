@@ -32,23 +32,27 @@ std::pair<int, int> Human::get_move(const Board& a_board) const
             std::cin >> temp;
             if (!std::regex_match(temp, digits))
             {
-                throw NotNumberException();
+                throw not_number_error();
             }
             else if (temp.size() > 3)
             {
-                throw OutOfBoundsCellException();
+                throw out_of_bound_error();
+            }
+            if (temp == "0")
+            {
+                return {-1, -1};
             }
             index = std::stoi(temp);
             valid = true;
         }
-        catch (NotNumberException const& err)
+        catch (not_number_error const& err)
         {
             rlutil::cls();
             std::cout << err.what();
             rlutil::msleep(2000);
             rlutil::cls();
         }
-        catch (OutOfBoundsCellException const& err)
+        catch (out_of_bound_error const& err)
         {
             rlutil::cls();
             std::cout << err.what();

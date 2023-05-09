@@ -25,7 +25,6 @@ public:
     int get_size() const;
     char get_value(int, int) const;
     char get_winner() const;
-    Scoreboard get_scoreboard() const;
     
     void set_cell(int, int, char);
     void clear_cell(int, int);

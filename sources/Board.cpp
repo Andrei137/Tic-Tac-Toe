@@ -103,11 +103,6 @@ char Board::get_winner() const
     return m_winner;
 }
 
-Scoreboard Board::get_scoreboard() const
-{
-    return m_scoreboard;
-}
-
 void Board::set_cell(int a_row, int a_col, char a_value)
 {
     m_Squares[a_row][a_col].set_value(a_value);

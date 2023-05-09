@@ -4,56 +4,54 @@
 
 using str = std::string;
 
-class MoveException : public std::runtime_error
+class invalid_move_error : public std::runtime_error
 {
-public:
-    explicit MoveException(const str& a_msg) : std::runtime_error(a_msg) {}
+    using std::runtime_error::runtime_error;
 };
 
-class NotNumberException : public MoveException
+class not_number_error : public invalid_move_error
 {
 public:
-    NotNumberException() : MoveException("Invalid input. Please choose a number!") {}
+    not_number_error() : invalid_move_error("Invalid input. Please choose a number!") {}
 };
 
-class OutOfBoundsCellException : public MoveException
+class out_of_bound_error : public invalid_move_error
 {
 public:
-    OutOfBoundsCellException() : MoveException("Invalid input. Please choose a cell within the board!") {}
+    out_of_bound_error() : invalid_move_error("Invalid input. Please choose a cell within the board!") {}
 };
 
-class NonEmptyCellException : public MoveException
+class non_empty_cell_error : public invalid_move_error
 {
 public:
-    NonEmptyCellException() : MoveException("Invalid move. Please choose an empty cell!") {}
+    non_empty_cell_error() : invalid_move_error("Invalid move. Please choose an empty cell!") {}
 };
 
-class InputException : public std::runtime_error
+class input_error : public std::runtime_error
 {
-public:
-    explicit InputException(const str& a_msg) : std::runtime_error(a_msg) {}
+    using std::runtime_error::runtime_error;
 };
 
-class NumberOfPlayersInputException : public InputException
+class number_of_players_error : public input_error
 {
 public:
-    NumberOfPlayersInputException() : InputException("Invalid input. Please choose 1 or 2 players or exit de program!") {}
+    number_of_players_error() : input_error("Invalid input. Please choose 1 or 2 players or exit de program!") {}
 };
 
-class DifficultyInputException : public InputException
+class difficulty_error : public input_error
 {
 public:
-    DifficultyInputException() : InputException("Invalid input. Please choose a valid difficulty option!") {}
+    difficulty_error() : input_error("Invalid input. Please choose a valid difficulty option!") {}
 };
 
-class NameInputException : public InputException
+class name_error : public input_error
 {
 public:
-    NameInputException() : InputException("Invalid input. Name must be between 1 and 20 characters and only contain letters, numbers, and special characters.") {}
+    name_error() : input_error("Invalid input. Name must be between 1 and 20 characters and only contain letters, numbers, and special characters.") {}
 };
 
-class ReplayInputException : public InputException
+class replay_error : public input_error
 {
 public:
-    ReplayInputException() : InputException("Invalid input. Please choose 'y' or 'n'!") {}
+    replay_error() : input_error("Invalid input. Please choose 'y' or 'n'!") {}
 };

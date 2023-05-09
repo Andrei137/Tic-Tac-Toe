@@ -102,7 +102,12 @@ void Game::play()
                 std::pair<int, int> temp{ m_players[turn % 2]->get_move(m_board) };
                 row = temp.first;
                 col = temp.second;
-                if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
+                if (row == -1 && col == -1)
+                {
+                    m_board.set_winner(' ');
+                    row = col = 0;
+                }
+                else if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
                 {
                     const Human* human_ptr{ dynamic_cast<Human*>(m_players[turn % 2].get()) };
                     if (human_ptr != nullptr)
@@ -112,30 +117,25 @@ void Game::play()
                         if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
                         {
                             row = col = -1;
-                            throw OutOfBoundsCellException();
+                            throw out_of_bound_error();
                         }
                         else
                         {
                             row = col = -1;
-                            throw NonEmptyCellException();
+                            throw non_empty_cell_error();
                         }
                     }
                 }
-                else if (row == -1 && col == -1)
-                {
-                    m_board.set_winner(' ');
-                    row = col = 0;
-                }
                 valid = true;
             }
-            catch (const OutOfBoundsCellException& err)
+            catch (const out_of_bound_error& err)
             {
                 rlutil::cls();
                 std::cerr << err.what() << '\n';
                 rlutil::msleep(2000);
                 rlutil::cls();
             }
-            catch (const NonEmptyCellException& err)
+            catch (const non_empty_cell_error& err)
             {
                 std::cerr << err.what() << '\n';
                 rlutil::msleep(2000);
