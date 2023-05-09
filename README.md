@@ -8,7 +8,13 @@
 - Se poate juca intre 2 jucatori sau impotriva unui AI.
 - Se poate alege dificultatea AI-ului (Normal, Impossible).
 - Pe Normal, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
-- Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila (de gasit depth pt dimensiuni > 3).
+- Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila, algoritmul din spate fiind Minimax cu Alpha-Beta Pruning.
+
+|  Size | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| ----- | - | - | - | - | - | - | - | -: |
+| Depth | 9 | 8 | 6 | 5 | 4 | 4 | 4 |  3 |
+
+
 
 ### Tema 0
 

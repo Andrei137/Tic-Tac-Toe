@@ -1,10 +1,11 @@
 #pragma once
 
 #include "AI.h"
-#include <unordered_map>
 
 class Solver : public AI
 {
+    static const std::vector<int> m_depths;
+
     char opponent_symbol() const;
     int evaluate(Board&) const;
     int minimax(Board&, int, int, int, bool) const;

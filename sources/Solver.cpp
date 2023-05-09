@@ -1,6 +1,10 @@
 #include "../includes/Solver.h"
+#include <algorithm>
 #include <climits>
+#include <random>
 #include <rlutil.h>
+
+const std::vector<int> Solver::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
 
 Solver::Solver(char a_symbol) : AI(a_symbol) {}
 
@@ -29,7 +33,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
     {
         return a_depth - 10;
     }
-    else if (a_board.draw() || a_depth == 10)
+    else if (a_board.draw() || a_depth == m_depths[size - 3])
     {
         return 0;
     }
@@ -49,8 +53,14 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
                         a_board.set_winner(symbol);
                     }
                     int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, false) };
-                    best_score = std::max(best_score, score);
-                    a_alpha = std::max(a_alpha, score);
+                    if (score > best_score)
+                    {
+                        best_score = score;
+                    }
+                    if (score > a_alpha)
+                    {
+                        a_alpha = score;
+                    }
                     a_board.set_winner('-');
                     a_board.clear_cell(i, j);
                     if (a_beta <= a_alpha)
@@ -78,8 +88,14 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
                         a_board.set_winner(symbol);
                     }
                     int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, true) };
-                    best_score = std::min(best_score, score);
-                    a_beta = std::min(a_beta, score);
+                    if (score < best_score)
+                    {
+                        best_score = score;
+                    }
+                    if (score < a_beta)
+                    {
+                        a_beta = score;
+                    }
                     a_board.set_winner('-');
                     a_board.clear_cell(i, j);
                     if (a_beta <= a_alpha)
@@ -127,11 +143,17 @@ int Solver::get_best_move(Board& a_board) const
             best_moves.clear();
             best_moves.push_back(i * size + j + 1);
         }
+        else if (score == best_score)
+        {
+            best_moves.push_back(i * size + j + 1);
+        }
     }
     if (!best_moves.empty())
     {
-        srand(time(0));
-        return best_moves[rand() % static_cast<int>(best_moves.size())];
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(best_moves.begin(), best_moves.end(), g);
+        return best_moves[0];
     }
     return -1;
 }
