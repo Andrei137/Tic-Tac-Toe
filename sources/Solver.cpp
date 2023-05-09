@@ -1,5 +1,5 @@
 #include "../includes/Solver.h"
-#include <limits>
+#include <climits>
 #include <rlutil.h>
 
 Solver::Solver(char a_symbol) : AI(a_symbol) {}
@@ -35,7 +35,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
     }
     if (a_is_maximizing)
     {
-        int max_score{ std::numeric_limits<int>::min() };
+        int best_score{ INT_MIN };
         for (int i = 0; i < size; ++i)
         {
             for (int j = 0; j < size; ++j)
@@ -49,7 +49,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
                         a_board.set_winner(symbol);
                     }
                     int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, false) };
-                    max_score = std::max(max_score, score);
+                    best_score = std::max(best_score, score);
                     a_alpha = std::max(a_alpha, score);
                     a_board.set_winner('-');
                     a_board.clear_cell(i, j);
@@ -60,11 +60,11 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
                 }
             }
         }
-        return max_score;
+        return best_score;
     }
     else
     {
-        int min_score{ std::numeric_limits<int>::max() };
+        int best_score{ INT_MAX };
         for (int i = 0; i < size; ++i)
         {
             for (int j = 0; j < size; ++j)
@@ -78,7 +78,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
                         a_board.set_winner(symbol);
                     }
                     int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, true) };
-                    min_score = std::min(min_score, score);
+                    best_score = std::min(best_score, score);
                     a_beta = std::min(a_beta, score);
                     a_board.set_winner('-');
                     a_board.clear_cell(i, j);
@@ -89,7 +89,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
                 }
             }
         }
-        return min_score;
+        return best_score;
     }
 }
 
@@ -111,10 +111,10 @@ int Solver::get_best_move(Board& a_board) const
             }
         }
     }
-    int best_score{ std::numeric_limits<int>::min() };
     std::vector<int> best_moves{};
-    int alpha{ std::numeric_limits<int>::min() };
-    int beta{ std::numeric_limits<int>::max() };
+    int best_score{ INT_MIN };
+    int alpha{ INT_MIN };
+    int beta{ INT_MAX };
     for (const std::pair<int, int>& index : possible_moves)
     {
         int i{ index.first }, j{ index.second };
