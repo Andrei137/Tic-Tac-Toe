@@ -13,13 +13,7 @@ Randomizer& Randomizer::operator=(const Randomizer& a_other)
 
 std::pair<int, int> Randomizer::get_move(const Board& a_board) const
 {
-    std::cout << "\nComputer is thinking";
-    for (int i = 0; i < 3; ++i)
-    {
-        rlutil::msleep(100);
-        std::cout << '.';
-        rlutil::msleep(400);
-    }
+    loading(a_board);
     int size{ a_board.get_size() };
     for (int i = 1; i <= size * size; ++i)
     {

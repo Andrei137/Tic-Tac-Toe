@@ -18,7 +18,7 @@ Player& Player::operator=(const Player& a_other)
     return *this;
 }
 
-std::istream& operator>>(std::istream& a_in, std::shared_ptr<Player>& a_player)
+std::istream& operator>>(std::istream& a_in, const std::shared_ptr<Player>& a_player)
 {
     std::regex name_pattern(R"(^[a-zA-Z0-9_!@#$%^&*()\-+=\[\]{};:'\",.<>/?\|`~ ]{1,20}$)");
     bool valid{ false };
@@ -26,6 +26,7 @@ std::istream& operator>>(std::istream& a_in, std::shared_ptr<Player>& a_player)
     {
         try
         {
+            rlutil::showcursor();
             std::cout << "(" << a_player->m_symbol << ") Insert name\n-> ";
             std::string temp{};
             a_in >> temp;
@@ -38,6 +39,7 @@ std::istream& operator>>(std::istream& a_in, std::shared_ptr<Player>& a_player)
         }
         catch (const name_error& err)
         {
+            rlutil::hidecursor();
             rlutil::cls();
             std::cerr << err.what() << '\n';
             rlutil::msleep(2500);

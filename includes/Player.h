@@ -23,7 +23,7 @@ public:
     Player& operator=(const Player&);
     virtual ~Player() = default;
 
-    friend std::istream& operator>>(std::istream&, std::shared_ptr<Player>&);
+    friend std::istream& operator>>(std::istream&, const std::shared_ptr<Player>&);
     friend std::ostream& operator<<(std::ostream&, const Player&);
 
     static std::pair<int, int> convert(int, int);

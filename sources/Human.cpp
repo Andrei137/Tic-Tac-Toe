@@ -47,17 +47,17 @@ std::pair<int, int> Human::get_move(const Board& a_board) const
         }
         catch (not_number_error const& err)
         {
+            rlutil::hidecursor();
             rlutil::cls();
             std::cout << err.what();
             rlutil::msleep(2000);
-            rlutil::cls();
         }
         catch (out_of_bound_error const& err)
         {
+            rlutil::hidecursor();
             rlutil::cls();
             std::cout << err.what();
             rlutil::msleep(2000);
-            rlutil::cls();
         }
     }
     return convert(index, a_board.get_size());

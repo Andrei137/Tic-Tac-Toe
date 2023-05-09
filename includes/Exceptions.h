@@ -35,13 +35,13 @@ class input_error : public std::runtime_error
 class number_of_players_error : public input_error
 {
 public:
-    number_of_players_error() : input_error("Invalid input. Please choose 1 or 2 players or exit de program!") {}
+    number_of_players_error() : input_error("Invalid input. Please choose 1 or 2 players or select \"Exit\"!") {}
 };
 
 class difficulty_error : public input_error
 {
 public:
-    difficulty_error() : input_error("Invalid input. Please choose a valid difficulty option!") {}
+    difficulty_error() : input_error("Invalid input. Please choose a valid difficulty option or select \"Go Back\"!") {}
 };
 
 class name_error : public input_error

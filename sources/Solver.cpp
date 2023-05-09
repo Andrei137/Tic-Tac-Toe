@@ -160,13 +160,7 @@ int Solver::get_best_move(Board& a_board) const
 
 std::pair<int, int> Solver::get_move(const Board& a_board) const
 {
-    std::cout << "\nComputer is thinking";
-    for (int i = 0; i < 3; ++i)
-    {
-        rlutil::msleep(100);
-        std::cout << '.';
-        rlutil::msleep(400);
-    }
+    loading(a_board);
     Board copy{ a_board };
     return convert(get_best_move(copy), a_board.get_size());
 }

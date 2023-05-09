@@ -1,6 +1,6 @@
 #include "../includes/Game.h"
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('-'), m_difficulty('-'), m_reseted(true)
+Game::Game(int a_size) : m_board(a_size), m_gamemode('-'), m_difficulty('?'), m_reseted(true)
 {
     m_players[0] = std::make_shared<Human>('X');
 }
@@ -99,6 +99,8 @@ void Game::play()
         {
             try
             {
+                rlutil::cls();
+                rlutil::showcursor();
                 std::pair<int, int> temp{ m_players[turn % 2]->get_move(m_board) };
                 row = temp.first;
                 col = temp.second;
@@ -130,6 +132,7 @@ void Game::play()
             }
             catch (const out_of_bound_error& err)
             {
+                rlutil::hidecursor();
                 rlutil::cls();
                 std::cerr << err.what() << '\n';
                 rlutil::msleep(2000);
@@ -137,6 +140,8 @@ void Game::play()
             }
             catch (const non_empty_cell_error& err)
             {
+                rlutil::hidecursor();
+                rlutil::cls();
                 std::cerr << err.what() << '\n';
                 rlutil::msleep(2000);
                 rlutil::cls();
@@ -176,18 +181,33 @@ void Game::tictactoe()
 {
     while (true)
     {
-        // TODO: exceptii pentru user input
-        if (m_gamemode == '-')
+        while (m_gamemode == '-')
         {
-            rlutil::cls();
-            rlutil::showcursor();
-            print_logo();
-            std::cout << "< Number of players >\n";
-            std::cout << "[1] Player vs Computer\n";
-            std::cout << "[2] Player vs Player\n";
-            std::cout << "[0] Exit\n\n";
-            std::cout << "-> ";
-            std::cin >> m_gamemode;
+            try
+            {
+                rlutil::cls();
+                rlutil::showcursor();
+                print_logo();
+                std::cout << "< Number of players >\n";
+                std::cout << "[1] Player vs Computer\n";
+                std::cout << "[2] Player vs Player\n";
+                std::cout << "[0] Exit\n\n";
+                std::cout << "-> ";
+                str temp{};
+                std::cin >> temp;
+                if (temp != "0" && temp != "1" && temp != "2")
+                {
+                    throw number_of_players_error();
+                }
+                m_gamemode = temp[0];
+            }
+            catch (const number_of_players_error& err)
+            {
+                rlutil::hidecursor();
+                rlutil::cls();
+                std::cerr << err.what() << '\n';
+                rlutil::msleep(2000);
+            }
         }
         if (m_gamemode == '0')
         {
@@ -196,28 +216,40 @@ void Game::tictactoe()
         }
         else if (m_gamemode == '1')
         {
-            int wrong_input{ 0 };
+            if (m_difficulty == '?')
+            {
+                m_difficulty = '-';
+            }
             while (m_difficulty == '-')
             {
-                rlutil::cls();
-                std::cout << "< Difficulty >\n";
-                std::cout << "[1] Normal\n";
-                std::cout << "[2] Impossible\n";
-                std::cout << "[0] Go Back\n\n";
-                std::cout << "-> ";
-                std::cin >> m_difficulty;
-                if (wrong_input == 10)
+                try
                 {
-                    m_gamemode = '1';
+                    rlutil::cls();
+                    rlutil::showcursor();
+                    std::cout << "< Difficulty >\n";
+                    std::cout << "[1] Normal\n";
+                    std::cout << "[2] Impossible\n";
+                    std::cout << "[0] Go Back\n\n";
+                    std::cout << "-> ";
+                    str temp{};
+                    std::cin >> temp;
+                    if (temp != "0" && temp != "1" && temp != "2")
+                    {
+                        throw difficulty_error();
+                    }
+                    m_difficulty = temp[0];
+                    if (m_difficulty == '0')
+                    {
+                        m_gamemode = '-';
+                        m_difficulty = '?';
+                    }
                 }
-                if (m_difficulty == '0')
+                catch (const difficulty_error& err)
                 {
-                    m_gamemode = '-';
-                }
-                else if (m_difficulty != '1' && m_difficulty != '2')
-                {
-                    m_difficulty = '-';
-                    ++wrong_input;
+                    rlutil::hidecursor();
+                    rlutil::cls();
+                    std::cerr << err.what() << '\n';
+                    rlutil::msleep(2000);
                 }
             }
         }
@@ -225,102 +257,141 @@ void Game::tictactoe()
         {
             play();
             char replay_decision{ '-' };
-            int wrong_input{ 0 };
             while (replay_decision == '-')
             {
-                std::cout << "Want to replay? [y]es [n]o\n-> ";
-                std::cin >> replay_decision;
-                rlutil::cls();
-                if (wrong_input == 10)
+                try
                 {
-                    replay_decision = 'n';
-                }
-                if (replay_decision == 'y')
-                {
-                    m_reseted = false;
-                    char sides_decision{ '-' };
-                    wrong_input = 0;
-                    while (sides_decision == '-')
+                    rlutil::showcursor();
+                    std::cout << "Want to replay? [y]es [n]o\n-> ";
+                    str temp{};
+                    std::cin >> temp;
+                    if (temp != "y" && temp != "n")
                     {
+                        throw replay_error();
+                    }
+                    replay_decision = temp[0];
+                    rlutil::cls();
+                }
+                catch (const replay_error& err)
+                {
+                    rlutil::hidecursor();
+                    rlutil::cls();
+                    std::cerr << err.what() << '\n';
+                    rlutil::msleep(2000);
+                    rlutil::cls();
+                }
+            }
+            if (replay_decision == 'y')
+            {
+                m_reseted = false;
+                char sides_decision{ '-' };
+                while (sides_decision == '-')
+                {
+                    try
+                    {
+                        rlutil::cls();
+                        rlutil::showcursor();
                         std::cout << "Want to replay? yes\n";
                         std::cout << "Want to switch sides? [y]es [n]o\n-> ";
-                        std::cin >> sides_decision;
+                        str temp{};
+                        std::cin >> temp;
+                        if (temp != "y" && temp != "n")
+                        {
+                            throw replay_error();
+                        }
+                        sides_decision = temp[0];
                         rlutil::cls();
-                        if (wrong_input == 10)
-                        {
-                            sides_decision = 'n';
-                        }
-                        if (sides_decision == 'y')
-                        {
-                            std::shared_ptr<Player> temp{ m_players[0] };
-                            m_players[0] = m_players[1];
-                            m_players[1] = temp;
-                            m_players[0]->set_symbol('X');
-                            m_players[1]->set_symbol('O');
-                        }
-                        else if (sides_decision != 'n')
-                        {
-                            rlutil::cls();
-                            ++wrong_input;
-                            sides_decision = '-';
-                        }
+                    }
+                    catch (const replay_error& err)
+                    {
+                        rlutil::hidecursor();
+                        rlutil::cls();
+                        std::cerr << err.what() << '\n';
+                        rlutil::msleep(2000);
                     }
                 }
-                else if (replay_decision == 'n')
+                if (sides_decision == 'y')
                 {
-                    m_reseted = true;
-                    m_players[1] = nullptr;
-                    m_players[0]->reset_wins();
-                    Player::reset_draws();
-                    char change_players_decision{ '-' };
-                    wrong_input = 0;
-                    while (change_players_decision == '-')
+                    std::shared_ptr<Player> temp{ m_players[0] };
+                    m_players[0] = m_players[1];
+                    m_players[1] = temp;
+                    m_players[0]->set_symbol('X');
+                    m_players[1]->set_symbol('O');
+                }
+            }
+            else
+            {
+                m_reseted = true;
+                m_players[1] = nullptr;
+                m_players[0]->reset_wins();
+                Player::reset_draws();
+                char change_players_decision{ '-' };
+                while (change_players_decision == '-')
+                {
+                    try
                     {
+                        rlutil::cls();
+                        rlutil::showcursor();
                         std::cout << "Want to replay? no\n";
                         std::cout << "Want to change players? [y]es [n]o\n-> ";
-                        std::cin >> change_players_decision;
+                        str temp{};
+                        std::cin >> temp;
+                        if (temp != "y" && temp != "n")
+                        {
+                            throw replay_error();
+                        }
+                        change_players_decision = temp[0];
                         rlutil::cls();
-                        if (wrong_input == 10)
-                        {
-                            change_players_decision = 'n';
-                        }
-                        if (change_players_decision == 'y')
-                        {
-                            m_gamemode = '2';
-                        }
-                        else if (change_players_decision == 'n')
-                        {
-                            char change_gamemode_decision{ '-' };
-                            while (change_gamemode_decision == '-')
-                            {
-                                std::cout << "Want to replay? no\n";
-                                std::cout << "Want to change players? no\n";
-                                std::cout << "Want to change gamemode? [y]es [n]o\n-> ";
-                                std::cin >> change_gamemode_decision;
-                                rlutil::cls();
-                                if (change_gamemode_decision == 'y')
-                                {
-                                    m_gamemode = '-';
-                                }
-                                else
-                                {
-                                    return;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            rlutil::cls();
-                            ++wrong_input;
-                            change_players_decision = '-';
-                        }
                     }
+                    catch (const replay_error& err)
+                    {
+                        rlutil::hidecursor();
+                        rlutil::cls();
+                        std::cerr << err.what() << '\n';
+                        rlutil::msleep(2000);
+                    }
+                }
+                if (change_players_decision == 'y')
+                {
+                    m_gamemode = '2';
                 }
                 else
                 {
-                    rlutil::cls();
-                    ++wrong_input;
-                    replay_decision = '-';
+                    char change_gamemode_decision{ '-' };
+                    while (change_gamemode_decision == '-')
+                    {
+                        try
+                        {
+                            rlutil::cls();
+                            rlutil::showcursor();
+                            std::cout << "Want to replay? no\n";
+                            std::cout << "Want to change players? no\n";
+                            std::cout << "Want to change gamemode? [y]es [n]o\n-> ";
+                            str temp{};
+                            std::cin >> temp;
+                            if (temp != "y" && temp != "n")
+                            {
+                                throw replay_error();
+                            }
+                            change_gamemode_decision = temp[0];
+                            rlutil::cls();
+                        }
+                        catch (const replay_error& err)
+                        {
+                            rlutil::hidecursor();
+                            rlutil::cls();
+                            std::cerr << err.what() << '\n';
+                            rlutil::msleep(2000);
+                        }
+                    }
+                    if (change_gamemode_decision == 'y')
+                    {
+                        m_gamemode = '-';
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             }
         }
