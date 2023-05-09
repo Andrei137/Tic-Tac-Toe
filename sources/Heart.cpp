@@ -1,4 +1,7 @@
 #include "../includes/Heart.h"
+#include <cmath>
+#include <iostream>
+#include <rlutil.h>
 
 #define elif else if
 

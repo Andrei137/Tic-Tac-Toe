@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Board.h"
-#include <fstream>
 #include <memory>
 #include <rlutil.h>
 #include <string>
@@ -26,7 +25,7 @@ public:
     friend std::ostream& operator<<(std::ostream&, const Player&);
 
     static std::pair<int, int> convert(int, int);
-    virtual std::pair<int, int> get_move(Board&) const = 0;
+    virtual std::pair<int, int> get_move(const Board&) const = 0;
 
     const str& get_name() const;
     char get_symbol() const;

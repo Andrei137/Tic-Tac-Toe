@@ -8,13 +8,12 @@ Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m
 
 Player& Player::operator=(const Player& a_other)
 {
-    if (this == &a_other) 
+    if (this != &a_other) 
     {
-        return *this;
+        m_symbol = a_other.m_symbol;
+        m_name = a_other.m_name;
+        m_wins = a_other.m_wins;
     }
-    m_symbol = a_other.m_symbol;
-    m_name = a_other.m_name;
-    m_wins = a_other.m_wins;
     return *this;
 }
 

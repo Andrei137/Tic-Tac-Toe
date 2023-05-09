@@ -4,17 +4,15 @@ Randomizer::Randomizer(char a_symbol) : AI(a_symbol) {}
 
 Randomizer& Randomizer::operator=(const Randomizer& a_other)
 {
-    if (this == &a_other)
+    if (this != &a_other)
     {
-        return *this;
+        AI::operator=(a_other);
     }
-    AI::operator=(a_other);
     return *this;
 }
 
-std::pair<int, int> Randomizer::get_move(Board& a_board) const
+std::pair<int, int> Randomizer::get_move(const Board& a_board) const
 {
-    srand(time(0));
     std::cout << "\nComputer is thinking";
     for (int i = 0; i < 3; ++i)
     {
@@ -46,6 +44,7 @@ std::pair<int, int> Randomizer::get_move(Board& a_board) const
             return convert(i, size);
         }
     }
+    srand(time(0));
     int number{ -1 };
     while (number == -1)
     {

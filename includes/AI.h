@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Player.h"
+#include <ctime>
+#include <cstdlib>
 
 class AI : public Player
 {
@@ -10,5 +12,5 @@ protected:
     AI& operator=(const AI&);
     ~AI() override = default;
 
-    std::pair<int, int> get_move(Board&) const override  = 0;
+    std::pair<int, int> get_move(const Board&) const override  = 0;
 };

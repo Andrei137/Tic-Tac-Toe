@@ -7,15 +7,14 @@ Human::Human(char a_symbol) : Player(a_symbol)
 
 Human& Human::operator=(const Human& a_other)
 {
-    if (this == &a_other) 
+    if (this != &a_other) 
     {
-        return *this;
+        Player::operator=(a_other);
     }
-    Player::operator=(a_other);
     return *this;
 }
 
-std::pair<int, int> Human::get_move(Board& a_board) const
+std::pair<int, int> Human::get_move(const Board& a_board) const
 {
     rlutil::showcursor();
     str temp_player{};

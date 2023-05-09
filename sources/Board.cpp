@@ -3,30 +3,9 @@
 
 using namespace tabulate;
 
-Board::Board(int a_size) : m_size(a_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner('-')
-{
-    int nr{1}, digits_max{ nr_digits(m_size * m_size) };
-    for (int i = 0; i < m_size; ++i)
-    {
-        for (int j = 0; j < m_size; ++j)
-        {
-            std::string s{};
-            if (digits_max == 1)
-            {
-                s = " ";
-            }
-            int digits{ nr_digits(nr) };
-            while (digits < digits_max)
-            {
-                s += " ";
-                ++digits;
-            }
-            m_cells[i][j].set_free_pos(s + std::to_string(nr++) + " ");
-        }
-    }
-}
+Board::Board(int a_size) : m_size(a_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner('-') {}
 
-Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner(a_other.m_winner)
+Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(m_size, std::vector<Square>(m_size)), m_winner(a_other.m_winner) 
 {
     for (int i = 0; i < m_size; ++i)
     {
@@ -39,7 +18,7 @@ Board::Board(const Board& a_other) : m_size(a_other.m_size), m_cells(m_size, std
 
 Board& Board::operator=(const Board& a_other)
 {
-    if (this != &a_other)
+    if (this != &a_other) 
     {
         m_size = a_other.m_size;
         m_winner = a_other.m_winner;
@@ -106,7 +85,14 @@ std::ostream& operator<< (std::ostream& a_out, const Board& a_board)
         table_right.add_row({ row_right });
 
     }
-    full_table.add_row({ table_left, table_right });
+    if (a_board.m_winner == '-')
+    {
+        full_table.add_row({ table_left, table_right });
+    }
+    else
+    {
+        full_table.add_row({ table_left });
+    }
     full_table.format().hide_border();
     a_out << full_table;
     return a_out;
@@ -117,6 +103,11 @@ int Board::get_size() const
     return m_size;
 }
 
+char Board::get_value(int a_row, int a_col) const
+{
+    return m_cells[a_row][a_col].get_value();
+}
+
 char Board::get_winner() const
 {
     return m_winner;
@@ -125,13 +116,13 @@ char Board::get_winner() const
 void Board::set_cell(int a_row, int a_col, char a_value)
 {
     m_cells[a_row][a_col].set_value(a_value);
-    str s{ " - "};
-    if (nr_digits(m_size * m_size) == 3)
-    {
-        s += " ";
-    }
-    m_cells[a_row][a_col].set_free_pos(s);
     m_cells[a_row][a_col].set_occupied(true);
+}
+
+void Board::clear_cell(int a_row, int a_col)
+{
+    m_cells[a_row][a_col].set_value(' ');
+    m_cells[a_row][a_col].set_occupied(false);
 }
 
 void Board::set_winner(char a_winner)
@@ -148,19 +139,6 @@ void Board::reset()
         {
             m_cells[i][j].set_value(' ');
             m_cells[i][j].set_occupied(false);
-            int nr{ i * m_size + j + 1 };
-            std::string s{};
-            if (nr_digits(m_size * m_size) == 1)
-            {
-                s = " ";
-            }
-            int digits{ nr_digits(nr) };
-            while (digits < nr_digits(m_size * m_size))
-            {
-                s += " ";
-                ++digits;
-            }
-            m_cells[i][j].set_free_pos(s + std::to_string(nr) + " ");
         }
     }
 }

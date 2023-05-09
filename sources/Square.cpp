@@ -1,19 +1,19 @@
 #include "../includes/Square.h"
 
-Square::Square(char a_value, str a_free_pos, bool a_occupied)
-    : m_value(a_value), m_free_pos(std::move(a_free_pos)), m_occupied(a_occupied) {}
+Square::Square(char a_value, bool a_occupied)
+    : m_value(a_value), m_occupied(a_occupied) {}
 
-std::ostream& operator<<(std::ostream& a_out, const Square& a_square)
+Square::Square(const Square& a_other)
+    : m_value(a_other.m_value), m_occupied(a_other.m_occupied) {}
+
+Square& Square::operator=(const Square& a_other)
 {
-    if (a_square.m_occupied)
+    if (this != &a_other)
     {
-        a_out << a_square.m_value;
+        m_value = a_other.m_value;
+        m_occupied = a_other.m_occupied;
     }
-    else
-    {
-        a_out << a_square.m_free_pos;
-    }
-    return a_out;
+    return *this;
 }
 
 char Square::get_value() const
@@ -31,10 +31,6 @@ void Square::set_value(char a_value)
     m_value = a_value;
 }
 
-void Square::set_free_pos(const str& a_free_pos)
-{
-    m_free_pos = a_free_pos;
-}
 
 void Square::set_occupied(bool a_occupied)
 {

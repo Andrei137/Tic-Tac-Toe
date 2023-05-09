@@ -1,7 +1,7 @@
+#pragma once
+
 #include <array>
-#include <iostream>
-#include <cmath>
-#include <rlutil.h>
+#include <string>
 
 using str = std::string;
 

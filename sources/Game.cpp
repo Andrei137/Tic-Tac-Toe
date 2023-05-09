@@ -37,7 +37,7 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     a_out << "(" << a_game.m_players[0]->get_symbol() << ") " << a_game.m_players[0]->get_name() << " : " << a_game.m_players[0]->get_wins() << " - ";
     a_out << "(" << a_game.m_players[1]->get_symbol() << ") " << a_game.m_players[1]->get_name() << " : " << a_game.m_players[1]->get_wins() << ' ';
     a_out << "[Draws : " << Player::get_draws() << "]\n";
-    a_out << a_game.m_board << '\n';
+    a_out << a_game.m_board;
     return a_out;
 }
 
@@ -73,16 +73,13 @@ void Game::play()
     {
         if (m_gamemode == '1')
         {
-            // TODO: m_difficulty 2
-            if (m_difficulty == '1' || m_difficulty == '2')
+            if (m_difficulty == '1')
             {
                 m_players[1] = std::make_shared<Randomizer>('O');
             }
             else
             {
-                std::cout << "In development!";
-                rlutil::cls();
-                return;
+                m_players[1] = std::make_shared<Solver>('O');
             }
         }
         else

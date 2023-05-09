@@ -4,6 +4,7 @@
 #include "Heart.h"
 #include "Human.h"
 #include "Randomizer.h"
+#include "Solver.h"
 #include <array>
 
 class Game
