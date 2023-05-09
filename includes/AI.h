@@ -12,5 +12,5 @@ protected:
     AI& operator=(const AI&);
     ~AI() override = default;
 
-    std::pair<int, int> get_move(const Board&) const override  = 0;
+    std::pair<int, int> get_move(const Board&) const override = 0;
 };

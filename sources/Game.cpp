@@ -14,18 +14,15 @@ Game::~Game()
 
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
-    rlutil::cls();
     rlutil::showcursor();
-    std::cout << "-> (" << a_game.m_players[0]->get_symbol() << ") Insert name : ";
-    str temp{};
-    a_in >> temp;
-    a_game.m_players[0]->set_name(temp);
-    Human* human_ptr{ dynamic_cast<Human*>(a_game.m_players[1].get()) };
+    rlutil::cls();
+    a_in >> a_game.m_players[0];
+    const Human* human_ptr{ dynamic_cast<Human*>(a_game.m_players[1].get()) };
     if (human_ptr != nullptr)
     {
-        std::cout << "-> (" << a_game.m_players[1]->get_symbol() << ") Insert name : ";
-        a_in >> temp;
-        human_ptr->set_name(temp);
+        rlutil::cls();
+        std::cout << "(X) " << a_game.m_players[0]->get_name() << '\n';
+        a_in >> a_game.m_players[1];
     }
     rlutil::cls();
     return a_in;
@@ -34,13 +31,9 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
 std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
 {
     rlutil::cls();
-    a_out << "(" << a_game.m_players[0]->get_symbol() << ") " << a_game.m_players[0]->get_name() << " : " << a_game.m_players[0]->get_wins() << " - ";
-    a_out << "(" << a_game.m_players[1]->get_symbol() << ") " << a_game.m_players[1]->get_name() << " : " << a_game.m_players[1]->get_wins() << ' ';
-    a_out << "[Draws : " << Player::get_draws() << "]\n";
     a_out << a_game.m_board;
     return a_out;
 }
-
 void Game::print_logo()
 {
     std::cout << "\n _______ _        _______           _______ \n";
@@ -53,6 +46,10 @@ void Game::print_logo()
 
 void Game::print_winner()
 {
+    std::pair<str, str> names{ m_players[0]->get_name(), m_players[1]->get_name() };
+    std::pair<int, int> wins{ m_players[0]->get_wins(), m_players[1]->get_wins() };
+    int draws{ Player::get_draws() };
+    m_board.set_scoreboard(Scoreboard{ names, wins, draws });
     std::cout << *this;
     char winner{ m_board.get_winner() };
     if (winner != 'X' && winner != 'O')
@@ -65,7 +62,6 @@ void Game::print_winner()
     }
     std::cout << "Game over!\n\n";
 }
-
 
 void Game::play()
 {
@@ -88,32 +84,62 @@ void Game::play()
         }
         std::cin >> *this;
     }
+    std::pair<str, str> names{ m_players[0]->get_name(), m_players[1]->get_name() };
+    std::pair<int, int> wins{ m_players[0]->get_wins(), m_players[1]->get_wins() };
+    int draws{ Player::get_draws() };
+    m_board.set_scoreboard(Scoreboard{ names, wins, draws });
     m_board.reset();
     int turn{ 0 };
     int row{ -1 }, col{ -1 };
     char symbol{};
     while (true)
     {
-        while (row == -1 && col == -1)
+        bool valid{ false };
+        while (!valid)
         {
-            rlutil::hidecursor();
-            std::cout << *this;
-            std::pair<int, int> temp{ m_players[turn % 2]->get_move(m_board) };
-            row = temp.first;
-            col = temp.second;
-            std::cout << row << ' ' << col << '\n';
-            if (row == -1 && col == -1)
+            try
             {
-                m_board.set_winner(' ');
-                row = col = 0;
+                std::pair<int, int> temp{ m_players[turn % 2]->get_move(m_board) };
+                row = temp.first;
+                col = temp.second;
+                if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
+                {
+                    const Human* human_ptr{ dynamic_cast<Human*>(m_players[turn % 2].get()) };
+                    if (human_ptr != nullptr)
+                    {
+                        rlutil::hidecursor();
+                        rlutil::cls();
+                        if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
+                        {
+                            row = col = -1;
+                            throw OutOfBoundsCellException();
+                        }
+                        else
+                        {
+                            row = col = -1;
+                            throw NonEmptyCellException();
+                        }
+                    }
+                }
+                else if (row == -1 && col == -1)
+                {
+                    m_board.set_winner(' ');
+                    row = col = 0;
+                }
+                valid = true;
             }
-            else if (row < 0 || row >= m_board.get_size() || col < 0 || col >= m_board.get_size())
+            catch (const OutOfBoundsCellException& err)
             {
-                row = col = -1;
+                rlutil::cls();
+                std::cerr << err.what() << '\n';
+                rlutil::msleep(2000);
+                rlutil::cls();
             }
-            else if (!m_board.valid_move(row, col))
+            catch (const NonEmptyCellException& err)
             {
-                row = col = -1;
+                std::cerr << err.what() << '\n';
+                rlutil::msleep(2000);
+                rlutil::cls();
             }
         }
         symbol = m_players[turn % 2]->get_symbol();

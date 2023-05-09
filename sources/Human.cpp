@@ -1,4 +1,5 @@
 #include "../includes/Human.h"
+#include <regex>
 
 Human::Human(char a_symbol) : Player(a_symbol) 
 {
@@ -16,19 +17,44 @@ Human& Human::operator=(const Human& a_other)
 
 std::pair<int, int> Human::get_move(const Board& a_board) const
 {
-    rlutil::showcursor();
-    str temp_player{};
-    std::cout << "\n-> (" << m_symbol << ") " << m_name << "\'";
-    if (m_name[m_name.size() - 1] != 's')
-    {
-        std::cout << 's';
-    }
-    std::cout << " Turn : ";
+    std::regex digits(R"(^-?[0-9]{1,20}$)"); 
+    bool valid{ false };
     int index{};
-    std::cin >> index;
-    if (index == 0)
+    while (!valid)
     {
-        return { -1, -1 };
+        try
+        {
+            rlutil::cls();
+            std::cout << a_board;
+            rlutil::showcursor();
+            std::cout << *this;
+            str temp{};
+            std::cin >> temp;
+            if (!std::regex_match(temp, digits))
+            {
+                throw NotNumberException();
+            }
+            else if (temp.size() > 3)
+            {
+                throw OutOfBoundsCellException();
+            }
+            index = std::stoi(temp);
+            valid = true;
+        }
+        catch (NotNumberException const& err)
+        {
+            rlutil::cls();
+            std::cout << err.what();
+            rlutil::msleep(2000);
+            rlutil::cls();
+        }
+        catch (OutOfBoundsCellException const& err)
+        {
+            rlutil::cls();
+            std::cout << err.what();
+            rlutil::msleep(2000);
+            rlutil::cls();
+        }
     }
     return convert(index, a_board.get_size());
 }

@@ -1,15 +1,17 @@
 #pragma once
 
 #include "Square.h"
+#include "Scoreboard.h"
 #include <iostream>
 #include <vector>
 
 class Board
 {
     int m_size{};
-    std::vector<std::vector<Square>> m_cells{};
+    std::vector<std::vector<Square>> m_Squares{};
     char m_winner{};
-    
+    Scoreboard m_scoreboard{};
+
 public:
     Board() = default;
     explicit Board(int);
@@ -23,10 +25,12 @@ public:
     int get_size() const;
     char get_value(int, int) const;
     char get_winner() const;
+    Scoreboard get_scoreboard() const;
     
     void set_cell(int, int, char);
     void clear_cell(int, int);
     void set_winner(char);
+    void set_scoreboard(const Scoreboard&);
 
     void reset();
     bool valid_move(int, int) const;

@@ -1,4 +1,5 @@
 #include "../includes/Player.h"
+#include <regex>
 
 int Player::m_draws{0};
 
@@ -17,9 +18,44 @@ Player& Player::operator=(const Player& a_other)
     return *this;
 }
 
+std::istream& operator>>(std::istream& a_in, std::shared_ptr<Player>& a_player)
+{
+    std::regex name_pattern(R"(^[a-zA-Z0-9_!@#$%^&*()\-+=\[\]{};:'\",.<>/?\|`~ ]{1,20}$)");
+    bool valid{ false };
+    while (!valid)
+    {
+        try
+        {
+            std::cout << "(" << a_player->m_symbol << ") Insert name\n-> ";
+            std::string temp{};
+            a_in >> temp;
+            if (!std::regex_match(temp, name_pattern) || a_in.fail() || temp.size() > 20)
+            {
+                throw NameInputException();
+            }
+            a_player->m_name = temp;
+            valid = true;
+        }
+        catch (const NameInputException& err)
+        {
+            rlutil::cls();
+            std::cerr << err.what() << '\n';
+            rlutil::msleep(2500);
+            rlutil::cls();
+        }
+    }
+    return a_in;
+}
+
 std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
 {
-    a_out << "Player: " << a_player.get_name() << ", Symbol: " << a_player.get_symbol() << ", Wins: " << a_player.get_wins() << ", Draws: " << Player::get_draws() << '\n';
+    rlutil::showcursor();
+    a_out << "\n\n(" << a_player.m_symbol << ") " << a_player.m_name << "\'";
+    if (a_player.m_name[a_player.m_name.size() - 1] != 's')
+    {
+        a_out << 's';
+    }
+    a_out << " Turn\n-> ";
     return a_out;
 }
 
