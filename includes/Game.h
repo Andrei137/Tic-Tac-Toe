@@ -5,6 +5,7 @@
 #include "Human.h"
 #include "Randomizer.h"
 #include "Solver.h"
+#include "StickyNoob.h"
 #include <array>
 
 class Game
