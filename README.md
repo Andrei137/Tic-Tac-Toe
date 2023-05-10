@@ -58,7 +58,7 @@
 - [x] STL
 - [x] cât mai multe `const`
 - [x] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului
-- [x] tag de `git`: de exemplu `v0.2`
+- [] tag de `git`: de exemplu `v0.2`
 
 ## Tema 3
 
