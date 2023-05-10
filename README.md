@@ -57,8 +57,8 @@
 - [x] funcții și atribute `static`
 - [x] STL
 - [x] cât mai multe `const`
-- [ ] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului
-- [ ] tag de `git`: de exemplu `v0.2`
+- [x] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului : [6f94cf0](https://github.com/Andrei137/Tic-Tac-Toe/commit/6f94cf0b545c430603f08bb6cd462e1b62bb941e)
+- [x] tag de `git`: de exemplu `v0.2`
 
 ## Tema 3
 
