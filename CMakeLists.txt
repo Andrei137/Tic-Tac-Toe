@@ -82,7 +82,7 @@ find_package(Threads REQUIRED)
 ###############################################################################
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
-add_executable(${PROJECT_NAME} Main.cpp sources/AI.cpp sources/Board.cpp sources/Game.cpp sources/Heart.cpp sources/Human.cpp sources/Player.cpp sources/Randomizer.cpp sources/Scoreboard.cpp sources/Solver.cpp sources/Square.cpp sources/StickyNoob.cpp)
+add_executable(${PROJECT_NAME} Main.cpp sources/AI.cpp sources/Board.cpp sources/Game.cpp sources/Heart.cpp sources/Human.cpp sources/Player.cpp sources/Randomizer.cpp sources/Scoreboard.cpp sources/Solver.cpp sources/Square.cpp)
 
 ###############################################################################
 
