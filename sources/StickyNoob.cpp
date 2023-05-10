@@ -1,6 +1,9 @@
 #include "../includes/StickyNoob.h"
 
-StickyNoob::StickyNoob(char a_symbol) : AI(a_symbol) {}
+StickyNoob::StickyNoob(char a_symbol) : AI(a_symbol) 
+{
+    this->set_name("Computer (Easy)");
+}
 
 StickyNoob& StickyNoob::operator=(const StickyNoob& a_other)
 {

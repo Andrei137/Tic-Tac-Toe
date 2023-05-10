@@ -389,46 +389,83 @@ void Game::tictactoe()
                         rlutil::msleep(2000);
                     }
                 }
-                if (change_players_decision == 'y')
+                if (change_players_decision == 'n')
                 {
-                    m_gamemode = '2';
-                }
-                else
-                {
-                    char change_gamemode_decision{ '-' };
-                    while (change_gamemode_decision == '-')
+                    char change_difficulty_decision{ '-' };
+                    if (m_difficulty != '-' && m_difficulty != '?')
                     {
-                        try
+                        while (change_difficulty_decision == '-')
                         {
-                            rlutil::cls();
-                            rlutil::showcursor();
-                            std::cout << "Want to replay? no\n";
-                            std::cout << "Want to change players? no\n";
-                            std::cout << "Want to change gamemode? [y]es [n]o\n-> ";
-                            str temp{};
-                            std::cin >> temp;
-                            if (temp != "y" && temp != "n")
+                            try
                             {
-                                throw replay_error();
+                                rlutil::cls();
+                                rlutil::showcursor();
+                                std::cout << "Want to replay? no\n";
+                                std::cout << "Want to change players? no\n";
+                                std::cout << "Want to change difficulty? [y]es [n]o\n-> ";
+                                str temp{};
+                                std::cin >> temp;
+                                if (temp != "y" && temp != "n")
+                                {
+                                    throw replay_error();
+                                }
+                                change_difficulty_decision = temp[0];
+                                rlutil::cls();
                             }
-                            change_gamemode_decision = temp[0];
-                            rlutil::cls();
+                            catch (const replay_error& err)
+                            {
+                                rlutil::hidecursor();
+                                rlutil::cls();
+                                std::cerr << err.what() << '\n';
+                                rlutil::msleep(2000);
+                            }
                         }
-                        catch (const replay_error& err)
+                        if (change_difficulty_decision == 'y')
                         {
-                            rlutil::hidecursor();
-                            rlutil::cls();
-                            std::cerr << err.what() << '\n';
-                            rlutil::msleep(2000);
+                            m_difficulty = '-';
                         }
                     }
-                    if (change_gamemode_decision == 'y')
+                    if (change_difficulty_decision == '-' || change_difficulty_decision == 'n')
                     {
-                        m_gamemode = '-';
-                    }
-                    else
-                    {
-                        return;
+                        char change_gamemode_decision{ '-' };
+                        while (change_gamemode_decision == '-')
+                        {
+                            try
+                            {
+                                rlutil::cls();
+                                rlutil::showcursor();
+                                std::cout << "Want to replay? no\n";
+                                std::cout << "Want to change players? no\n";
+                                if (change_difficulty_decision == 'n')
+                                {
+                                    std::cout << "Want to change difficulty? no\n";
+                                }
+                                std::cout << "Want to change gamemode? [y]es [n]o\n-> ";
+                                str temp{};
+                                std::cin >> temp;
+                                if (temp != "y" && temp != "n")
+                                {
+                                    throw replay_error();
+                                }
+                                change_gamemode_decision = temp[0];
+                                rlutil::cls();
+                            }
+                            catch (const replay_error& err)
+                            {
+                                rlutil::hidecursor();
+                                rlutil::cls();
+                                std::cerr << err.what() << '\n';
+                                rlutil::msleep(2000);
+                            }
+                        }
+                        if (change_gamemode_decision == 'y')
+                        {
+                            m_gamemode = m_difficulty = '-';
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
             }

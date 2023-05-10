@@ -1,6 +1,9 @@
 #include "../includes/Randomizer.h"
 
-Randomizer::Randomizer(char a_symbol) : AI(a_symbol) {}
+Randomizer::Randomizer(char a_symbol) : AI(a_symbol) 
+{
+    this->set_name("Computer (Normal)");
+}
 
 Randomizer& Randomizer::operator=(const Randomizer& a_other)
 {

@@ -6,7 +6,10 @@
 
 const std::vector<int> Solver::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
 
-Solver::Solver(char a_symbol) : AI(a_symbol) {}
+Solver::Solver(char a_symbol) : AI(a_symbol) 
+{
+    this->set_name("Computer (Impossible)");
+}
 
 Solver& Solver::operator=(const Solver& a_other)
 {
