@@ -3,8 +3,6 @@
 #include <iostream>
 #include <rlutil.h>
 
-#define elif else if
-
 std::array<str, 3> Heart::m_message{"THANK", "  U FOR ", "PLAYING"};
 
 bool Heart::fast_check(float a_x, float a_value1, float a_value2, char a_sign)
@@ -46,7 +44,7 @@ void Heart::print_message(float a_x, float a_y, bool a_condition, int a_i, int& 
             rlutil::setColor(4);
             std::cout << '*';
         }
-        elif (a_condition)
+        else if (a_condition)
         {
             rlutil::setColor(4);
             std::cout << " ";
@@ -87,7 +85,7 @@ void Heart::for_message(float a_y, int a_condition)
         {
             print_message(i, a_y, fast_check(i, -0.06f, 0.06f, '|'), 0, k1);
         }
-        elif (a_condition == 2)
+        else if (a_condition == 2)
         {
             print_message(i, a_y, fast_check(i, -0.12f, 0.12f, '|'), 1, k2);
         }
@@ -106,15 +104,15 @@ void Heart::print_full_heart()
         {
             for_message(y, 1);
         }
-        elif (fast_check(y, 0.4f, 0.45f, '&'))
+        else if (fast_check(y, 0.4f, 0.45f, '&'))
         {
             for_message(y, 2);
         }
-        elif (fast_check(y, 0.25f, 0.3f, '&'))
+        else if (fast_check(y, 0.25f, 0.3f, '&'))
         {
             for_message(y, 3);
         }
-        elif (fast_check(y, 0.2f, 0.6f, '&'))
+        else if (fast_check(y, 0.2f, 0.6f, '&'))
         {
             for_heart(y, 1);
         }

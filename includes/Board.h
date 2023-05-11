@@ -12,6 +12,11 @@ class Board
     char m_winner{};
     Scoreboard m_scoreboard{};
 
+    bool win_col(char, int, int) const;
+    bool win_row(char, int, int) const;
+    bool win_diag1(char, int, int) const; 
+    bool win_diag2(char, int, int) const;
+
 public:
     Board() = default;
     explicit Board(int);
@@ -33,10 +38,6 @@ public:
 
     void reset();
     bool valid_move(int, int) const;
-    bool win_col(char, int, int) const;
-    bool win_row(char, int, int) const;
-    bool win_diag1(char, int, int) const; 
-    bool win_diag2(char, int, int) const;
     bool win(char, int, int) const;
     bool draw() const;
     bool game_over(char, int, int) const;

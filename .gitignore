@@ -708,6 +708,9 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# Sublime Text
+*.sublime-project
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 

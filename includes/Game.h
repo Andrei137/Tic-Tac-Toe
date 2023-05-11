@@ -15,6 +15,15 @@ class Game
     char m_gamemode{};
     char m_difficulty{};
     bool m_reseted{};
+
+    void swap_players();
+    static void print_logo();
+    void print_winner();
+    char make_decision(const str&, const str&);
+    void initialize();
+    std::pair<int, int> get_move(int);
+    void play();
+    void replay();
     
 public:
     Game() = default;
@@ -26,9 +35,5 @@ public:
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
 
-    void swap();
-    static void print_logo();
-    void print_winner();
-    void play();
     void tictactoe();
 };

@@ -41,7 +41,6 @@ std::pair<int, int> Randomizer::get_move(const Board& a_board) const
             return convert(i, size);
         }
     }
-    srand(time(0));
     int number{ -1 };
     while (number == -1)
     {

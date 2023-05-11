@@ -9,6 +9,7 @@ class Solver : public AI
     char opponent_symbol() const;
     int evaluate(Board&) const;
     int minimax(Board&, int, int, int, bool) const;
+    int get_best_move(Board&) const;
 
 public:
     explicit Solver(char);
@@ -16,6 +17,5 @@ public:
     Solver& operator=(const Solver&);
     ~Solver() override = default;
 
-    int get_best_move(Board&) const;
     std::pair<int, int> get_move(const Board&) const override;
 };

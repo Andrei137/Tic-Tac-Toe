@@ -6,7 +6,7 @@ AI& AI::operator=(const AI& a_other)
 {
     if (this != &a_other)
     {
-        AI::operator=(a_other);
+        Player::operator=(a_other);
     }
     return *this;
 }

@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <climits>
 #include <random>
-#include <rlutil.h>
 
 const std::vector<int> Solver::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
 
@@ -30,11 +29,11 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
     int size{ a_board.get_size() };
     if (a_board.get_winner() == m_symbol)
     {
-        return 10 - a_depth;
+        return 10;
     }
     else if (a_board.get_winner() == opponent_symbol())
     {
-        return a_depth - 10;
+        return -10;
     }
     else if (a_board.draw() || a_depth == m_depths[size - 3])
     {
@@ -115,7 +114,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
 int Solver::get_best_move(Board& a_board) const
 {
     int size{ a_board.get_size() };
-    std::vector<std::pair<int, int>> possible_moves{};
+    std::vector<int> possible_moves{};
     for (int i = 0; i < size; ++i)
     {
         for (int j = 0; j < size; ++j)
@@ -126,7 +125,7 @@ int Solver::get_best_move(Board& a_board) const
                 {
                     return i * size + j + 1;
                 }
-                possible_moves.push_back({i, j});
+                possible_moves.push_back(i * size + j + 1);
             }
         }
     }
@@ -134,9 +133,10 @@ int Solver::get_best_move(Board& a_board) const
     int best_score{ INT_MIN };
     int alpha{ INT_MIN };
     int beta{ INT_MAX };
-    for (const std::pair<int, int>& index : possible_moves)
+    for (const int index : possible_moves)
     {
-        int i{ index.first }, j{ index.second };
+        int i{ (index - 1) / size };
+        int j{ (index - 1) % size };
         a_board.set_cell(i, j, m_symbol);
         int score{ minimax(a_board, 0, alpha, beta, false) };
         a_board.clear_cell(i, j);
@@ -144,17 +144,29 @@ int Solver::get_best_move(Board& a_board) const
         {
             best_score = score;
             best_moves.clear();
-            best_moves.push_back(i * size + j + 1);
+            best_moves.push_back(index);
         }
         else if (score == best_score)
         {
-            best_moves.push_back(i * size + j + 1);
+            best_moves.push_back(index);
         }
     }
     if (!best_moves.empty())
     {
-        std::random_device rd;
-        std::mt19937 g(rd());
+        if (size == 3 && best_moves == possible_moves)
+        {
+            std::vector copy{ best_moves };
+            best_moves.clear();
+            for (const int index : copy)
+            {
+                if (index % 2)
+                {
+                    best_moves.push_back(index);
+                }
+            }
+        }
+        static std::random_device rd;
+        static std::mt19937 g(rd());
         std::shuffle(best_moves.begin(), best_moves.end(), g);
         return best_moves[0];
     }

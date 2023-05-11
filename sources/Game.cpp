@@ -1,6 +1,6 @@
 #include "../includes/Game.h"
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('-'), m_difficulty('?'), m_reseted(true)
+Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_reseted(true)
 {
     m_players[0] = std::make_shared<Human>('X');
 }
@@ -12,7 +12,7 @@ Game::~Game()
     Heart::print_full_heart();
 }
 
-void Game::swap()
+void Game::swap_players()
 {
     std::shared_ptr<Player> temp{ m_players[0] };
     m_players[0] = m_players[1];
@@ -37,7 +37,6 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
         int random{};
         if (a_game.m_difficulty != '?')
         {
-            srand(time(0));
             random = rand() % 2;
         }
         std::cout << "Choosing who goes first";
@@ -51,7 +50,7 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
         if (random == 1)
         {
             std::cout << "Computer goes first!\n\n";
-            a_game.swap();
+            a_game.swap_players();
             a_in >> a_game.m_players[1];
         }
         else
@@ -71,6 +70,7 @@ std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
     a_out << a_game.m_board;
     return a_out;
 }
+
 void Game::print_logo()
 {
     std::cout << "\n _______ _        _______           _______ \n";
@@ -100,15 +100,144 @@ void Game::print_winner()
     std::cout << "Game over!\n\n";
 }
 
+
+char Game::make_decision(const str& a_message, const str& a_options)
+{
+    while (true)
+    {
+        try
+        {
+            rlutil::cls();
+            rlutil::showcursor();
+            if (a_options == "012")
+            {
+                print_logo();
+            }
+            else if (a_message == "Want to replay? [y]es [n]o")
+            {
+                print_winner();
+            }
+            std::cout << a_message << "\n-> ";
+            str temp{};
+            std::cin >> temp;
+            if (temp.size() != 1 || a_options.find(temp[0]) == str::npos)
+            {
+                throw replay_error();
+            }
+            return temp[0];
+        }
+        catch (const replay_error& err)
+        {
+            rlutil::hidecursor();
+            rlutil::cls();
+            std::cerr << err.what() << '\n';
+            rlutil::msleep(2000);
+            rlutil::cls();
+        }
+    }
+}
+
+void Game::initialize()
+{
+    if (m_gamemode == '?')
+    {
+        m_gamemode = make_decision
+        (
+            "< Number of players >\n"
+            "[1] Player vs Computer\n"
+            "[2] Player vs Player\n"
+            "[0] Exit",
+            "012"
+        );
+    }
+    if (m_gamemode == '0')
+    {
+        rlutil::cls();
+        return;
+    }
+    else if (m_gamemode == '1')
+    {
+        if (m_difficulty == '?')
+        {
+            m_difficulty = make_decision
+            (
+                "< Difficulty >\n"
+                "[1] Easy\n"
+                "[2] Normal\n"
+                "[3] Impossible\n"
+                "[0] Go Back",
+                "0123"
+            );
+        }
+    }
+}
+
+std::pair<int, int> Game::get_move(int a_turn)
+{
+    while (true)
+    {
+        try
+        {
+            rlutil::cls();
+            rlutil::showcursor();
+            std::pair<int, int> temp{ m_players[a_turn % 2]->get_move(m_board) };
+            int row { temp.first };
+            int col { temp.second };
+            if (row == -1 && col == -1)
+            {
+                m_board.set_winner(' ');
+                row = col = 0;
+            }
+            else if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
+            {
+                const Human* human_ptr{ dynamic_cast<Human*>(m_players[a_turn % 2].get()) };
+                if (human_ptr != nullptr)
+                {
+                    rlutil::hidecursor();
+                    rlutil::cls();
+                    if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
+                    {
+                        row = col = -1;
+                        throw out_of_bound_error();
+                    }
+                    else
+                    {
+                        row = col = -1;
+                        throw non_empty_cell_error();
+                    }
+                }
+            }
+            return temp;
+        }
+        catch (const out_of_bound_error& err)
+        {
+            rlutil::hidecursor();
+            rlutil::cls();
+            std::cerr << err.what() << '\n';
+            rlutil::msleep(2000);
+            rlutil::cls();
+        }
+        catch (const non_empty_cell_error& err)
+        {
+            rlutil::hidecursor();
+            rlutil::cls();
+            std::cerr << err.what() << '\n';
+            rlutil::msleep(2000);
+            rlutil::cls();
+        }
+    }
+}
+
 void Game::play()
 {
+    srand(time(0));
     if (m_reseted)
     {
         if (m_gamemode == '1')
         {
             if (m_difficulty == '1')
             {
-                m_players[1] = std::make_shared<Randomizer>('O');
+                m_players[1] = std::make_shared<StickyNoob>('O');
             }
             else if (m_difficulty == '2')
             {
@@ -131,64 +260,10 @@ void Game::play()
     m_board.set_scoreboard(Scoreboard{ names, wins, draws });
     m_board.reset();
     int turn{ 0 };
-    int row{ -1 }, col{ -1 };
+    int row{}, col{};
     char symbol{};
     while (true)
     {
-        bool valid{ false };
-        while (!valid)
-        {
-            try
-            {
-                rlutil::cls();
-                rlutil::showcursor();
-                std::pair<int, int> temp{ m_players[turn % 2]->get_move(m_board) };
-                row = temp.first;
-                col = temp.second;
-                if (row == -1 && col == -1)
-                {
-                    m_board.set_winner(' ');
-                    row = col = 0;
-                }
-                else if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
-                {
-                    const Human* human_ptr{ dynamic_cast<Human*>(m_players[turn % 2].get()) };
-                    if (human_ptr != nullptr)
-                    {
-                        rlutil::hidecursor();
-                        rlutil::cls();
-                        if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
-                        {
-                            row = col = -1;
-                            throw out_of_bound_error();
-                        }
-                        else
-                        {
-                            row = col = -1;
-                            throw non_empty_cell_error();
-                        }
-                    }
-                }
-                valid = true;
-            }
-            catch (const out_of_bound_error& err)
-            {
-                rlutil::hidecursor();
-                rlutil::cls();
-                std::cerr << err.what() << '\n';
-                rlutil::msleep(2000);
-                rlutil::cls();
-            }
-            catch (const non_empty_cell_error& err)
-            {
-                rlutil::hidecursor();
-                rlutil::cls();
-                std::cerr << err.what() << '\n';
-                rlutil::msleep(2000);
-                rlutil::cls();
-            }
-        }
-        symbol = m_players[turn % 2]->get_symbol();
         if (m_board.get_winner() == ' ')
         {
             rlutil::showcursor();
@@ -197,12 +272,15 @@ void Game::play()
         }
         else 
         {
+            std::pair<int, int> temp{ get_move(turn) };
+            row = temp.first;
+            col = temp.second;
+            symbol = m_players[turn % 2]->get_symbol();
             m_board.set_cell(row, col, symbol);
             if (m_board.game_over(symbol, row, col))
             {
                 break;
             }
-            row = col = -1;
             ++turn;
         }
     }
@@ -218,257 +296,111 @@ void Game::play()
     print_winner();
 }
 
+void Game::replay()
+{
+    char replay_decision
+    { 
+        make_decision
+        (
+            "Want to replay? [y]es [n]o",
+            "yn"
+        ) 
+    };
+    if (replay_decision == 'y')
+    {
+        m_reseted = false;
+        char sides_decision
+        {
+            make_decision
+            (
+                "Want to replay? yes\n"
+                "Want to switch sides? [y]es [n]o",
+                "yn"
+            )
+        };
+        if (sides_decision == 'y')
+        {
+            swap_players();
+        }
+    }
+    else
+    {
+        m_reseted = true;
+        m_players[1] = nullptr;
+        m_players[0]->reset_wins();
+        Player::reset_draws();
+        char change_players_decision
+        {
+            make_decision
+            (
+                "Want to replay? no\n"
+                "Want to change players? [y]es [n]o",
+                "yn"
+            )
+        };
+        if (change_players_decision == 'n')
+        {
+            char change_difficulty_decision{ '-' };
+            if (m_difficulty != '?')
+            {
+                change_difficulty_decision = make_decision
+                (
+                    "Want to replay? no\n"
+                    "Want to change players? no\n"
+                    "Want to change difficulty? [y]es [n]o",
+                    "yn"
+                );
+            }
+            if (change_difficulty_decision == 'y')
+            {
+                m_difficulty = '?';
+            }
+            else
+            {
+                char change_gamemode_decision{};
+                if (change_difficulty_decision == '-')
+                {
+                    change_gamemode_decision =
+                    {
+                        make_decision
+                        (
+                            "Want to replay? no\n"
+                            "Want to change players? no\n"
+                            "Want to change gamemode? [y]es [n]o",
+                            "yn"
+                        )
+                    };
+                }
+                else if (change_difficulty_decision == 'n')
+                {
+                    change_gamemode_decision =
+                    {  
+                        make_decision
+                        (
+                            "Want to replay? no\n"
+                            "Want to change players? no\n"
+                            "Want to change difficulty? no\n"
+                            "Want to change gamemode? [y]es [n]o",
+                            "yn"
+                        )
+                    };
+                }
+                if (change_gamemode_decision == 'n')
+                {
+                    return;
+                }
+                m_gamemode = m_difficulty = '?';
+            }
+        }
+    }
+}
+
 void Game::tictactoe()
 {
     while (true)
     {
-        while (m_gamemode == '-')
-        {
-            try
-            {
-                rlutil::cls();
-                rlutil::showcursor();
-                print_logo();
-                std::cout << "< Number of players >\n";
-                std::cout << "[1] Player vs Computer\n";
-                std::cout << "[2] Player vs Player\n";
-                std::cout << "[0] Exit\n\n";
-                std::cout << "-> ";
-                str temp{};
-                std::cin >> temp;
-                if (temp != "0" && temp != "1" && temp != "2")
-                {
-                    throw number_of_players_error();
-                }
-                m_gamemode = temp[0];
-            }
-            catch (const number_of_players_error& err)
-            {
-                rlutil::hidecursor();
-                rlutil::cls();
-                std::cerr << err.what() << '\n';
-                rlutil::msleep(2000);
-            }
-        }
-        if (m_gamemode == '0')
-        {
-            rlutil::cls();
-            return;
-        }
-        else if (m_gamemode == '1')
-        {
-            if (m_difficulty == '?')
-            {
-                m_difficulty = '-';
-            }
-            while (m_difficulty == '-')
-            {
-                try
-                {
-                    rlutil::cls();
-                    rlutil::showcursor();
-                    std::cout << "< Difficulty >\n";
-                    std::cout << "[1] Easy\n";
-                    std::cout << "[2] Normal\n";
-                    std::cout << "[3] Impossible\n";
-                    std::cout << "[0] Go Back\n\n";
-                    std::cout << "-> ";
-                    str temp{};
-                    std::cin >> temp;
-                    if (temp != "0" && temp != "1" && temp != "2" && temp != "3")
-                    {
-                        throw difficulty_error();
-                    }
-                    m_difficulty = temp[0];
-                    if (m_difficulty == '0')
-                    {
-                        m_gamemode = '-';
-                        m_difficulty = '?';
-                    }
-                }
-                catch (const difficulty_error& err)
-                {
-                    rlutil::hidecursor();
-                    rlutil::cls();
-                    std::cerr << err.what() << '\n';
-                    rlutil::msleep(2000);
-                }
-            }
-        }
-        if (m_gamemode != '-')
-        {
-            play();
-            char replay_decision{ '-' };
-            while (replay_decision == '-')
-            {
-                try
-                {
-                    rlutil::showcursor();
-                    std::cout << "Want to replay? [y]es [n]o\n-> ";
-                    str temp{};
-                    std::cin >> temp;
-                    if (temp != "y" && temp != "n")
-                    {
-                        throw replay_error();
-                    }
-                    replay_decision = temp[0];
-                    rlutil::cls();
-                }
-                catch (const replay_error& err)
-                {
-                    rlutil::hidecursor();
-                    rlutil::cls();
-                    std::cerr << err.what() << '\n';
-                    rlutil::msleep(2000);
-                    rlutil::cls();
-                }
-            }
-            if (replay_decision == 'y')
-            {
-                m_reseted = false;
-                char sides_decision{ '-' };
-                while (sides_decision == '-')
-                {
-                    try
-                    {
-                        rlutil::cls();
-                        rlutil::showcursor();
-                        std::cout << "Want to replay? yes\n";
-                        std::cout << "Want to switch sides? [y]es [n]o\n-> ";
-                        str temp{};
-                        std::cin >> temp;
-                        if (temp != "y" && temp != "n")
-                        {
-                            throw replay_error();
-                        }
-                        sides_decision = temp[0];
-                        rlutil::cls();
-                    }
-                    catch (const replay_error& err)
-                    {
-                        rlutil::hidecursor();
-                        rlutil::cls();
-                        std::cerr << err.what() << '\n';
-                        rlutil::msleep(2000);
-                    }
-                }
-                if (sides_decision == 'y')
-                {
-                    swap();
-                }
-            }
-            else
-            {
-                m_reseted = true;
-                m_players[1] = nullptr;
-                m_players[0]->reset_wins();
-                Player::reset_draws();
-                char change_players_decision{ '-' };
-                while (change_players_decision == '-')
-                {
-                    try
-                    {
-                        rlutil::cls();
-                        rlutil::showcursor();
-                        std::cout << "Want to replay? no\n";
-                        std::cout << "Want to change players? [y]es [n]o\n-> ";
-                        str temp{};
-                        std::cin >> temp;
-                        if (temp != "y" && temp != "n")
-                        {
-                            throw replay_error();
-                        }
-                        change_players_decision = temp[0];
-                        rlutil::cls();
-                    }
-                    catch (const replay_error& err)
-                    {
-                        rlutil::hidecursor();
-                        rlutil::cls();
-                        std::cerr << err.what() << '\n';
-                        rlutil::msleep(2000);
-                    }
-                }
-                if (change_players_decision == 'n')
-                {
-                    char change_difficulty_decision{ '-' };
-                    if (m_difficulty != '-' && m_difficulty != '?')
-                    {
-                        while (change_difficulty_decision == '-')
-                        {
-                            try
-                            {
-                                rlutil::cls();
-                                rlutil::showcursor();
-                                std::cout << "Want to replay? no\n";
-                                std::cout << "Want to change players? no\n";
-                                std::cout << "Want to change difficulty? [y]es [n]o\n-> ";
-                                str temp{};
-                                std::cin >> temp;
-                                if (temp != "y" && temp != "n")
-                                {
-                                    throw replay_error();
-                                }
-                                change_difficulty_decision = temp[0];
-                                rlutil::cls();
-                            }
-                            catch (const replay_error& err)
-                            {
-                                rlutil::hidecursor();
-                                rlutil::cls();
-                                std::cerr << err.what() << '\n';
-                                rlutil::msleep(2000);
-                            }
-                        }
-                        if (change_difficulty_decision == 'y')
-                        {
-                            m_difficulty = '-';
-                        }
-                    }
-                    if (change_difficulty_decision == '-' || change_difficulty_decision == 'n')
-                    {
-                        char change_gamemode_decision{ '-' };
-                        while (change_gamemode_decision == '-')
-                        {
-                            try
-                            {
-                                rlutil::cls();
-                                rlutil::showcursor();
-                                std::cout << "Want to replay? no\n";
-                                std::cout << "Want to change players? no\n";
-                                if (change_difficulty_decision == 'n')
-                                {
-                                    std::cout << "Want to change difficulty? no\n";
-                                }
-                                std::cout << "Want to change gamemode? [y]es [n]o\n-> ";
-                                str temp{};
-                                std::cin >> temp;
-                                if (temp != "y" && temp != "n")
-                                {
-                                    throw replay_error();
-                                }
-                                change_gamemode_decision = temp[0];
-                                rlutil::cls();
-                            }
-                            catch (const replay_error& err)
-                            {
-                                rlutil::hidecursor();
-                                rlutil::cls();
-                                std::cerr << err.what() << '\n';
-                                rlutil::msleep(2000);
-                            }
-                        }
-                        if (change_gamemode_decision == 'y')
-                        {
-                            m_gamemode = m_difficulty = '-';
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-                }
-            }
-        }
+        initialize();
+        play();
+        replay();
     }
 }
