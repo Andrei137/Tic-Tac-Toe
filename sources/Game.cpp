@@ -387,6 +387,7 @@ void Game::replay()
                 }
                 if (change_gamemode_decision == 'n')
                 {
+                    m_gamemode = '0';
                     return;
                 }
                 m_gamemode = m_difficulty = '?';
@@ -400,7 +401,15 @@ void Game::tictactoe()
     while (true)
     {
         initialize();
+        if (m_gamemode == '0')
+        {
+            return;
+        }
         play();
         replay();
+        if (m_gamemode == '0')
+        {
+            return;
+        }
     }
 }
