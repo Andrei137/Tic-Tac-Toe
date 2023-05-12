@@ -83,8 +83,8 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
     {
         str temp{ a_game.m_players[0]->get_name() };
         /*
-        // Get difficulty from between () from temp to fix duplicated names
-        // Compuer (Normal) -> Normal
+            Get difficulty from between () from temp to fix duplicated names
+            Compuer (Normal) -> Normal
         */
         temp = temp.substr(temp.find('('), temp.find(')') - temp.find('(') + 1);
         a_game.m_players[0]->set_name("Computer 1 " + temp);
