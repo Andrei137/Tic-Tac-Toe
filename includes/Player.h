@@ -38,8 +38,7 @@ public:
 
     void add_win();
     static void add_draw();
-    
-    void reset_wins();
+
     static void reset_draws();
 
     virtual std::pair<int, int> get_move(const Board&) const = 0;

@@ -108,11 +108,6 @@ void Player::add_draw()
     ++m_draws;
 }
 
-void Player::reset_wins()
-{
-    m_wins = 0;
-}
-
 void Player::reset_draws()
 {
     m_draws = 0;
