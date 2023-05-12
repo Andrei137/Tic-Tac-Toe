@@ -51,13 +51,13 @@
   - [x] smart pointers
   - [x] `dynamic_cast`
 - [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-- [x] excepții
-  - [x] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
-  - [x] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
+- [ ] excepții
+  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
+  - [ ] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
 - [x] funcții și atribute `static`
 - [x] STL
 - [x] cât mai multe `const`
-- [x] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului : [6f94cf0](https://github.com/Andrei137/Tic-Tac-Toe/commit/6f94cf0b545c430603f08bb6cd462e1b62bb941e)
+- [x] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului : [6f94cf0](https://github.com/Andrei137/Tic-Tac-Toe/commit/77c9c2e2e686bd244d37e7f3958e0195d34f5d1e)
 - [x] tag de `git`: de exemplu `v0.2`
 
 ## Tema 3
