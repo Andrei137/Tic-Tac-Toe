@@ -1,9 +1,7 @@
 #include "../includes/Game.h"
+#include <sstream>
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_reseted(true)
-{
-    m_players[0] = std::make_shared<Human>('X');
-}
+Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_reseted(true) {}
 
 Game::~Game()
 {
@@ -21,6 +19,22 @@ void Game::swap_players()
     m_players[1]->set_symbol('O');
 }
 
+void Game::create_AI(int a_difficulty, int a_index, char a_symbol)
+{
+    if (a_difficulty == 1)
+    {
+        m_players[a_index] = std::make_shared<StickyNoob>(a_symbol);
+    }
+    else if (a_difficulty == 2)
+    {
+        m_players[a_index] = std::make_shared<Randomizer>(a_symbol);
+    }
+    else
+    {
+        m_players[a_index] = std::make_shared<Solver>(a_symbol);
+    }
+}
+
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
     rlutil::cls();
@@ -31,8 +45,10 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
         rlutil::cls();
         std::cout << "(X) " << a_game.m_players[0]->get_name() << '\n';
         a_in >> a_game.m_players[1];
+        return a_in;
     }
-    else
+    human_ptr = dynamic_cast<Human*>(a_game.m_players[0].get());
+    if (human_ptr != nullptr)
     {
         int random{};
         if (a_game.m_difficulty != '?')
@@ -57,9 +73,17 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
         {
             std::cout << "Player goes first!\n\n";
             a_in >> a_game.m_players[0];
+            rlutil::showcursor();
+            rlutil::cls();
         }
-        rlutil::showcursor();
-        rlutil::cls();
+    }
+    if (typeid(*a_game.m_players[0]) == typeid(*a_game.m_players[1]))
+    {
+        str temp{ a_game.m_players[0]->get_name() };
+        // get information from between () from temp Compuer (Normal) -> Normal
+        temp = temp.substr(temp.find('('), temp.find(')') - temp.find('(') + 1);
+        a_game.m_players[0]->set_name("Computer 1 " + temp);
+        a_game.m_players[1]->set_name("Computer 2 " + temp);
     }
     return a_in;
 }
@@ -109,11 +133,11 @@ char Game::make_decision(const str& a_message, const str& a_options)
         {
             rlutil::cls();
             rlutil::showcursor();
-            if (a_options == "012")
+            if (m_gamemode == '?')
             {
                 print_logo();
             }
-            else if (a_message == "Want to replay? [y]es [n]o")
+            else if (m_board.get_winner() != '-')
             {
                 print_winner();
             }
@@ -143,11 +167,12 @@ void Game::initialize()
     {
         m_gamemode = make_decision
         (
-            "< Number of players >\n"
-            "[1] Player vs Computer\n"
-            "[2] Player vs Player\n"
-            "[0] Exit",
-            "012"
+            "< Choose the gamemode >\n"
+            "[1] Computer vs Computer\n"
+            "[2] Player vs Computer\n"
+            "[3] Player vs Player\n"
+            "[0] Exit\n",
+            "0123"
         );
     }
     if (m_gamemode == '0')
@@ -155,7 +180,7 @@ void Game::initialize()
         rlutil::cls();
         return;
     }
-    else if (m_gamemode == '1')
+    else if (m_gamemode == '2')
     {
         if (m_difficulty == '?')
         {
@@ -165,11 +190,105 @@ void Game::initialize()
                 "[1] Easy\n"
                 "[2] Normal\n"
                 "[3] Impossible\n"
-                "[0] Go Back",
+                "[0] Go Back\n",
                 "0123"
             );
         }
     }
+}
+
+void Game::replay()
+{
+    std::stringstream ss{};
+    ss << "Want to replay? ";
+    char replay_decision
+    { 
+        make_decision
+        (
+            ss.str() + "[y]es [n]o",
+            "yn"
+        ) 
+    };
+    if (replay_decision == 'y')
+    {
+        ss << "yes\n"
+              "Want to switch sides? ";
+        m_reseted = false;
+        char sides_decision
+        {
+            make_decision
+            (
+                ss.str() + "[y]es [n]o",
+                "yn"
+            )
+        };
+        if (sides_decision == 'y')
+        {
+            swap_players();
+        }
+        return;
+    }
+    ss << "no\n"
+          "Want to change players? ";
+    m_reseted = true;
+    Player::reset_draws();
+    char change_players_decision
+    {
+        make_decision
+        (
+            ss.str() + "[y]es [n]o",
+            "yn"
+        )
+    };
+    if (change_players_decision == 'y')
+    {
+        return;
+    }
+    char change_difficulty_decision{ '-' };
+    if (m_difficulty != '?')
+    {
+        ss << "no\n"
+              "Want to change difficulty? ";
+        change_difficulty_decision = make_decision
+        (
+            ss.str() + "[y]es [n]o",
+            "yn"
+        );
+    }
+    if (change_difficulty_decision == 'y')
+    {
+        m_difficulty = '?';
+        return;
+    }
+    ss << "no\n"
+          "Want to change gamemode? ";
+    char change_gamemode_decision{};
+    if (change_difficulty_decision == '-')
+    {
+        change_gamemode_decision = make_decision
+        (
+            ss.str() + "[y]es [n]o",
+            "yn"
+        );
+    }
+    else if (change_difficulty_decision == 'n')
+    {
+        change_gamemode_decision =
+        {  
+            make_decision
+            (
+                ss.str() + "[y]es [n]o",
+                "yn"
+            )
+        };
+    }
+    if (change_gamemode_decision == 'n')
+    {
+        m_gamemode = '0';
+        return;
+    }
+    m_board.set_winner('-');
+    m_gamemode = m_difficulty = '?';
 }
 
 std::pair<int, int> Game::get_move(int a_turn)
@@ -230,26 +349,22 @@ std::pair<int, int> Game::get_move(int a_turn)
 
 void Game::play()
 {
-    srand(time(0));
+    m_board.reset();
     if (m_reseted)
     {
         if (m_gamemode == '1')
         {
-            if (m_difficulty == '1')
-            {
-                m_players[1] = std::make_shared<StickyNoob>('O');
-            }
-            else if (m_difficulty == '2')
-            {
-                m_players[1] = std::make_shared<Randomizer>('O');
-            }
-            else
-            {
-                m_players[1] = std::make_shared<Solver>('O');
-            }
+            create_AI(1 + rand() % 3, 0, 'X');
+            create_AI(1 + rand() % 3, 1, 'O');
+        }
+        else if (m_gamemode == '2')
+        {
+            m_players[0] = std::make_shared<Human>('X');
+            create_AI(m_difficulty - '0', 1, 'O');
         }
         else
         {
+            m_players[0] = std::make_shared<Human>('X');
             m_players[1] = std::make_shared<Human>('O');
         }
         std::cin >> *this;
@@ -258,7 +373,6 @@ void Game::play()
     std::pair<int, int> wins{ m_players[0]->get_wins(), m_players[1]->get_wins() };
     int draws{ Player::get_draws() };
     m_board.set_scoreboard(Scoreboard{ names, wins, draws });
-    m_board.reset();
     int turn{ 0 };
     int row{}, col{};
     char symbol{};
@@ -291,107 +405,14 @@ void Game::play()
     }
     else
     {
+        m_board.set_winner('D');
         Player::add_draw();
     }
-    print_winner();
-}
-
-void Game::replay()
-{
-    char replay_decision
-    { 
-        make_decision
-        (
-            "Want to replay? [y]es [n]o",
-            "yn"
-        ) 
-    };
-    if (replay_decision == 'y')
-    {
-        m_reseted = false;
-        char sides_decision
-        {
-            make_decision
-            (
-                "Want to replay? yes\n"
-                "Want to switch sides? [y]es [n]o",
-                "yn"
-            )
-        };
-        if (sides_decision == 'y')
-        {
-            swap_players();
-        }
-        return;
-    }
-    m_reseted = true;
-    m_players[1] = nullptr;
-    m_players[0]->reset_wins();
-    Player::reset_draws();
-    char change_players_decision
-    {
-        make_decision
-        (
-            "Want to replay? no\n"
-            "Want to change players? [y]es [n]o",
-            "yn"
-        )
-    };
-    if (change_players_decision == 'y')
-    {
-        return;
-    }
-    char change_difficulty_decision{ '-' };
-    if (m_difficulty != '?')
-    {
-        change_difficulty_decision = make_decision
-        (
-            "Want to replay? no\n"
-            "Want to change players? no\n"
-            "Want to change difficulty? [y]es [n]o",
-            "yn"
-        );
-    }
-    if (change_difficulty_decision == 'y')
-    {
-        m_difficulty = '?';
-        return;
-    }
-    char change_gamemode_decision{};
-    if (change_difficulty_decision == '-')
-    {
-        change_gamemode_decision = make_decision
-        (
-            "Want to replay? no\n"
-            "Want to change players? no\n"
-            "Want to change gamemode? [y]es [n]o",
-            "yn"
-        );
-    }
-    else if (change_difficulty_decision == 'n')
-    {
-        change_gamemode_decision =
-        {  
-            make_decision
-            (
-                "Want to replay? no\n"
-                "Want to change players? no\n"
-                "Want to change difficulty? no\n"
-                "Want to change gamemode? [y]es [n]o",
-                "yn"
-            )
-        };
-    }
-    if (change_gamemode_decision == 'n')
-    {
-        m_gamemode = '0';
-        return;
-    }
-    m_gamemode = m_difficulty = '?';
 }
 
 void Game::tictactoe()
 {
+    srand(time(0));
     while (true)
     {
         initialize();

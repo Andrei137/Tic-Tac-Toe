@@ -17,13 +17,18 @@ class Game
     bool m_reseted{};
 
     void swap_players();
+    void create_AI(int, int, char);
+
     static void print_logo();
     void print_winner();
+
     char make_decision(const str&, const str&);
     void initialize();
+    void replay();
+
     std::pair<int, int> get_move(int);
     void play();
-    void replay();
+
 
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);
