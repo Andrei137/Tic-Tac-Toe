@@ -16,6 +16,8 @@ protected:
     int m_wins{};
     static int m_draws;
 
+    static std::pair<int, int> convert(int, int);
+
 public:
     Player() = default;
     explicit Player(char);
@@ -25,9 +27,6 @@ public:
 
     friend std::istream& operator>>(std::istream&, const std::shared_ptr<Player>&);
     friend std::ostream& operator<<(std::ostream&, const Player&);
-
-    static std::pair<int, int> convert(int, int);
-    virtual std::pair<int, int> get_move(const Board&) const = 0;
 
     const str& get_name() const;
     char get_symbol() const;
@@ -42,4 +41,6 @@ public:
     
     void reset_wins();
     static void reset_draws();
+
+    virtual std::pair<int, int> get_move(const Board&) const = 0;
 };

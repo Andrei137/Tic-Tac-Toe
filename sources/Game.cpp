@@ -322,78 +322,72 @@ void Game::replay()
         {
             swap_players();
         }
+        return;
     }
-    else
+    m_reseted = true;
+    m_players[1] = nullptr;
+    m_players[0]->reset_wins();
+    Player::reset_draws();
+    char change_players_decision
     {
-        m_reseted = true;
-        m_players[1] = nullptr;
-        m_players[0]->reset_wins();
-        Player::reset_draws();
-        char change_players_decision
-        {
+        make_decision
+        (
+            "Want to replay? no\n"
+            "Want to change players? [y]es [n]o",
+            "yn"
+        )
+    };
+    if (change_players_decision == 'y')
+    {
+        return;
+    }
+    char change_difficulty_decision{ '-' };
+    if (m_difficulty != '?')
+    {
+        change_difficulty_decision = make_decision
+        (
+            "Want to replay? no\n"
+            "Want to change players? no\n"
+            "Want to change difficulty? [y]es [n]o",
+            "yn"
+        );
+    }
+    if (change_difficulty_decision == 'y')
+    {
+        m_difficulty = '?';
+        return;
+    }
+    char change_gamemode_decision{};
+    if (change_difficulty_decision == '-')
+    {
+        change_gamemode_decision = make_decision
+        (
+            "Want to replay? no\n"
+            "Want to change players? no\n"
+            "Want to change gamemode? [y]es [n]o",
+            "yn"
+        );
+    }
+    else if (change_difficulty_decision == 'n')
+    {
+        change_gamemode_decision =
+        {  
             make_decision
             (
                 "Want to replay? no\n"
-                "Want to change players? [y]es [n]o",
+                "Want to change players? no\n"
+                "Want to change difficulty? no\n"
+                "Want to change gamemode? [y]es [n]o",
                 "yn"
             )
         };
-        if (change_players_decision == 'n')
-        {
-            char change_difficulty_decision{ '-' };
-            if (m_difficulty != '?')
-            {
-                change_difficulty_decision = make_decision
-                (
-                    "Want to replay? no\n"
-                    "Want to change players? no\n"
-                    "Want to change difficulty? [y]es [n]o",
-                    "yn"
-                );
-            }
-            if (change_difficulty_decision == 'y')
-            {
-                m_difficulty = '?';
-            }
-            else
-            {
-                char change_gamemode_decision{};
-                if (change_difficulty_decision == '-')
-                {
-                    change_gamemode_decision =
-                    {
-                        make_decision
-                        (
-                            "Want to replay? no\n"
-                            "Want to change players? no\n"
-                            "Want to change gamemode? [y]es [n]o",
-                            "yn"
-                        )
-                    };
-                }
-                else if (change_difficulty_decision == 'n')
-                {
-                    change_gamemode_decision =
-                    {  
-                        make_decision
-                        (
-                            "Want to replay? no\n"
-                            "Want to change players? no\n"
-                            "Want to change difficulty? no\n"
-                            "Want to change gamemode? [y]es [n]o",
-                            "yn"
-                        )
-                    };
-                }
-                if (change_gamemode_decision == 'n')
-                {
-                    m_gamemode = '0';
-                    return;
-                }
-                m_gamemode = m_difficulty = '?';
-            }
-        }
     }
+    if (change_gamemode_decision == 'n')
+    {
+        m_gamemode = '0';
+        return;
+    }
+    m_gamemode = m_difficulty = '?';
 }
 
 void Game::tictactoe()

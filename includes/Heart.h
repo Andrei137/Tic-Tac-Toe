@@ -18,5 +18,6 @@ class Heart
 public:
     Heart() = default;
     ~Heart() = default;
+
     static void print_full_heart();
 };

@@ -24,6 +24,9 @@ class Game
     std::pair<int, int> get_move(int);
     void play();
     void replay();
+
+    friend std::istream& operator>>(std::istream&, Game&);
+    friend std::ostream& operator<<(std::ostream&, const Game&);
     
 public:
     Game() = default;
@@ -31,9 +34,6 @@ public:
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     ~Game();
-    
-    friend std::istream& operator>>(std::istream&, Game&);
-    friend std::ostream& operator<<(std::ostream&, const Game&);
 
     void tictactoe();
 };
