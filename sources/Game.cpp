@@ -77,10 +77,15 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
             rlutil::cls();
         }
     }
-    if (typeid(*a_game.m_players[0]) == typeid(*a_game.m_players[1]))
+    const auto& player1 = *a_game.m_players[0];
+    const auto& player2 = *a_game.m_players[1];
+    if (typeid(player1) == typeid(player2))
     {
         str temp{ a_game.m_players[0]->get_name() };
-        // get information from between () from temp Compuer (Normal) -> Normal
+        /*
+        // Get difficulty from between () from temp to fix duplicated names
+        // Compuer (Normal) -> Normal
+        */
         temp = temp.substr(temp.find('('), temp.find(')') - temp.find('(') + 1);
         a_game.m_players[0]->set_name("Computer 1 " + temp);
         a_game.m_players[1]->set_name("Computer 2 " + temp);
