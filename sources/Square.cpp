@@ -1,10 +1,8 @@
 #include "../includes/Square.h"
 
-Square::Square(char a_value, bool a_occupied)
-    : m_value(a_value), m_occupied(a_occupied) {}
+Square::Square(char a_value, bool a_occupied) : m_value(a_value), m_occupied(a_occupied) {}
 
-Square::Square(const Square& a_other)
-    : m_value(a_other.m_value), m_occupied(a_other.m_occupied) {}
+Square::Square(const Square& a_other) : m_value(a_other.m_value), m_occupied(a_other.m_occupied) {}
 
 Square& Square::operator=(const Square& a_other)
 {
