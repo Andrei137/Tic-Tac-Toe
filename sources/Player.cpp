@@ -26,7 +26,7 @@ str Player::get_input(std::istream& a_in) const
     auto start = std::chrono::steady_clock::now();
     while (!has_input && std::chrono::steady_clock::now() - start < std::chrono::seconds(90))
     {
-        if (_kbhit())
+        if (kbhit())
         {
             has_input = true;
             break;
