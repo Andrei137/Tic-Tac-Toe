@@ -29,8 +29,6 @@ public:
     friend std::istream& operator>>(std::istream&, const std::shared_ptr<Player>&);
     friend std::ostream& operator<<(std::ostream&, const Player&);
 
-    void swap_player(Player&);
-
     const str& get_name() const;
     char get_symbol() const;
     int get_wins() const;

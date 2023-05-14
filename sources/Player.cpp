@@ -61,13 +61,6 @@ std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
     return a_out;
 }
 
-void Player::swap_player(Player& a_other)
-{
-    std::unique_ptr<Player> temp{ a_other.clone() };
-    a_other = *clone();
-    *this = std::move(*temp);
-}
-
 std::pair<int, int> Player::convert(int a_index, int a_board_size)
 {
     int temp{ a_index - 1 };

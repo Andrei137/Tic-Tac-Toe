@@ -9,13 +9,17 @@ Game::~Game()
     rlutil::showcursor();
     Heart::print_full_heart();
     std::cout << "Press any key to exit...";
-    rlutil::anykey();
+    char ch{};
+    std::cin >> ch;
     rlutil::cls();
 }
 
 void Game::swap_players()
 {
-    m_players[0].swap(m_players[1]);
+    std::shared_ptr<Player> temp{ m_players[0]->clone() };
+    m_players[0] = std::move(m_players[1]);
+    m_players[1] = std::move(temp);
+
     m_players[0]->set_symbol('X');
     m_players[1]->set_symbol('O');
 }
