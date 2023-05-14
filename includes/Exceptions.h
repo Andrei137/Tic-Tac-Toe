@@ -25,6 +25,6 @@ class initialization_error : public execution_error
 {
 public:
     explicit initialization_error(const str& a_message) 
-        : execution_error{"Error: The game stopped because the " + a_message + " did not load properly!\n"
+        : execution_error{"Error: The game stopped because the " + std::string(a_message) + " did not load properly!\n"
                           "Try restarting the program or contacting the developer\n\n"} {}
 };
