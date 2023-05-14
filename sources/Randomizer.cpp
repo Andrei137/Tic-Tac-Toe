@@ -5,6 +5,11 @@ Randomizer::Randomizer(char a_symbol) : AI(a_symbol)
     this->set_name("Computer (Normal)");
 }
 
+Randomizer* Randomizer::clone() const
+{
+    return new Randomizer(*this);
+}
+
 Randomizer& Randomizer::operator=(const Randomizer& a_other)
 {
     if (this != &a_other)

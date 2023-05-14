@@ -6,6 +6,7 @@ class StickyNoob : public AI
 {
 public:
     explicit StickyNoob(char);
+    StickyNoob* clone() const override;
     StickyNoob(const StickyNoob&) = default;
     StickyNoob& operator=(const StickyNoob&);
     ~StickyNoob() override = default;

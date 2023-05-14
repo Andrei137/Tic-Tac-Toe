@@ -13,6 +13,7 @@ class Solver : public AI
 
 public:
     explicit Solver(char);
+    Solver* clone() const override;
     Solver(const Solver&) = default;
     Solver& operator=(const Solver&);
     ~Solver() override = default;

@@ -6,6 +6,11 @@ Human::Human(char a_symbol) : Player(a_symbol)
     this->set_name("Unknown");
 }
 
+Human* Human::clone() const
+{
+    return new Human(*this);
+}
+
 Human& Human::operator=(const Human& a_other)
 {
     if (this != &a_other) 

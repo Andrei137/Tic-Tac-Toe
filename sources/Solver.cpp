@@ -10,6 +10,11 @@ Solver::Solver(char a_symbol) : AI(a_symbol)
     this->set_name("Computer (Impossible)");
 }
 
+Solver* Solver::clone() const
+{
+    return new Solver(*this);
+}
+
 Solver& Solver::operator=(const Solver& a_other)
 {
     if (this != &a_other)

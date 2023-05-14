@@ -5,6 +5,11 @@ StickyNoob::StickyNoob(char a_symbol) : AI(a_symbol)
     this->set_name("Computer (Easy)");
 }
 
+StickyNoob* StickyNoob::clone() const
+{
+    return new StickyNoob(*this);
+}
+
 StickyNoob& StickyNoob::operator=(const StickyNoob& a_other)
 {
     if (this != &a_other)

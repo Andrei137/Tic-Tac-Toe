@@ -8,13 +8,14 @@ Game::~Game()
     rlutil::cls();
     rlutil::showcursor();
     Heart::print_full_heart();
+    std::cout << "Press any key to exit...";
+    rlutil::anykey();
+    rlutil::cls();
 }
 
 void Game::swap_players()
 {
-    std::shared_ptr<Player> temp{ m_players[0] };
-    m_players[0] = m_players[1];
-    m_players[1] = temp;
+    m_players[0].swap(m_players[1]);
     m_players[0]->set_symbol('X');
     m_players[1]->set_symbol('O');
 }
@@ -262,6 +263,7 @@ void Game::replay()
     }
     if (change_difficulty_decision == 'y')
     {
+        m_board.set_winner('-');
         m_difficulty = '?';
         return;
     }

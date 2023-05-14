@@ -11,9 +11,9 @@ Player& Player::operator=(const Player& a_other)
 {
     if (this != &a_other) 
     {
-        m_symbol = a_other.m_symbol;
         m_name = a_other.m_name;
         m_wins = a_other.m_wins;
+        m_symbol = a_other.m_symbol;
     }
     return *this;
 }
@@ -59,6 +59,13 @@ std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
     }
     a_out << " Turn\n-> ";
     return a_out;
+}
+
+void Player::swap_player(Player& a_other)
+{
+    std::unique_ptr<Player> temp{ a_other.clone() };
+    a_other = *clone();
+    *this = std::move(*temp);
 }
 
 std::pair<int, int> Player::convert(int a_index, int a_board_size)

@@ -21,12 +21,15 @@ protected:
 public:
     Player() = default;
     explicit Player(char);
+    virtual Player* clone() const = 0;
     Player(const Player&);
     Player& operator=(const Player&);
     virtual ~Player() = default;
 
     friend std::istream& operator>>(std::istream&, const std::shared_ptr<Player>&);
     friend std::ostream& operator<<(std::ostream&, const Player&);
+
+    void swap_player(Player&);
 
     const str& get_name() const;
     char get_symbol() const;

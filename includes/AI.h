@@ -8,6 +8,7 @@ class AI : public Player
 {
 protected:
     explicit AI(char);
+    virtual AI* clone() const override = 0;
     AI(const AI&) = default;
     AI& operator=(const AI&);
     ~AI() override = default;
