@@ -23,47 +23,27 @@ Human& Human::operator=(const Human& a_other)
 std::pair<int, int> Human::get_move(const Board& a_board) const
 {
     std::regex digits(R"(^-?[0-9]{1,20}$)"); 
-    bool valid{ false };
-    int index{};
-    while (!valid)
+    short wrong_inputs{ 0 };
+    while (true)
     {
-        try
+        rlutil::showcursor();
+        if (wrong_inputs == 10)
         {
-            rlutil::cls();
-            std::cout << a_board;
-            rlutil::showcursor();
-            std::cout << *this;
-            str temp{};
-            std::cin >> temp;
-            if (!std::regex_match(temp, digits))
-            {
-                throw not_number_error();
-            }
-            else if (temp.size() > 3)
-            {
-                throw out_of_bound_error();
-            }
-            if (temp == "0")
-            {
-                return {-1, -1};
-            }
-            index = std::stoi(temp);
-            valid = true;
+            throw excessive_attempts_error();
         }
-        catch (not_number_error const& err)
+        std::cout << a_board;
+        std::cout << *this;
+        str temp{ get_input(std::cin) };
+        if (!std::regex_match(temp, digits))
         {
-            rlutil::hidecursor();
-            rlutil::cls();
-            std::cout << err.what();
-            rlutil::msleep(2000);
+            handle_wrong_input(wrong_inputs, "Invalid input. Please choose a number!");
+            continue;
         }
-        catch (out_of_bound_error const& err)
+        if (temp == "0")
         {
-            rlutil::hidecursor();
-            rlutil::cls();
-            std::cout << err.what();
-            rlutil::msleep(2000);
+            return {-1, -1};
         }
+        int index{ std::stoi(temp) };
+        return convert(index, a_board.get_size());
     }
-    return convert(index, a_board.get_size());
 }

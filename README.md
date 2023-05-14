@@ -2,7 +2,7 @@
 
 ### Descriere
 
-- X si O pe matrice de dimensiuni variate (ex: 3x3, 5x5, 7x7).
+- X si O pe matrice de dimensiuni variate (ex: 3x3, 5x5, 7x7), maximul este 9.
 - Pentru dimeniunea 3, se pastreaza regulile clasice.
 - Pentru dimensiuni mai mari, se aplica regula de la Connect 4 pentru a adauga complexitate (se castiga daca se formeaza o linie de lungime 4).
 - Se poate alege intre CvC (Computer vs Computer), PvC/PvE (Player vs Computer/Environment) si PvP (Player vs Player).
@@ -12,9 +12,9 @@
 - Pe Normal, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
 - Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila, algoritmul din spate fiind Minimax cu Alpha-Beta Pruning.
 
-|  Size | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
-| ----- | - | - | - | - | - | - | - | -: |
-| Depth | 9 | 8 | 6 | 5 | 4 | 4 | 4 |  3 |
+|  Size | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+| ----- | - | - | - | - | - | - | - |
+| Depth | 9 | 8 | 6 | 5 | 4 | 4 | 4 |
 
 
 
@@ -52,9 +52,9 @@
   - [x] smart pointers
   - [x] `dynamic_cast`
 - [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-- [ ] excepții
-  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
+- [x] excepții
+  - [x] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
+  - [x] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
 - [x] funcții și atribute `static`
 - [x] STL
 - [x] cât mai multe `const`

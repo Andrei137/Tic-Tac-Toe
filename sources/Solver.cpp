@@ -17,7 +17,7 @@ Solver* Solver::clone() const
 
 Solver& Solver::operator=(const Solver& a_other)
 {
-    if (this != &a_other)
+    if (this != &a_other) 
     {
         AI::operator=(a_other);
     }

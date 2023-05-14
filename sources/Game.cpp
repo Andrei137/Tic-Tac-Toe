@@ -1,17 +1,18 @@
 #include "../includes/Game.h"
 #include <sstream>
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_reseted(true) {}
+Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_reseted(true)
+{
+    if (a_size < 3 || a_size > 10)
+    {
+        throw initialization_error("board");
+    }
+}
 
 Game::~Game()
 {
-    rlutil::cls();
     rlutil::showcursor();
     Heart::print_full_heart();
-    std::cout << "Press any key to exit...";
-    char ch{};
-    std::cin >> ch;
-    rlutil::cls();
 }
 
 void Game::swap_players()
@@ -42,6 +43,10 @@ void Game::create_AI(int a_difficulty, int a_index, char a_symbol)
 
 std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
+    if (a_game.m_players[0]->get_symbol() != 'X')
+    {
+        throw initialization_error("players");
+    }
     rlutil::cls();
     const Human* human_ptr{ dynamic_cast<Human*>(a_game.m_players[1].get()) };
     if (human_ptr != nullptr)
@@ -55,6 +60,10 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
     human_ptr = dynamic_cast<Human*>(a_game.m_players[0].get());
     if (human_ptr != nullptr)
     {
+        if (a_game.m_players[1]->get_name() == "Unknown")
+        {
+            throw initialization_error("computer");
+        }
         int random{};
         if (a_game.m_difficulty != '?')
         {
@@ -134,40 +143,33 @@ void Game::print_winner()
     std::cout << "Game over!\n\n";
 }
 
-
 char Game::make_decision(const str& a_message, const str& a_options)
 {
+    short wrong_inputs{ 0 };
     while (true)
     {
-        try
+        rlutil::cls();
+        rlutil::showcursor();
+        if (wrong_inputs == 10)
         {
-            rlutil::cls();
-            rlutil::showcursor();
-            if (m_gamemode == '?')
-            {
-                print_logo();
-            }
-            else if (m_board.get_winner() != '-')
-            {
-                print_winner();
-            }
-            std::cout << a_message << "\n-> ";
-            str temp{};
-            std::cin >> temp;
-            if (temp.size() != 1 || a_options.find(temp[0]) == str::npos)
-            {
-                throw replay_error();
-            }
-            return temp[0];
+            throw excessive_attempts_error();
         }
-        catch (const replay_error& err)
+        if (m_gamemode == '?')
         {
-            rlutil::hidecursor();
-            rlutil::cls();
-            std::cerr << err.what() << '\n';
-            rlutil::msleep(2000);
-            rlutil::cls();
+            print_logo();
         }
+        else if (m_board.get_winner() != '-')
+        {
+            print_winner();
+        }
+        std::cout << a_message << "\n-> ";
+        str temp{ m_players[0]->get_input(std::cin) };
+        if (temp.size() != 1 || a_options.find(temp[0]) == str::npos)
+        {
+            m_players[0]->handle_wrong_input(wrong_inputs, "Invalid input! Please try again!");
+            continue;
+        }
+        return temp[0];
     }
 }
 
@@ -181,8 +183,9 @@ void Game::initialize()
             "[1] Computer vs Computer\n"
             "[2] Player vs Computer\n"
             "[3] Player vs Player\n"
+            "[4] Change the board size\n"
             "[0] Exit\n",
-            "0123"
+            "01234"
         );
     }
     if (m_gamemode == '0')
@@ -200,11 +203,33 @@ void Game::initialize()
                 "[1] Easy\n"
                 "[2] Normal\n"
                 "[3] Impossible\n"
-                "[0] Go Back\n",
+                "[0] Go back\n",
                 "0123"
             );
         }
+        if (m_difficulty == '0')
+        {
+            m_gamemode = m_difficulty = '?';
+            initialize();
+        }
     }
+    else if (m_gamemode == '4')
+    {
+        char size = make_decision
+        (
+            "< Choose the board size >\n"
+            "[?] Select any number from 3 to 9 --\n"
+            "[0] Go back --\n",
+            "03456789"
+        );
+        if (size != '0')
+        {
+            m_board.set_size(size - '0');
+        }
+        m_gamemode = '?';
+        initialize();
+    }
+    return;
 }
 
 void Game::replay()
@@ -295,6 +320,7 @@ void Game::replay()
     }
     if (change_gamemode_decision == 'n')
     {
+        rlutil::cls();
         m_gamemode = '0';
         return;
     }
@@ -304,63 +330,55 @@ void Game::replay()
 
 std::pair<int, int> Game::get_move(int a_turn)
 {
+    short wrong_inputs{ 0 };
     while (true)
     {
-        try
+        if (wrong_inputs == 10)
         {
-            rlutil::cls();
-            rlutil::showcursor();
-            std::pair<int, int> temp{ m_players[a_turn % 2]->get_move(m_board) };
-            int row { temp.first };
-            int col { temp.second };
-            if (row == -1 && col == -1)
-            {
-                m_board.set_winner(' ');
-                row = col = 0;
-            }
-            else if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
-            {
-                const Human* human_ptr{ dynamic_cast<Human*>(m_players[a_turn % 2].get()) };
-                if (human_ptr != nullptr)
-                {
-                    rlutil::hidecursor();
-                    rlutil::cls();
-                    if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
-                    {
-                        row = col = -1;
-                        throw out_of_bound_error();
-                    }
-                    else
-                    {
-                        row = col = -1;
-                        throw non_empty_cell_error();
-                    }
-                }
-            }
+            throw excessive_attempts_error();
+        }
+        rlutil::cls();
+        rlutil::showcursor();
+        std::pair<int, int> temp{ m_players[a_turn % 2]->get_move(m_board) };
+        int row { temp.first };
+        int col { temp.second };
+        if (row == -1 && col == -1)
+        {
+            m_board.set_winner(' ');
             return temp;
         }
-        catch (const out_of_bound_error& err)
+        if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
         {
-            rlutil::hidecursor();
-            rlutil::cls();
-            std::cerr << err.what() << '\n';
-            rlutil::msleep(2000);
-            rlutil::cls();
+            ++wrong_inputs;
+            const Human* human_ptr{ dynamic_cast<Human*>(m_players[a_turn % 2].get()) };
+            if (human_ptr != nullptr)
+            {
+                str message{ "Invalid move. Please choose an empty cell!\n" };
+                if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
+                {
+                    message = "Invalid input. Please choose a cell within the board!\n";
+                }
+                m_players[0]->handle_wrong_input(wrong_inputs, message);
+            }
+            continue;
         }
-        catch (const non_empty_cell_error& err)
-        {
-            rlutil::hidecursor();
-            rlutil::cls();
-            std::cerr << err.what() << '\n';
-            rlutil::msleep(2000);
-            rlutil::cls();
-        }
+        return temp;
     }
 }
 
 void Game::play()
 {
     m_board.reset();
+    for (int i = 0; i < m_board.get_size(); ++i)
+    {
+        for (int j = 0; j < m_board.get_size(); ++j)
+        {
+            if (!m_board.valid_move(i, j))
+            {
+                throw initialization_error("board");
+            }
+        }
+    }
     if (m_reseted)
     {
         if (m_gamemode == '1')

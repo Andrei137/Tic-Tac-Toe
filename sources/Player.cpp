@@ -1,5 +1,7 @@
 #include "../includes/Player.h"
+#include <chrono>
 #include <regex>
+#include <thread>
 
 int Player::m_draws{0};
 
@@ -18,35 +20,60 @@ Player& Player::operator=(const Player& a_other)
     return *this;
 }
 
+str Player::get_input(std::istream& a_in) const
+{
+    bool has_input{ false };
+    auto start = std::chrono::steady_clock::now();
+    while (!has_input && std::chrono::steady_clock::now() - start < std::chrono::seconds(90))
+    {
+        if (_kbhit())
+        {
+            has_input = true;
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    if (!has_input)
+    {
+        throw timeout_error();
+    }
+    std::string temp{};
+    a_in >> temp;
+    return temp;
+}
+
+void Player::handle_wrong_input(short& a_wrong_inputs, const str& a_message) const
+{
+    ++a_wrong_inputs;
+    rlutil::hidecursor();
+    rlutil::cls();
+    std::cerr << a_message;
+    rlutil::msleep(2000);
+    rlutil::cls();
+}
+
 std::istream& operator>>(std::istream& a_in, const std::shared_ptr<Player>& a_player)
 {
     std::regex name_pattern(R"(^[a-zA-Z0-9_!@#$%^&*()\-+=\[\]{};:'\",.<>/?\|`~ ]{1,20}$)");
-    bool valid{ false };
-    while (!valid)
+    short wrong_inputs{ 0 };
+    while (true)
     {
-        try
+        rlutil::showcursor();
+        if (wrong_inputs == 10)
         {
-            rlutil::showcursor();
-            std::cout << "(" << a_player->m_symbol << ") Insert name\n-> ";
-            std::string temp{};
-            a_in >> temp;
-            if (!std::regex_match(temp, name_pattern) || a_in.fail() || temp.size() > 20)
-            {
-                throw name_error();
-            }
-            a_player->m_name = temp;
-            valid = true;
+            throw excessive_attempts_error();
         }
-        catch (const name_error& err)
+        
+        std::cout << "(" << a_player->m_symbol << ") Insert name\n-> ";
+        std::string temp{ a_player->get_input(a_in) };
+        if (!std::regex_match(temp, name_pattern) || a_in.fail() || temp.size() > 20)
         {
-            rlutil::hidecursor();
-            rlutil::cls();
-            std::cerr << err.what() << '\n';
-            rlutil::msleep(2500);
-            rlutil::cls();
+            a_player->handle_wrong_input(wrong_inputs, "Invalid input. Name must be between 1 and 20 characters and only contain letters, numbers, and special characters.");
+            continue;
         }
+        a_player->m_name = temp;
+        return a_in;
     }
-    return a_in;
 }
 
 std::ostream& operator<<(std::ostream& a_out, const Player& a_player)

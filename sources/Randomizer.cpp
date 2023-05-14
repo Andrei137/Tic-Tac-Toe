@@ -12,7 +12,7 @@ Randomizer* Randomizer::clone() const
 
 Randomizer& Randomizer::operator=(const Randomizer& a_other)
 {
-    if (this != &a_other)
+    if (this != &a_other) 
     {
         AI::operator=(a_other);
     }

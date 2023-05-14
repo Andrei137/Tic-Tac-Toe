@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Exceptions.h"
 #include "Board.h"
 #include <memory>
 #include <rlutil.h>
@@ -29,6 +28,9 @@ public:
     friend std::istream& operator>>(std::istream&, const std::shared_ptr<Player>&);
     friend std::ostream& operator<<(std::ostream&, const Player&);
 
+    str get_input(std::istream&) const;
+    void handle_wrong_input(short&, const str&) const;
+
     const str& get_name() const;
     char get_symbol() const;
     int get_wins() const;
@@ -39,7 +41,6 @@ public:
 
     void add_win();
     static void add_draw();
-
     static void reset_draws();
 
     virtual std::pair<int, int> get_move(const Board&) const = 0;

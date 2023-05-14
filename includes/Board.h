@@ -8,7 +8,7 @@
 class Board
 {
     int m_size{};
-    std::vector<std::vector<Square>> m_Squares{};
+    std::vector<std::vector<Square>> m_cells{};
     char m_winner{};
     Scoreboard m_scoreboard{};
 
@@ -31,6 +31,7 @@ public:
     char get_value(int, int) const;
     char get_winner() const;
     
+    void set_size(int);
     void set_cell(int, int, char);
     void clear_cell(int, int);
     void set_winner(char);
