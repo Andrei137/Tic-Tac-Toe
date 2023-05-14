@@ -5,7 +5,8 @@ Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_
 {
     if (a_size < 3 || a_size > 10)
     {
-        throw initialization_error("board");
+        throw initialization_error("Error: The game stopped because the board did not load properly!\n"
+                                   "Try restarting the program or contacting the developer\n\n");
     }
 }
 
@@ -45,7 +46,8 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
 {
     if (a_game.m_players[0]->get_symbol() != 'X')
     {
-        throw initialization_error("players");
+        throw initialization_error("Error: The game stopped because the player order did not load properly!\n"
+                                   "Try restarting the program or contacting the developer\n\n");
     }
     rlutil::cls();
     const Human* human_ptr{ dynamic_cast<Human*>(a_game.m_players[1].get()) };
@@ -62,7 +64,8 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
     {
         if (a_game.m_players[1]->get_name() == "Unknown")
         {
-            throw initialization_error("computer");
+            throw initialization_error("Error: The game stopped because the computer did not load properly!\n" 
+                                       "Try restarting the program or contacting the developer\n\n");
         }
         int random{};
         if (a_game.m_difficulty != '?')
@@ -375,7 +378,8 @@ void Game::play()
         {
             if (!m_board.valid_move(i, j))
             {
-                throw initialization_error("board");
+                throw initialization_error("Error: The game stopped because the board did not load properly!\n"
+                                           "Try restarting the program or contacting the developer\n\n");
             }
         }
     }

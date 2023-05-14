@@ -24,7 +24,5 @@ public:
 class initialization_error : public execution_error
 {
 public:
-    explicit initialization_error(const str& a_message) 
-        : execution_error(str("Error: The game stopped because the ") + a_message + " did not load properly!\n"
-                          "Try restarting the program or contacting the developer\n\n") {}
+    explicit initialization_error(const str& a_message) : execution_error(a_message) {}
 };
