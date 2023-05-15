@@ -36,7 +36,6 @@ class Game
     friend std::ostream& operator<<(std::ostream&, const Game&);
     
 public:
-    Game() = default;
     explicit Game(int);
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;

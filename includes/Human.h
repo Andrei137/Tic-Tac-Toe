@@ -6,8 +6,8 @@ class Human : public Player
 {
 public:
     explicit Human(char);
-    Human(const Human&) = default;
     Human* clone() const override;
+    Human(const Human&);
     Human& operator=(const Human&);
     ~Human() override = default;
 

@@ -20,7 +20,6 @@ public:
     Board() = default;
     explicit Board(int);
     Board(const Board&);
-    ~Board() = default;
     
     Board& operator=(const Board&);
     

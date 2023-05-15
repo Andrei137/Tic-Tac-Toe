@@ -7,9 +7,8 @@ Easy* Easy::clone() const
     return new Easy(*this);
 }
 
-std::pair<int, int> Easy::get_move(const Board& a_board, char a_symbol) const
+int Easy::get_move(const Board& a_board, char a_symbol) const
 {
-    loading(a_board);
     char opponent_symbol{ a_symbol == 'X' ? 'O' : 'X' };
     int size{ a_board.get_size() };
     for (int i = 0; i < size; ++i)
@@ -20,22 +19,22 @@ std::pair<int, int> Easy::get_move(const Board& a_board, char a_symbol) const
             {
                 if (i != 0 && a_board.valid_move(i - 1, j))
                 {
-                    return std::make_pair(i - 1, j);
+                    return (i - 1) * size + j + 1;
                 }
                 else if (j != 0 && a_board.valid_move(i, j - 1))
                 {
-                    return std::make_pair(i, j - 1);
+                    return i * size + j;
                 }
                 else if (i != size - 1 && a_board.valid_move(i + 1, j))
                 {
-                    return std::make_pair(i + 1, j);
+                    return (i + 1) * size + j + 1;
                 }
                 else if (j != size - 1 && a_board.valid_move(i, j + 1))
                 {
-                    return std::make_pair(i, j + 1);
+                    return i * size + j + 2;
                 }
             }
         }
     }
-    return {0, 0};
+    return 1;
 }

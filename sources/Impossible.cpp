@@ -166,9 +166,8 @@ int Impossible::get_best_move(Board& a_board, char a_symbol) const
     return -1;
 }
 
-std::pair<int, int> Impossible::get_move(const Board& a_board, char a_symbol) const
+int Impossible::get_move(const Board& a_board, char a_symbol) const
 {
-    loading(a_board);
     Board copy{ a_board };
-    return convert(get_best_move(copy, a_symbol), a_board.get_size());
+    return get_best_move(copy, a_symbol);
 }

@@ -20,7 +20,6 @@ protected:
     static std::pair<int, int> convert(int, int);
 
 public:
-    Player() = default;
     explicit Player(char);
     virtual Player* clone() const = 0;
     Player(const Player&);

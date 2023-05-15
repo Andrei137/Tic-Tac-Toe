@@ -11,6 +11,8 @@ Human* Human::clone() const
     return new Human(*this);
 }
 
+Human::Human(const Human& a_other) : Player(a_other) {}
+
 Human& Human::operator=(const Human& a_other)
 {
     if (this != &a_other) 

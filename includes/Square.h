@@ -13,7 +13,6 @@ public:
     Square() = default;
     explicit Square(char, bool);
     Square(const Square&);
-    ~Square() = default;
 
     Square& operator=(const Square&);
     
