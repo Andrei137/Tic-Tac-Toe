@@ -1,12 +1,9 @@
 #pragma once
 
-#include "AI.h"
+#include "AIFactory.h"
 #include "Board.h"
-#include "Easy.h"
-#include "Hard.h"
 #include "Heart.h"
 #include "Human.h"
-#include "Impossible.h"
 #include <array>
 #include <ctime>
 #include <cstdlib>

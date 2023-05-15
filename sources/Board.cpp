@@ -137,6 +137,21 @@ void Board::set_scoreboard(const std::pair<str, str>& a_names, const std::pair<i
     scoreboard.initialize(a_names, a_wins, a_draws);
 }
 
+bool Board::is_empty() const
+{
+    for (int i = 0; i < m_size; ++i)
+    {
+        for (int j = 0; j < m_size; ++j)
+        {
+            if (m_cells[i][j].is_occupied())
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void Board::reset()
 {
     m_winner = '-';

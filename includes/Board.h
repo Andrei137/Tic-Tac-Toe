@@ -35,6 +35,7 @@ public:
     void set_winner(char);
     void set_scoreboard(const std::pair<str, str>&, const std::pair<int, int>&, int);
 
+    bool is_empty() const;
     void reset();
     bool valid_move(int, int) const;
     bool win(char, int, int) const;

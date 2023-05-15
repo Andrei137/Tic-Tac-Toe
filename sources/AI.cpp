@@ -9,7 +9,7 @@ AI* AI::clone() const
 
 void AI::set_difficulty(std::shared_ptr<Difficulty> a_difficulty)
 {
-    m_difficulty = a_difficulty;
+    m_difficulty = std::move(a_difficulty);
 }
 
 std::pair<int, int> AI::get_move(const Board& a_board) const
@@ -28,6 +28,13 @@ std::pair<int, int> AI::get_move(const Board& a_board) const
         std::cout << '.';
         rlutil::msleep(400);
     }
-    return convert(m_difficulty->get_move(a_board, m_symbol), a_board.get_size());
+    Board copy{ a_board };
+    int move{ m_difficulty->get_move(copy, m_symbol) };
+    if (move == -1)
+    {
+        throw initialization_error("Error: The game stopped because the computer did not work properly!\n" 
+                                   "Try restarting the program or contacting the developer\n\n");
+    }
+    return convert(move, a_board.get_size());
 }
 

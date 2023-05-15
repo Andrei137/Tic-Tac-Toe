@@ -1,9 +1,5 @@
 #include "../includes/Impossible.h"
-#include <algorithm>
-#include <climits>
-#include <random>
-
-const std::vector<int> Impossible::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
+#include <vector>
 
 Impossible::Impossible() : Difficulty() {}
 
@@ -12,162 +8,19 @@ Impossible* Impossible::clone() const
     return new Impossible(*this);
 }
 
-char Impossible::opponent_symbol(char a_symbol) const
+int Impossible::get_move(Board& a_board, char a_symbol)
 {
-    return a_symbol == 'X' ? 'O' : 'X';
-}
-
-int Impossible::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a_is_maximizing, char a_symbol) const
-{
-    int size{ a_board.get_size() };
-    if (a_board.get_winner() == a_symbol)
+    /*
+        Force the first move of impossible bot to be odd
+    */
+    if (a_board.get_size() == 3 && a_board.is_empty())
     {
-        return 10;
-    }
-    else if (a_board.get_winner() == opponent_symbol(a_symbol))
-    {
-        return -10;
-    }
-    else if (a_board.draw() || a_depth == m_depths[size - 3])
-    {
-        return 0;
-    }
-    if (a_is_maximizing)
-    {
-        int best_score{ INT_MIN };
-        for (int i = 0; i < size; ++i)
+        std::vector<int> best_moves{};
+        for (int i = 1; i <= a_board.get_size() * a_board.get_size(); i += 2)
         {
-            for (int j = 0; j < size; ++j)
-            {
-                if (a_board.valid_move(i, j))
-                {
-                    char symbol{ a_symbol };
-                    a_board.set_cell(i, j, symbol);
-                    if (a_board.win(symbol, i, j))
-                    {
-                        a_board.set_winner(symbol);
-                    }
-                    int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, false, a_symbol) };
-                    if (score > best_score)
-                    {
-                        best_score = score;
-                    }
-                    if (score > a_alpha)
-                    {
-                        a_alpha = score;
-                    }
-                    a_board.set_winner('-');
-                    a_board.clear_cell(i, j);
-                    if (a_beta <= a_alpha)
-                    {
-                        break;
-                    }
-                }
-            }
+            best_moves.push_back(i);
         }
-        return best_score;
+        return best_moves[rand() % best_moves.size()];
     }
-    else
-    {
-        int best_score{ INT_MAX };
-        for (int i = 0; i < size; ++i)
-        {
-            for (int j = 0; j < size; ++j)
-            {
-                if (a_board.valid_move(i, j))
-                {
-                    char symbol{ opponent_symbol(a_symbol) };
-                    a_board.set_cell(i, j, symbol);
-                    if (a_board.win(symbol, i, j))
-                    {
-                        a_board.set_winner(symbol);
-                    }
-                    int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, true, a_symbol) };
-                    if (score < best_score)
-                    {
-                        best_score = score;
-                    }
-                    if (score < a_beta)
-                    {
-                        a_beta = score;
-                    }
-                    a_board.set_winner('-');
-                    a_board.clear_cell(i, j);
-                    if (a_beta <= a_alpha)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-        return best_score;
-    }
-}
-
-int Impossible::get_best_move(Board& a_board, char a_symbol) const
-{
-    int size{ a_board.get_size() };
-    std::vector<int> possible_moves{};
-    for (int i = 0; i < size; ++i)
-    {
-        for (int j = 0; j < size; ++j)
-        {
-            if (a_board.valid_move(i, j))
-            {
-                if (a_board.win(a_symbol, i, j))
-                {
-                    return i * size + j + 1;
-                }
-                possible_moves.push_back(i * size + j + 1);
-            }
-        }
-    }
-    std::vector<int> best_moves{};
-    int best_score{ INT_MIN };
-    int alpha{ INT_MIN };
-    int beta{ INT_MAX };
-    for (const int index : possible_moves)
-    {
-        int i{ (index - 1) / size };
-        int j{ (index - 1) % size };
-        a_board.set_cell(i, j, a_symbol);
-        int score{ minimax(a_board, 0, alpha, beta, false, a_symbol) };
-        a_board.clear_cell(i, j);
-        if (score > best_score)
-        {
-            best_score = score;
-            best_moves.clear();
-            best_moves.push_back(index);
-        }
-        else if (score == best_score)
-        {
-            best_moves.push_back(index);
-        }
-    }
-    if (!best_moves.empty())
-    {
-        if (size == 3 && best_moves == possible_moves)
-        {
-            std::vector copy{ best_moves };
-            best_moves.clear();
-            for (const int index : copy)
-            {
-                if (index % 2)
-                {
-                    best_moves.push_back(index);
-                }
-            }
-        }
-        static std::random_device rd;
-        static std::mt19937 g(rd());
-        std::shuffle(best_moves.begin(), best_moves.end(), g);
-        return best_moves[0];
-    }
-    return -1;
-}
-
-int Impossible::get_move(const Board& a_board, char a_symbol) const
-{
-    Board copy{ a_board };
-    return get_best_move(copy, a_symbol);
+    return Minimax::get_random_move(a_board, a_symbol, "impossible");
 }

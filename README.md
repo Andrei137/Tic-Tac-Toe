@@ -8,9 +8,10 @@
 - Se poate alege intre CvC (Computer vs Computer), PvC/PvE (Player vs Computer/Environment) si PvP (Player vs Player).
 - La PvE, se poate alege dificultatea AI-ului (Easy, Hard, Impossible).
 - La CvC, dificultatile sunt alese random.
-- Pe Easy, AI-ul cauta pozitiile ocupate de adversar si incearca sa se plaseze pe pozitii libere din jurul lor, in ordinea sus, stanga, jos, dreapta. La prima mutare cu X se plaseaza in coltul stanga sus.
-- Pe Hard, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
-- Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila, algoritmul din spate fiind Minimax cu Alpha-Beta Pruning.
+- Cele 3 dificultati au fost implementate folosind Minimax cu Alpha-Beta Pruning.
+- Pe Easy, AI-ul alege intotdeauna una din cele mai slabe mutari posibile (i. e. Minimax score = -10).
+- Pe Hard, AI-ul are un stil balansat, stiind sa faca mutarea castigatoare sau sa blocheze mutarea castigatoare a adversarului, in rest alegand una dintre mutarile care duc catre remiza sau uneori catre pierdere (i.e. Minimax score = 0 sau 75% sansa Minimax score = -10).
+- Pe Impossible, AI-ul alege intotdeauna una din cele mai bune mutari posibile (i. e. Minimax score = 10).
 
 |  Size | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
 | ----- | - | - | - | - | - | - | - |
@@ -64,7 +65,10 @@
 ## Tema 3
 
 #### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
+- [x] 2 șabloane de proiectare (design patterns)
+     - Singleton: Heart, Scoreboard
+     - Factory: AIFactory
+     - Strategy: baza Difficulty cu derivatele Easy, Hard, Impossible; clasa Player are un atribut de tip Difficulty
 - [ ] o funcție șablon (template) cu sens; minim 2 instanțieri
 - [ ] o clasă șablon cu sens; minim 2 instanțieri
 <!-- - [ ] o specializare pe funcție/clasă șablon -->

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <rlutil.h>
 
+Heart* Heart::m_instance{ nullptr };
 std::array<str, 3> Heart::m_message{"THANK", "  U FOR ", "PLAYING"};
 
 bool Heart::fast_check(float a_x, float a_value1, float a_value2, char a_sign)
@@ -98,8 +99,11 @@ void Heart::for_message(float a_y, int a_condition)
 
 Heart& Heart::get_instance()
 {
-    static Heart instance;
-    return instance;
+    if (m_instance == nullptr)
+    {
+        m_instance = new Heart();
+    }
+    return *m_instance;
 }
 
 void Heart::print_full_heart()

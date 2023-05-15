@@ -4,16 +4,10 @@
 
 class Impossible : public Difficulty
 {
-    static const std::vector<int> m_depths;
-
-    char opponent_symbol(char) const;
-    int evaluate(Board&, char) const;
-    int minimax(Board&, int, int, int, bool, char) const;
-    int get_best_move(Board&, char) const;
 
 public:
     Impossible();
     Impossible* clone() const override;
 
-    int get_move(const Board&, char) const override;
+    int get_move(Board&, char) override;
 };

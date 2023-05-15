@@ -9,7 +9,6 @@ public:
     explicit AI(char);
     AI* clone() const override;
     ~AI() override = default;
-
     
     void set_difficulty(std::shared_ptr<Difficulty>) override;
 

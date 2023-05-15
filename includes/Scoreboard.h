@@ -9,6 +9,7 @@ using str = std::string;
 
 class Scoreboard
 {
+    static Scoreboard* m_instance;
     std::pair<str, str> m_names;
     std::pair<int, int> m_wins;
     int m_draws{};
@@ -16,7 +17,6 @@ class Scoreboard
     Scoreboard() = default;
 
 public:
-    explicit Scoreboard(std::pair<str, str>, std::pair<int, int>, int);
     Scoreboard(const Scoreboard&) = delete;
     Scoreboard& operator=(const Scoreboard&) = delete;
 

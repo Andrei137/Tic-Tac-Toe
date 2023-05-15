@@ -29,21 +29,17 @@ void Game::swap_players()
 
 void Game::create_AI(int a_difficulty, int a_index, char a_symbol)
 {
-     m_players[a_index] = std::make_shared<AI>(a_symbol);
     if (a_difficulty == 1)
     {
-        m_players[a_index]->set_name("Computer (Easy)");
-        m_players[a_index]->set_difficulty(std::make_shared<Easy>());
+        m_players[a_index] = AIFactory::easy(a_symbol);
     }
     else if (a_difficulty == 2)
     {
-        m_players[a_index]->set_name("Computer (Hard)");
-        m_players[a_index]->set_difficulty(std::make_shared<Hard>());
+        m_players[a_index] = AIFactory::hard(a_symbol);
     }
     else
     {
-        m_players[a_index]->set_name("Computer (Impossible)");
-        m_players[a_index]->set_difficulty(std::make_shared<Impossible>());
+        m_players[a_index] = AIFactory::impossible(a_symbol);
     }
 }
 

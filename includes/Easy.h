@@ -8,5 +8,5 @@ public:
     Easy();
     Easy* clone() const override;
 
-    int get_move(const Board&, char) const override;
+    int get_move(Board&, char) override;
 };
