@@ -6,10 +6,10 @@
 - Pentru dimeniunea 3, se pastreaza regulile clasice.
 - Pentru dimensiuni mai mari, se aplica regula de la Connect 4 pentru a adauga complexitate (se castiga daca se formeaza o linie de lungime 4).
 - Se poate alege intre CvC (Computer vs Computer), PvC/PvE (Player vs Computer/Environment) si PvP (Player vs Player).
-- La PvE, se poate alege dificultatea AI-ului (Easy, Normal, Impossible).
+- La PvE, se poate alege dificultatea AI-ului (Easy, Hard, Impossible).
 - La CvC, dificultatile sunt alese random.
 - Pe Easy, AI-ul cauta pozitiile ocupate de adversar si incearca sa se plaseze pe pozitii libere din jurul lor, in ordinea sus, stanga, jos, dreapta. La prima mutare cu X se plaseaza in coltul stanga sus.
-- Pe Normal, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
+- Pe Hard, AI-ul stie sa impedice victoria adversarului si sa completeze o linie pentru a castiga, insa in rest alege random pozitiile.
 - Pe Impossible, AI-ul alege intotdeauna cea mai buna mutare posibila, algoritmul din spate fiind Minimax cu Alpha-Beta Pruning.
 
 |  Size | 3 | 4 | 5 | 6 | 7 | 8 | 9 |

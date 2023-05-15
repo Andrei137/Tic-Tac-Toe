@@ -1,28 +1,16 @@
-#include "../includes/StickyNoob.h"
+#include "../includes/Easy.h"
 
-StickyNoob::StickyNoob(char a_symbol) : AI(a_symbol) 
+Easy::Easy() : Difficulty() {}
+
+Easy* Easy::clone() const
 {
-    this->set_name("Computer (Easy)");
+    return new Easy(*this);
 }
 
-StickyNoob* StickyNoob::clone() const
-{
-    return new StickyNoob(*this);
-}
-
-StickyNoob& StickyNoob::operator=(const StickyNoob& a_other)
-{
-    if (this != &a_other)
-    {
-        AI::operator=(a_other);
-    }
-    return *this;
-}
-
-std::pair<int, int> StickyNoob::get_move(const Board& a_board) const
+std::pair<int, int> Easy::get_move(const Board& a_board, char a_symbol) const
 {
     loading(a_board);
-    char opponent_symbol{ this->get_symbol() == 'X' ? 'O' : 'X' };
+    char opponent_symbol{ a_symbol == 'X' ? 'O' : 'X' };
     int size{ a_board.get_size() };
     for (int i = 0; i < size; ++i)
     {

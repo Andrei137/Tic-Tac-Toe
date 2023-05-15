@@ -1,18 +1,18 @@
 #pragma once
 
 #include "Player.h"
-#include <ctime>
-#include <cstdlib>
+#include "Difficulty.h"
 
 class AI : public Player
 {
-protected:
+public:
     explicit AI(char);
-    virtual AI* clone() const override = 0;
+    AI* clone() const override;
     AI(const AI&) = default;
     AI& operator=(const AI&);
     ~AI() override = default;
 
-    void loading(const Board&) const;
-    std::pair<int, int> get_move(const Board&) const override = 0;
+    void set_difficulty(std::shared_ptr<Difficulty>) override;
+
+    std::pair<int, int> get_move(const Board&) const override;
 };

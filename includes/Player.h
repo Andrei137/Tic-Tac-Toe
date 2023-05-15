@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Board.h"
+#include "Difficulty.h"
 #include <memory>
 #include <rlutil.h>
 #include <string>
@@ -14,6 +15,7 @@ protected:
     str m_name{};
     int m_wins{};
     static int m_draws;
+    std::shared_ptr<Difficulty> m_difficulty{};
 
     static std::pair<int, int> convert(int, int);
 
@@ -43,5 +45,6 @@ public:
     static void add_draw();
     static void reset_draws();
 
+    virtual void set_difficulty(std::shared_ptr<Difficulty>) = 0;
     virtual std::pair<int, int> get_move(const Board&) const = 0;
 };

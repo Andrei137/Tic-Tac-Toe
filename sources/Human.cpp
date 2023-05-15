@@ -20,6 +20,11 @@ Human& Human::operator=(const Human& a_other)
     return *this;
 }
 
+void Human::set_difficulty(std::shared_ptr<Difficulty>)
+{
+    m_difficulty = nullptr;
+}
+
 std::pair<int, int> Human::get_move(const Board& a_board) const
 {
     std::regex digits(R"(^-?[0-9]{1,20}$)"); 

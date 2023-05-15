@@ -82,7 +82,7 @@ std::ostream& operator<<(std::ostream& a_out, const Board& a_board)
         full_table.add_row({ table_left });
     }
     full_table.format().hide_border();
-    Scoreboard& scoreboard{ Scoreboard::get_instance() };
+    const Scoreboard& scoreboard{ Scoreboard::get_instance() };
     a_out << scoreboard;
     a_out << "\n\n";
     a_out << full_table;

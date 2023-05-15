@@ -1,12 +1,15 @@
 #pragma once
 
+#include "AI.h"
 #include "Board.h"
+#include "Easy.h"
+#include "Hard.h"
 #include "Heart.h"
 #include "Human.h"
-#include "Randomizer.h"
-#include "Solver.h"
-#include "StickyNoob.h"
+#include "Impossible.h"
 #include <array>
+#include <ctime>
+#include <cstdlib>
 
 class Game
 {
@@ -28,7 +31,6 @@ class Game
 
     std::pair<int, int> get_move(int);
     void play();
-
 
     friend std::istream& operator>>(std::istream&, Game&);
     friend std::ostream& operator<<(std::ostream&, const Game&);

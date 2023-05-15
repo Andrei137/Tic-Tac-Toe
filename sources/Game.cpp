@@ -13,7 +13,7 @@ Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_
 Game::~Game()
 {
     rlutil::showcursor();
-    auto& heart{ Heart::get_instance() };
+    const Heart& heart{ Heart::get_instance() };
     heart.print_full_heart();
 }
 
@@ -29,17 +29,21 @@ void Game::swap_players()
 
 void Game::create_AI(int a_difficulty, int a_index, char a_symbol)
 {
+     m_players[a_index] = std::make_shared<AI>(a_symbol);
     if (a_difficulty == 1)
     {
-        m_players[a_index] = std::make_shared<StickyNoob>(a_symbol);
+        m_players[a_index]->set_name("Computer (Easy)");
+        m_players[a_index]->set_difficulty(std::make_shared<Easy>());
     }
     else if (a_difficulty == 2)
     {
-        m_players[a_index] = std::make_shared<Randomizer>(a_symbol);
+        m_players[a_index]->set_name("Computer (Hard)");
+        m_players[a_index]->set_difficulty(std::make_shared<Hard>());
     }
     else
     {
-        m_players[a_index] = std::make_shared<Solver>(a_symbol);
+        m_players[a_index]->set_name("Computer (Impossible)");
+        m_players[a_index]->set_difficulty(std::make_shared<Impossible>());
     }
 }
 
@@ -102,7 +106,7 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
         str temp{ a_game.m_players[0]->get_name() };
         /*
             Get difficulty from between () from temp to fix duplicated names
-            Compuer (Normal) -> Normal
+            Compuer (Impossible) -> Impossible
         */
         temp = temp.substr(temp.find('('), temp.find(')') - temp.find('(') + 1);
         a_game.m_players[0]->set_name("Computer 1 " + temp);
@@ -204,7 +208,7 @@ void Game::initialize()
             (
                 "< Difficulty >\n"
                 "[1] Easy\n"
-                "[2] Normal\n"
+                "[2] Hard\n"
                 "[3] Impossible\n"
                 "[0] Go back\n",
                 "0123"

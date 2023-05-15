@@ -7,7 +7,7 @@ int Player::m_draws{0};
 
 Player::Player(char a_symbol) : m_symbol(a_symbol), m_wins(0) {}
 
-Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m_wins) {}
+Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m_wins), m_difficulty(a_other.m_difficulty) {}
 
 Player& Player::operator=(const Player& a_other)
 {
@@ -16,6 +16,7 @@ Player& Player::operator=(const Player& a_other)
         m_name = a_other.m_name;
         m_wins = a_other.m_wins;
         m_symbol = a_other.m_symbol;
+        m_difficulty = a_other.m_difficulty;
     }
     return *this;
 }

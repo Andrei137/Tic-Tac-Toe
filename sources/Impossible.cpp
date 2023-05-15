@@ -1,42 +1,30 @@
-#include "../includes/Solver.h"
+#include "../includes/Impossible.h"
 #include <algorithm>
 #include <climits>
 #include <random>
 
-const std::vector<int> Solver::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
+const std::vector<int> Impossible::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
 
-Solver::Solver(char a_symbol) : AI(a_symbol) 
+Impossible::Impossible() : Difficulty() {}
+
+Impossible* Impossible::clone() const
 {
-    this->set_name("Computer (Impossible)");
+    return new Impossible(*this);
 }
 
-Solver* Solver::clone() const
+char Impossible::opponent_symbol(char a_symbol) const
 {
-    return new Solver(*this);
+    return a_symbol == 'X' ? 'O' : 'X';
 }
 
-Solver& Solver::operator=(const Solver& a_other)
-{
-    if (this != &a_other) 
-    {
-        AI::operator=(a_other);
-    }
-    return *this;
-}
-
-char Solver::opponent_symbol() const
-{
-    return m_symbol == 'X' ? 'O' : 'X';
-}
-
-int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a_is_maximizing) const
+int Impossible::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a_is_maximizing, char a_symbol) const
 {
     int size{ a_board.get_size() };
-    if (a_board.get_winner() == m_symbol)
+    if (a_board.get_winner() == a_symbol)
     {
         return 10;
     }
-    else if (a_board.get_winner() == opponent_symbol())
+    else if (a_board.get_winner() == opponent_symbol(a_symbol))
     {
         return -10;
     }
@@ -53,13 +41,13 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
             {
                 if (a_board.valid_move(i, j))
                 {
-                    char symbol{ m_symbol };
+                    char symbol{ a_symbol };
                     a_board.set_cell(i, j, symbol);
                     if (a_board.win(symbol, i, j))
                     {
                         a_board.set_winner(symbol);
                     }
-                    int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, false) };
+                    int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, false, a_symbol) };
                     if (score > best_score)
                     {
                         best_score = score;
@@ -88,13 +76,13 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
             {
                 if (a_board.valid_move(i, j))
                 {
-                    char symbol{ opponent_symbol() };
+                    char symbol{ opponent_symbol(a_symbol) };
                     a_board.set_cell(i, j, symbol);
                     if (a_board.win(symbol, i, j))
                     {
                         a_board.set_winner(symbol);
                     }
-                    int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, true) };
+                    int score{ minimax(a_board, a_depth + 1, a_alpha, a_beta, true, a_symbol) };
                     if (score < best_score)
                     {
                         best_score = score;
@@ -116,7 +104,7 @@ int Solver::minimax(Board& a_board, int a_depth, int a_alpha, int a_beta, bool a
     }
 }
 
-int Solver::get_best_move(Board& a_board) const
+int Impossible::get_best_move(Board& a_board, char a_symbol) const
 {
     int size{ a_board.get_size() };
     std::vector<int> possible_moves{};
@@ -126,7 +114,7 @@ int Solver::get_best_move(Board& a_board) const
         {
             if (a_board.valid_move(i, j))
             {
-                if (a_board.win(m_symbol, i, j))
+                if (a_board.win(a_symbol, i, j))
                 {
                     return i * size + j + 1;
                 }
@@ -142,8 +130,8 @@ int Solver::get_best_move(Board& a_board) const
     {
         int i{ (index - 1) / size };
         int j{ (index - 1) % size };
-        a_board.set_cell(i, j, m_symbol);
-        int score{ minimax(a_board, 0, alpha, beta, false) };
+        a_board.set_cell(i, j, a_symbol);
+        int score{ minimax(a_board, 0, alpha, beta, false, a_symbol) };
         a_board.clear_cell(i, j);
         if (score > best_score)
         {
@@ -178,9 +166,9 @@ int Solver::get_best_move(Board& a_board) const
     return -1;
 }
 
-std::pair<int, int> Solver::get_move(const Board& a_board) const
+std::pair<int, int> Impossible::get_move(const Board& a_board, char a_symbol) const
 {
     loading(a_board);
     Board copy{ a_board };
-    return convert(get_best_move(copy), a_board.get_size());
+    return convert(get_best_move(copy, a_symbol), a_board.get_size());
 }

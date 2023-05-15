@@ -1,47 +1,34 @@
-#include "../includes/Randomizer.h"
+#include "../includes/Hard.h"
 
-Randomizer::Randomizer(char a_symbol) : AI(a_symbol) 
+Hard::Hard() : Difficulty() {}
+
+Hard* Hard::clone() const
 {
-    this->set_name("Computer (Normal)");
+    return new Hard(*this);
 }
 
-Randomizer* Randomizer::clone() const
-{
-    return new Randomizer(*this);
-}
-
-Randomizer& Randomizer::operator=(const Randomizer& a_other)
-{
-    if (this != &a_other) 
-    {
-        AI::operator=(a_other);
-    }
-    return *this;
-}
-
-std::pair<int, int> Randomizer::get_move(const Board& a_board) const
+std::pair<int, int> Hard::get_move(const Board& a_board, char a_symbol) const
 {
     loading(a_board);
     int size{ a_board.get_size() };
     for (int i = 1; i <= size * size; ++i)
     {
-        char symbol{ this->get_symbol() };
         std::pair<int, int> index{ convert(i, size) };
         int col{ index.first }, row{ index.second };
-        if (a_board.valid_move(col, row) && a_board.win(symbol, col, row))
+        if (a_board.valid_move(col, row) && a_board.win(a_symbol, col, row))
         {
             return convert(i, size);
         }
-        if (symbol == 'X')
+        if (a_symbol == 'X')
         {
-            symbol = 'O';
+            a_symbol = 'O';
         }
         else
         {
-            symbol = 'X';
+            a_symbol = 'X';
         }
         std::cout << i;
-        if (a_board.valid_move(col, row) && a_board.win(symbol, col, row))
+        if (a_board.valid_move(col, row) && a_board.win(a_symbol, col, row))
         {
             return convert(i, size);
         }
