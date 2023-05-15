@@ -7,6 +7,8 @@ using str = std::string;
 
 class Heart
 {
+    Heart() = default;
+
     static std::array<str, 3> m_message;
     static bool fast_check(float, float, float, char);
     static bool is_inside_heart(float, float);
@@ -16,8 +18,9 @@ class Heart
     static void for_message(float, int);
 
 public:
-    Heart() = default;
-    ~Heart() = default;
+    Heart(const Heart&) = delete;
+    Heart& operator=(const Heart&) = delete;
+    static Heart& get_instance();
 
     static void print_full_heart();
 };

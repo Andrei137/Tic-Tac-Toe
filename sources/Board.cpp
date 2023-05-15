@@ -82,7 +82,8 @@ std::ostream& operator<<(std::ostream& a_out, const Board& a_board)
         full_table.add_row({ table_left });
     }
     full_table.format().hide_border();
-    a_out << a_board.m_scoreboard;
+    Scoreboard& scoreboard{ Scoreboard::get_instance() };
+    a_out << scoreboard;
     a_out << "\n\n";
     a_out << full_table;
     return a_out;
@@ -130,9 +131,10 @@ void Board::set_winner(char a_winner)
     m_winner = a_winner;
 }
 
-void Board::set_scoreboard(const Scoreboard& a_scoreboard)
+void Board::set_scoreboard(const std::pair<str, str>& a_names, const std::pair<int, int>& a_wins, int a_draws)
 {
-    m_scoreboard = a_scoreboard;
+    Scoreboard& scoreboard{ Scoreboard::get_instance() };
+    scoreboard.initialize(a_names, a_wins, a_draws);
 }
 
 void Board::reset()

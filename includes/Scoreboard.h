@@ -13,13 +13,15 @@ class Scoreboard
     std::pair<int, int> m_wins;
     int m_draws{};
 
-public:
     Scoreboard() = default;
-    explicit Scoreboard(std::pair<str, str>, std::pair<int, int>, int);
-    Scoreboard(const Scoreboard&) = default;
-    ~Scoreboard() = default;
 
-    Scoreboard& operator=(const Scoreboard&) = default;
+public:
+    explicit Scoreboard(std::pair<str, str>, std::pair<int, int>, int);
+    Scoreboard(const Scoreboard&) = delete;
+    Scoreboard& operator=(const Scoreboard&) = delete;
+
+    static Scoreboard& get_instance();
+    void initialize(const std::pair<str, str>&, const std::pair<int, int>&,  int);
 
     friend std::ostream& operator<<(std::ostream&, const Scoreboard&);
 };

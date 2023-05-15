@@ -96,6 +96,12 @@ void Heart::for_message(float a_y, int a_condition)
     }
 }
 
+Heart& Heart::get_instance()
+{
+    static Heart instance;
+    return instance;
+}
+
 void Heart::print_full_heart()
 {
     for (float y = 1.3f; y >= -0.7f; y -= 0.06f)

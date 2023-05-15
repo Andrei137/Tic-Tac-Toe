@@ -13,7 +13,8 @@ Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_
 Game::~Game()
 {
     rlutil::showcursor();
-    Heart::print_full_heart();
+    auto& heart{ Heart::get_instance() };
+    heart.print_full_heart();
 }
 
 void Game::swap_players()
@@ -131,8 +132,7 @@ void Game::print_winner()
 {
     std::pair<str, str> names{ m_players[0]->get_name(), m_players[1]->get_name() };
     std::pair<int, int> wins{ m_players[0]->get_wins(), m_players[1]->get_wins() };
-    int draws{ Player::get_draws() };
-    m_board.set_scoreboard(Scoreboard{ names, wins, draws });
+    m_board.set_scoreboard(names, wins, Player::get_draws());
     std::cout << *this;
     char winner{ m_board.get_winner() };
     if (winner != 'X' && winner != 'O')
@@ -404,8 +404,7 @@ void Game::play()
     }
     std::pair<str, str> names{ m_players[0]->get_name(), m_players[1]->get_name() };
     std::pair<int, int> wins{ m_players[0]->get_wins(), m_players[1]->get_wins() };
-    int draws{ Player::get_draws() };
-    m_board.set_scoreboard(Scoreboard{ names, wins, draws });
+    m_board.set_scoreboard(names, wins, Player::get_draws());
     int turn{ 0 };
     int row{}, col{};
     char symbol{};

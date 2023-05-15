@@ -10,7 +10,6 @@ class Board
     int m_size{};
     std::vector<std::vector<Square>> m_cells{};
     char m_winner{};
-    Scoreboard m_scoreboard{};
 
     bool win_col(char, int, int) const;
     bool win_row(char, int, int) const;
@@ -35,7 +34,7 @@ public:
     void set_cell(int, int, char);
     void clear_cell(int, int);
     void set_winner(char);
-    void set_scoreboard(const Scoreboard&);
+    void set_scoreboard(const std::pair<str, str>&, const std::pair<int, int>&, int);
 
     void reset();
     bool valid_move(int, int) const;
