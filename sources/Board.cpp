@@ -104,16 +104,6 @@ char Board::get_winner() const
     return m_winner;
 }
 
-void Board::set_size(int a_size)
-{
-    m_size = a_size;
-    m_cells.resize(m_size);
-    for (int i = 0; i < m_size; ++i)
-    {
-        m_cells[i].resize(m_size);
-    }
-}
-
 void Board::set_cell(int a_row, int a_col, char a_value)
 {
     m_cells[a_row][a_col].set_value(a_value);

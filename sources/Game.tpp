@@ -9,7 +9,7 @@ template <short Size>
 Game<Size>::Game(std::array<std::shared_ptr<Player>, 2> a_players, char a_gamemode, char a_difficulty, bool a_reseted) 
     : m_players{a_players[0], a_players[1]}, m_board(Size), m_gamemode(a_gamemode), m_difficulty(a_difficulty), m_reseted(a_reseted), m_changed_size(Size)
 {
-    if (Size < 3 || Size > 9)
+    if constexpr (Size < 3 || Size > 9)
     {
         throw initialization_error("Error: The game stopped because the board did not load properly!\n"
                                    "Try restarting the program or contacting the developer\n\n");
