@@ -305,8 +305,8 @@ void Game<Size>::initialize()
         char size = make_decision
         (
             "< Choose the board size >\n"
-            "[?] Select any number from 3 to 9 --\n"
-            "[0] Go back --\n",
+            "[?] Select any number from 3 to 9\n"
+            "[0] Go back\n",
             "03456789"
         );
         if (size != '0')

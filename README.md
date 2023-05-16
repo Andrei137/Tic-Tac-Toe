@@ -75,7 +75,7 @@
 - [x] o clasă șablon cu sens; minim 2 instanțieri
      - Clasa Game, instantierile se fac in Interface
 <!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git`: de exemplu `v0.3` sau `v1.0`
+- [x] tag de `git`: de exemplu `v0.3` sau `v1.0`
 
 ## Resurse
 

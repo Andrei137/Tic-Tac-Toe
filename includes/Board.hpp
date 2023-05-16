@@ -29,7 +29,6 @@ public:
     char get_value(int, int) const;
     char get_winner() const;
     
-    void set_size(int);
     void set_cell(int, int, char);
     void clear_cell(int, int);
     void set_winner(char);
