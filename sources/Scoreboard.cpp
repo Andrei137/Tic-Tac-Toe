@@ -1,4 +1,4 @@
-#include "../includes/Scoreboard.h"
+#include "../includes/Scoreboard.hpp"
 
 Scoreboard* Scoreboard::m_instance{ nullptr };
 

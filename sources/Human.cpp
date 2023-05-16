@@ -1,4 +1,4 @@
-#include "../includes/Human.h"
+#include "../includes/Human.hpp"
 #include <regex>
 
 Human::Human(char a_symbol) : Player(a_symbol) 

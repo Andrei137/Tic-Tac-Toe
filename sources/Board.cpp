@@ -1,4 +1,4 @@
-#include "../includes/Board.h"
+#include "../includes/Board.hpp"
 #include <tabulate/table.hpp>
 
 using namespace tabulate;
@@ -132,7 +132,7 @@ void Board::set_winner(char a_winner)
 }
 
 void Board::set_scoreboard(const std::pair<str, str>& a_names, const std::pair<int, int>& a_wins, int a_draws)
-{
+{   
     Scoreboard& scoreboard{ Scoreboard::get_instance() };
     scoreboard.initialize(a_names, a_wins, a_draws);
 }

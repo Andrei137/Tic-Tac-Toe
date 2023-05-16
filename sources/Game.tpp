@@ -1,49 +1,43 @@
-#include "../includes/Game.h"
-#include <sstream>
+#pragma once
 
-Game::Game(int a_size) : m_board(a_size), m_gamemode('?'), m_difficulty('?'), m_reseted(true)
+#include <cstdlib>
+#include <ctime>
+#include <sstream>
+#include <rlutil.h>
+
+template <short Size>
+Game<Size>::Game(std::array<std::shared_ptr<Player>, 2> a_players, char a_gamemode, char a_difficulty, bool a_reseted) 
+    : m_players{a_players[0], a_players[1]}, m_board(Size), m_gamemode(a_gamemode), m_difficulty(a_difficulty), m_reseted(a_reseted), m_changed_size(Size)
 {
-    if (a_size < 3 || a_size > 10)
+    if (Size < 3 || Size > 9)
     {
         throw initialization_error("Error: The game stopped because the board did not load properly!\n"
                                    "Try restarting the program or contacting the developer\n\n");
     }
 }
 
-Game::~Game()
-{
-    rlutil::showcursor();
-    const Heart& heart{ Heart::get_instance() };
-    heart.print_full_heart();
-}
-
-void Game::swap_players()
-{
-    std::shared_ptr<Player> temp{ m_players[0]->clone() };
-    m_players[0] = std::move(m_players[1]);
-    m_players[1] = std::move(temp);
-
-    m_players[0]->set_symbol('X');
-    m_players[1]->set_symbol('O');
-}
-
-void Game::create_AI(int a_difficulty, int a_index, char a_symbol)
+template <short Size>
+void Game<Size>::create_AI(int a_difficulty, int a_index, char a_symbol)
 {
     if (a_difficulty == 1)
     {
         m_players[a_index] = AIFactory::easy(a_symbol);
+        m_players[a_index]->set_name("Computer (Easy)");
     }
     else if (a_difficulty == 2)
     {
         m_players[a_index] = AIFactory::hard(a_symbol);
+        m_players[a_index]->set_name("Computer (Hard)");
     }
     else
     {
         m_players[a_index] = AIFactory::impossible(a_symbol);
+        m_players[a_index]->set_name("Computer (Impossible)");
     }
 }
 
-std::istream& operator>>(std::istream& a_in, Game& a_game)
+template <short Size>
+std::istream& operator>>(std::istream& a_in, Game<Size>& a_game)
 {
     if (a_game.m_players[0]->get_symbol() != 'X')
     {
@@ -95,30 +89,30 @@ std::istream& operator>>(std::istream& a_in, Game& a_game)
             rlutil::cls();
         }
     }
-    const auto& player1 = *a_game.m_players[0];
-    const auto& player2 = *a_game.m_players[1];
-    if (typeid(player1) == typeid(player2))
+    str name{ a_game.m_players[0]->get_name() };
+    if (name == a_game.m_players[1]->get_name())
     {
-        str temp{ a_game.m_players[0]->get_name() };
         /*
             Get difficulty from between () from temp to fix duplicated names
             Compuer (Impossible) -> Impossible
         */
-        temp = temp.substr(temp.find('('), temp.find(')') - temp.find('(') + 1);
-        a_game.m_players[0]->set_name("Computer 1 " + temp);
-        a_game.m_players[1]->set_name("Computer 2 " + temp);
+        name = name.substr(name.find('('), name.find(')') - name.find('(') + 1);
+        a_game.m_players[0]->set_name("Computer 1 " + name);
+        a_game.m_players[1]->set_name("Computer 2 " + name);
     }
     return a_in;
 }
 
-std::ostream& operator<<(std::ostream& a_out, const Game& a_game)
+template <short Size>
+std::ostream& operator<<(std::ostream& a_out, const Game<Size>& a_game)
 {
     rlutil::cls();
     a_out << a_game.m_board;
     return a_out;
 }
 
-void Game::print_logo()
+template <short Size>
+void Game<Size>::print_logo()
 {
     std::cout << "\n _______ _        _______           _______ \n";
     std::cout << "|__   __(_)      |__   __|         |__   __| \n";
@@ -128,7 +122,8 @@ void Game::print_logo()
     std::cout << "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
 }
 
-void Game::print_winner()
+template <short Size>
+void Game<Size>::print_winner()
 {
     std::pair<str, str> names{ m_players[0]->get_name(), m_players[1]->get_name() };
     std::pair<int, int> wins{ m_players[0]->get_wins(), m_players[1]->get_wins() };
@@ -146,7 +141,42 @@ void Game::print_winner()
     std::cout << "Game over!\n\n";
 }
 
-char Game::make_decision(const str& a_message, const str& a_options)
+template <short Size>
+std::pair<int, int> Game<Size>::get_move(int a_turn)
+{
+    short wrong_inputs{ 0 };
+    while (true)
+    {
+        if (wrong_inputs == 10)
+        {
+            throw excessive_attempts_error();
+        }
+        rlutil::cls();
+        rlutil::showcursor();
+        std::pair<int, int> temp{ m_players[a_turn % 2]->get_move(m_board) };
+        int row { temp.first };
+        int col { temp.second };
+        if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
+        {
+            ++wrong_inputs;
+            const Human* human_ptr{ dynamic_cast<Human*>(m_players[a_turn % 2].get()) };
+            if (human_ptr != nullptr)
+            {
+                str message{ "Invalid move. Please choose an empty cell!\n" };
+                if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
+                {
+                    message = "Invalid input. Please choose a cell within the board!\n";
+                }
+                m_players[0]->handle_wrong_input(wrong_inputs, message);
+            }
+            continue;
+        }
+        return temp;
+    }
+}
+
+template <short Size>
+char Game<Size>::make_decision(const str& a_message, const str& a_options)
 {
     short wrong_inputs{ 0 };
     while (true)
@@ -166,17 +196,71 @@ char Game::make_decision(const str& a_message, const str& a_options)
             print_winner();
         }
         std::cout << a_message << "\n-> ";
-        str temp{ m_players[0]->get_input(std::cin) };
+        str temp{ Player::get_input(std::cin) };
         if (temp.size() != 1 || a_options.find(temp[0]) == str::npos)
         {
-            m_players[0]->handle_wrong_input(wrong_inputs, "Invalid input! Please try again!");
+            Player::handle_wrong_input(wrong_inputs, "Invalid input! Please try again!");
             continue;
         }
         return temp[0];
     }
 }
 
-void Game::initialize()
+template <short Size>
+void Game<Size>::set_gamemode(char a_gamemode)
+{
+    m_gamemode = a_gamemode; 
+}
+
+template <short Size>
+void Game<Size>::set_difficulty(char a_difficulty)
+{
+    m_difficulty = a_difficulty;
+}
+
+template <short Size>
+players Game<Size>::get_players() const
+{
+    return m_players;
+}
+
+template <short Size>
+char Game<Size>::get_gamemode() const
+{
+    return m_gamemode;
+}
+
+template <short Size>
+char Game<Size>::get_difficulty() const
+{
+    return m_difficulty;
+}
+
+template <short Size>
+bool Game<Size>::get_reseted() const
+{
+    return m_reseted;
+}
+
+template <short Size>
+short Game<Size>::get_changed_size() const
+{
+    return m_changed_size;
+}
+
+template <short Size>
+void Game<Size>::swap_players()
+{
+    std::shared_ptr<Player> temp_player{ m_players[0]->clone() };
+    m_players[0] = std::move(m_players[1]);
+    m_players[1] = std::move(temp_player);
+
+    m_players[0]->set_symbol('X');
+    m_players[1]->set_symbol('O');
+}
+
+template <short Size>
+void Game<Size>::initialize()
 {
     if (m_gamemode == '?')
     {
@@ -227,15 +311,15 @@ void Game::initialize()
         );
         if (size != '0')
         {
-            m_board.set_size(size - '0');
+            m_changed_size = size - '0';
         }
         m_gamemode = '?';
-        initialize();
     }
     return;
 }
 
-void Game::replay()
+template <short Size>
+void Game<Size>::replay()
 {
     std::stringstream ss{};
     ss << "Want to replay? ";
@@ -331,45 +415,8 @@ void Game::replay()
     m_gamemode = m_difficulty = '?';
 }
 
-std::pair<int, int> Game::get_move(int a_turn)
-{
-    short wrong_inputs{ 0 };
-    while (true)
-    {
-        if (wrong_inputs == 10)
-        {
-            throw excessive_attempts_error();
-        }
-        rlutil::cls();
-        rlutil::showcursor();
-        std::pair<int, int> temp{ m_players[a_turn % 2]->get_move(m_board) };
-        int row { temp.first };
-        int col { temp.second };
-        if (row == -1 && col == -1)
-        {
-            m_board.set_winner(' ');
-            return temp;
-        }
-        if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size() || !m_board.valid_move(row, col))
-        {
-            ++wrong_inputs;
-            const Human* human_ptr{ dynamic_cast<Human*>(m_players[a_turn % 2].get()) };
-            if (human_ptr != nullptr)
-            {
-                str message{ "Invalid move. Please choose an empty cell!\n" };
-                if (row < 0 || col < 0 || row >= m_board.get_size() || col >= m_board.get_size())
-                {
-                    message = "Invalid input. Please choose a cell within the board!\n";
-                }
-                m_players[0]->handle_wrong_input(wrong_inputs, message);
-            }
-            continue;
-        }
-        return temp;
-    }
-}
-
-void Game::play()
+template <short Size>
+void Game<Size>::play()
 {
     m_board.reset();
     for (int i = 0; i < m_board.get_size(); ++i)
@@ -385,6 +432,9 @@ void Game::play()
     }
     if (m_reseted)
     {
+        // delete both players
+        m_players[0] = nullptr;
+        m_players[1] = nullptr;
         if (m_gamemode == '1')
         {
             create_AI(1 + rand() % 3, 0, 'X');
@@ -410,25 +460,16 @@ void Game::play()
     char symbol{};
     while (true)
     {
-        if (m_board.get_winner() == ' ')
+        std::pair<int, int> temp{ get_move(turn) };
+        row = temp.first;
+        col = temp.second;
+        symbol = m_players[turn % 2]->get_symbol();
+        m_board.set_cell(row, col, symbol);
+        if (m_board.game_over(symbol, row, col))
         {
-            rlutil::showcursor();
-            rlutil::cls();
-            return;
+            break;
         }
-        else 
-        {
-            std::pair<int, int> temp{ get_move(turn) };
-            row = temp.first;
-            col = temp.second;
-            symbol = m_players[turn % 2]->get_symbol();
-            m_board.set_cell(row, col, symbol);
-            if (m_board.game_over(symbol, row, col))
-            {
-                break;
-            }
-            ++turn;
-        }
+        ++turn;
     }
     if (m_board.win(symbol, row, col))
     {
@@ -439,24 +480,5 @@ void Game::play()
     {
         m_board.set_winner('D');
         Player::add_draw();
-    }
-}
-
-void Game::tictactoe()
-{
-    srand(time(0));
-    while (true)
-    {
-        initialize();
-        if (m_gamemode == '0')
-        {
-            return;
-        }
-        play();
-        replay();
-        if (m_gamemode == '0')
-        {
-            return;
-        }
     }
 }

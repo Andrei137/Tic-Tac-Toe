@@ -1,4 +1,4 @@
-#include "../includes/AI.h"
+#include "../includes/AI.hpp"
 
 AI::AI(char a_symbol) : Player(a_symbol) {}
 

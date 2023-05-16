@@ -1,11 +1,10 @@
-#include "includes/Game.h"
+#include "includes/Interface.hpp"
 
 int main()
 {
-    Game game{3};
     try
     {
-        game.tictactoe();
+        Interface::play_tictactoe();
     }
     catch (initialization_error& err)
     {
@@ -28,7 +27,7 @@ int main()
         rlutil::anykey();
         try
         {
-            game.tictactoe();
+            Interface::play_tictactoe();
         }
         catch(initialization_error& second_err)
         {

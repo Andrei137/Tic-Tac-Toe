@@ -1,10 +1,20 @@
-#include "../includes/Heart.h"
+#include "../includes/Heart.hpp"
 #include <cmath>
 #include <iostream>
 #include <rlutil.h>
 
 Heart* Heart::m_instance{ nullptr };
 std::array<str, 3> Heart::m_message{"THANK", "  U FOR ", "PLAYING"};
+
+Heart& Heart::get_instance()
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = new Heart();
+    }
+    return *m_instance;
+}
+
 
 bool Heart::fast_check(float a_x, float a_value1, float a_value2, char a_sign)
 {
@@ -95,15 +105,6 @@ void Heart::for_message(float a_y, int a_condition)
             print_message(i, a_y, fast_check(i, -0.08f, 0.08f, '|'), 2, k3);
         }
     }
-}
-
-Heart& Heart::get_instance()
-{
-    if (m_instance == nullptr)
-    {
-        m_instance = new Heart();
-    }
-    return *m_instance;
 }
 
 void Heart::print_full_heart()

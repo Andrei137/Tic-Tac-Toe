@@ -1,4 +1,4 @@
-#include "../includes/Impossible.h"
+#include "../includes/Impossible.hpp"
 #include <vector>
 
 Impossible::Impossible() : Difficulty() {}

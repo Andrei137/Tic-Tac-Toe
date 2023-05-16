@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Difficulty.h"
+#include "Difficulty.hpp"
 
 class Hard : public Difficulty
 {

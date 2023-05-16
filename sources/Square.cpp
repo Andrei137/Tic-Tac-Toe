@@ -1,4 +1,4 @@
-#include "../includes/Square.h"
+#include "../includes/Square.hpp"
 
 Square::Square(char a_value, bool a_occupied) : m_value(a_value), m_occupied(a_occupied) {}
 

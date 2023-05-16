@@ -66,11 +66,14 @@
 
 #### Cerințe
 - [x] 2 șabloane de proiectare (design patterns)
-     - Singleton: Heart, Scoreboard
+     - Singleton: Heart, Interface, Minimax, Scoreboard
      - Factory: AIFactory
      - Strategy: baza Difficulty cu derivatele Easy, Hard, Impossible; clasa Player are un atribut de tip Difficulty
-- [ ] o funcție șablon (template) cu sens; minim 2 instanțieri
-- [ ] o clasă șablon cu sens; minim 2 instanțieri
+- [x] o funcție șablon (template) cu sens; minim 2 instanțieri
+     - Functia start_game din Interface, instantierile se fac in play_tictactoe
+     - Permite schimbarea size-ului in timp real
+- [x] o clasă șablon cu sens; minim 2 instanțieri
+     - Clasa Game, instantierile se fac in Interface
 <!-- - [ ] o specializare pe funcție/clasă șablon -->
 - [ ] tag de `git`: de exemplu `v0.3` sau `v1.0`
 

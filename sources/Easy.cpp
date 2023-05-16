@@ -1,4 +1,4 @@
-#include "../includes/Easy.h"
+#include "../includes/Easy.hpp"
 
 Easy::Easy() : Difficulty() {}
 

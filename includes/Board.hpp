@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Square.h"
-#include "Scoreboard.h"
+#include "Square.hpp"
+#include "Scoreboard.hpp"
 #include <iostream>
 #include <vector>
 

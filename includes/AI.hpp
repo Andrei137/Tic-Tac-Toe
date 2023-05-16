@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Player.h"
-#include "Difficulty.h"
+#include "Player.hpp"
+#include "Difficulty.hpp"
 
 class AI : public Player
 {

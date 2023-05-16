@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AI.h"
+#include "AI.hpp"
 
 class AIFactory
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Board.h"
-#include "Difficulty.h"
+#include "Board.hpp"
+#include "Difficulty.hpp"
 #include <memory>
 #include <rlutil.h>
 #include <string>
@@ -29,14 +29,14 @@ public:
     friend std::istream& operator>>(std::istream&, const std::shared_ptr<Player>&);
     friend std::ostream& operator<<(std::ostream&, const Player&);
 
-    str get_input(std::istream&) const;
-    void handle_wrong_input(short&, const str&) const;
+    static str get_input(std::istream&);
+    static void handle_wrong_input(short&, const str&);
 
     const str& get_name() const;
     char get_symbol() const;
     int get_wins() const;
     static int get_draws();
-    
+
     void set_symbol(const char&);
     void set_name(const str&);
 

@@ -1,4 +1,4 @@
-#include "../includes/Hard.h"
+#include "../includes/Hard.hpp"
 
 Hard::Hard() : Difficulty() {}
 

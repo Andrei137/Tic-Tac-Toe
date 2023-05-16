@@ -1,4 +1,4 @@
-#include "../includes/Player.h"
+#include "../includes/Player.hpp"
 #include <chrono>
 #include <regex>
 #include <thread>
@@ -7,7 +7,7 @@ int Player::m_draws{0};
 
 Player::Player(char a_symbol) : m_symbol(a_symbol), m_wins(0) {}
 
-Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m_wins), m_difficulty(a_other.m_difficulty) {}
+Player::Player(const Player& a_other) : m_name(a_other.m_name), m_wins(a_other.m_wins), m_difficulty(a_other.m_difficulty){}
 
 Player& Player::operator=(const Player& a_other)
 {
@@ -21,7 +21,7 @@ Player& Player::operator=(const Player& a_other)
     return *this;
 }
 
-str Player::get_input(std::istream& a_in) const
+str Player::get_input(std::istream& a_in)
 {
     bool has_input{ false };
     auto start = std::chrono::steady_clock::now();
@@ -43,7 +43,7 @@ str Player::get_input(std::istream& a_in) const
     return temp;
 }
 
-void Player::handle_wrong_input(short& a_wrong_inputs, const str& a_message) const
+void Player::handle_wrong_input(short& a_wrong_inputs, const str& a_message)
 {
     ++a_wrong_inputs;
     rlutil::hidecursor();

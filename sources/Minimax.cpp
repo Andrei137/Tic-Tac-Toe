@@ -1,9 +1,19 @@
-#include "../includes/Minimax.h"
+#include "../includes/Minimax.hpp"
 #include <algorithm>
 #include <climits>
 #include <random>
 
+Minimax* Minimax::m_instance{ nullptr };
 const std::vector<int> Minimax::m_depths{ 9, 8, 6, 5, 4, 4, 3, 3 };
+
+Minimax& Minimax::get_instance()
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = new Minimax();
+    }
+    return *m_instance;
+}
 
 char Minimax::opponent_symbol(char a_symbol)
 {
@@ -134,7 +144,7 @@ std::vector<int> Minimax::get_moves(Board& a_board, char a_symbol, const str& a_
         a_board.set_cell(i, j, a_symbol);
         int score{ minimax(a_board, 0, alpha, beta, false, a_symbol) };
         a_board.clear_cell(i, j);
-        if (a_difficulty == "easy" || (a_difficulty == "hard" && 1 + rand() % 100 <= 75))
+        if (a_difficulty == "easy")
         {
             if (score < worst_score)
             {
@@ -149,6 +159,10 @@ std::vector<int> Minimax::get_moves(Board& a_board, char a_symbol, const str& a_
         }
         if (a_difficulty == "hard")
         {
+            if ( 1 + rand() % 100 <= 75 && score < 0)
+            {
+                moves.push_back(index);
+            }
             if (score == 0)
             {
                 moves.push_back(index);

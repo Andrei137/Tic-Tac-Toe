@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Board.h"
-#include "Minimax.h"
+#include "Board.hpp"
+#include "Minimax.hpp"
+#include <rlutil.h>
 
 class Difficulty 
 {
