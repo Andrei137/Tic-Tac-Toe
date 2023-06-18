@@ -215,7 +215,8 @@ char Game<Size>::make_decision(const str& a_message, const str& a_options)
         {
             print_winner();
         }
-        std::cout << a_message << "\n-> ";
+        std::cout << a_message;
+        std::cout << std::flush << "\n-> ";
         str temp{ Player::get_input(std::cin) };
         if (temp.size() != 1 || a_options.find(temp[0]) == str::npos)
         {

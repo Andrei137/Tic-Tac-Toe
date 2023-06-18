@@ -16,15 +16,11 @@ Interface& Interface::get_instance()
     return *m_instance;
 }
 
-Interface::~Interface()
+void Interface::destroy_instance()
 {
     rlutil::showcursor();
     Heart::print_full_heart();
-}
-
-void Interface::destroy_instance()
-{
-    get_instance().~Interface();
+    delete m_instance;
 }
 
 template <short Size>

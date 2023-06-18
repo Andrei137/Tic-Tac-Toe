@@ -13,7 +13,7 @@ public:
     Interface(const Interface&) = delete;
     Interface& operator=(const Interface&) = delete;
     static Interface& get_instance();
-    ~Interface();
+    ~Interface() = default;
 
     template <short Size>
     static void start_game(Game<Size>&, players&, char&, char&, bool&);
