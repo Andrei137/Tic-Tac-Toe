@@ -135,6 +135,5 @@ void Heart::print_full_heart()
     }
     rlutil::setColor(7);
     rlutil::msleep(50);
-    rlutil::locate(0, 0);
     std::cout << '\n';
 }

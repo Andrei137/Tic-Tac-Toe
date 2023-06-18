@@ -29,8 +29,8 @@ class Game
     
 public:
     explicit Game(players, char, char, bool);
-    Game(const Game&) = default;
-    Game& operator=(const Game&) = default;
+    Game(const Game&);
+    Game& operator=(const Game&);
     ~Game() = default;
 
     void set_difficulty(char);

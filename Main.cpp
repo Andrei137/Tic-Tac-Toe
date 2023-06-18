@@ -2,47 +2,39 @@
 
 int main()
 {
-    try
+    bool play{ true };
+    while (play)
     {
-        Interface::play_tictactoe();
-    }
-    catch (initialization_error& err)
-    {
-        rlutil::cls();
-        std::cerr << err.what();
-    }
-    catch (timeout_error& err)
-    {
-        rlutil::cls();
-        std::cerr << err.what();
-    }
-    catch (excessive_attempts_error& err)
-    {
-        std::cerr << err.what();
-        rlutil::msleep(4000);
-        rlutil::cls();
-        std::cout << "Fine, I'll give you one last chance!\n";
-        std::cout << "This time try not to break anything\n";
-        std::cout << "Press any key to continue...";
-        rlutil::anykey();
+        play = false;
         try
         {
             Interface::play_tictactoe();
         }
-        catch(initialization_error& second_err)
+        catch (initialization_error& err)
         {
             rlutil::cls();
-            std::cerr << second_err.what();
+            std::cerr << err.what();
         }
-        catch(...)
+        catch (timeout_error& err)
         {
             rlutil::cls();
-            std::cerr << "No more chances for you! ):\n\n";
+            std::cerr << err.what();
         }
-    }
-    catch (...)
-    {
-        std::cerr << "Something went wrong... ):\n\n";
+        catch (excessive_attempts_error& err)
+        {
+            std::cerr << err.what();
+            rlutil::msleep(4000);
+            rlutil::cls();
+            std::cout << "Fine, I'll give you one last chance!\n";
+            std::cout << "This time try not to break anything\n";
+            std::cout << "Press any key to continue...";
+            rlutil::anykey();
+            play = true;
+        }
+        catch (...)
+        {
+            std::cerr << "Something went wrong... ):\n\n";
+        }
     }
     return 0;
 }

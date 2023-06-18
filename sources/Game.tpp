@@ -17,6 +17,26 @@ Game<Size>::Game(std::array<std::shared_ptr<Player>, 2> a_players, char a_gamemo
 }
 
 template <short Size>
+Game<Size>::Game(const Game<Size>& a_other) : m_players(a_other.m_players), m_board(a_other.m_board), m_gamemode(a_other.m_gamemode), m_difficulty(a_other.m_difficulty), m_reseted(a_other.m_reseted), m_changed_size(a_other.m_changed_size)
+{
+}
+
+template <short Size>
+Game<Size>& Game<Size>::operator=(const Game<Size>& a_other)
+{
+    if (this != &a_other)
+    {
+        m_players = a_other.m_players;
+        m_board = a_other.m_board;
+        m_gamemode = a_other.m_gamemode;
+        m_difficulty = a_other.m_difficulty;
+        m_reseted = a_other.m_reseted;
+        m_changed_size = a_other.m_changed_size;
+    }
+    return *this;
+}
+
+template <short Size>
 void Game<Size>::create_AI(int a_difficulty, int a_index, char a_symbol)
 {
     if (a_difficulty == 1)

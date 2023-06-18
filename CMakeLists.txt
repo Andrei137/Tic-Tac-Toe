@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing executable name in this file
 # for now, the project name is used as the executable name
-project(TicTacToe)
+project(oop)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,7 +22,9 @@ set(debug_mode "$<OR:${is_debug},${is_rel_with_deb}>")
 
 function(set_custom_stdlib_and_sanitizers target add_apple_asan)
     if(MSVC)
-        target_compile_options(${target} PRIVATE "$<${debug_mode}:/fsanitize=address>")
+        # see https://gitlab.kitware.com/cmake/cmake/-/issues/24922
+        set_target_properties(${target} PROPERTIES VS_USER_PROPS "${CMAKE_SOURCE_DIR}/disable_modules.props")
+        target_compile_options(${target} PRIVATE "$<${debug_mode}:/fsanitize=address>" /experimental:module-)
         return()
     endif()
 
@@ -77,7 +79,7 @@ endfunction()
 
 # external dependencies with find_package
 
-find_package(Threads REQUIRED)
+# find_package(Threads REQUIRED)
 
 ###############################################################################
 
@@ -122,7 +124,7 @@ target_include_directories(
 )
 #target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)
 #target_link_directories(${PROJECT_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)
-target_link_libraries(${PROJECT_NAME} Threads::Threads)
+#target_link_libraries(${PROJECT_NAME} <SomeLib>)
 
 ###############################################################################
 
