@@ -65,7 +65,7 @@ std::istream& operator>>(std::istream& a_in, const std::shared_ptr<Player>& a_pl
             throw excessive_attempts_error();
         }
         
-        std::cout << "(" << a_player->m_symbol << ") Insert name\n-> ";
+        std::cout << "(" << a_player->m_symbol << ") Insert name\n-> " << std::flush;
         std::string temp{ a_player->get_input(a_in) };
         if (!std::regex_match(temp, name_pattern) || a_in.fail() || temp.size() > 20)
         {
