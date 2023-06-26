@@ -70,7 +70,7 @@ std::istream& operator>>(std::istream& a_in, Game<Size>& a_game)
     {
         a_in >> a_game.m_players[0];
         rlutil::cls();
-        std::cout << "(X) " << a_game.m_players[0]->get_name() << '\n';
+        std::cout << "(X) " << a_game.m_players[0]->get_name() << '\n' << std::flush;
         a_in >> a_game.m_players[1];
         return a_in;
     }
@@ -127,7 +127,7 @@ template <short Size>
 std::ostream& operator<<(std::ostream& a_out, const Game<Size>& a_game)
 {
     rlutil::cls();
-    a_out << a_game.m_board;
+    a_out << a_game.m_board << std::flush;
     return a_out;
 }
 
@@ -139,7 +139,7 @@ void Game<Size>::print_logo()
     std::cout << "   | |   _  ___     | | __ _  ___     | | ___   ___ \n";
     std::cout << "   | |  | |/ __|    | |/ _` |/ __|    | |/ _ \\ / _ \\ \n";
     std::cout << "   | |  | | (__     | | (_| | (__     | | (_) |  __/ \n";
-    std::cout << "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n";
+    std::cout << "   |_|  |_|\\___|    |_|\\__,_|\\___|    |_|\\___/ \\___| \n\n\n" << std::flush;
 }
 
 template <short Size>
@@ -158,7 +158,7 @@ void Game<Size>::print_winner()
     {
         std::cout << '\n' << m_players[(winner != 'X')]->get_name() << " wins!\n";
     }
-    std::cout << "Game over!\n\n";
+    std::cout << "Game over!\n\n" << std::flush;
 }
 
 template <short Size>

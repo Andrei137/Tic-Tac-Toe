@@ -21,7 +21,7 @@ std::pair<int, int> AI::get_move(const Board& a_board) const
     }
     rlutil::cls();
     std::cout << a_board;
-    std::cout << "\n\nComputer is thinking";
+    std::cout << "\n\nComputer is thinking" << std::flush;
     for (int i = 0; i < 3; ++i)
     {
         rlutil::msleep(100);

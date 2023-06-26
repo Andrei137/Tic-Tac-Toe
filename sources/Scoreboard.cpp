@@ -26,6 +26,6 @@ std::ostream& operator<<(std::ostream& a_out, const Scoreboard& a_scoreboard)
 {
     a_out << "(X) " << a_scoreboard.m_names.first << " : " << a_scoreboard.m_wins.first << " - ";
     a_out << "(O) " << a_scoreboard.m_names.second << " : " << a_scoreboard.m_wins.second << ' ';
-    a_out << "[Draws : " << a_scoreboard.m_draws << "]\n";
+    a_out << "[Draws : " << a_scoreboard.m_draws << "]\n" << std::flush;
     return a_out;
 }

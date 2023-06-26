@@ -85,7 +85,7 @@ std::ostream& operator<<(std::ostream& a_out, const Player& a_player)
     {
         a_out << 's';
     }
-    a_out << " Turn\n-> ";
+    a_out << " Turn\n-> " << std::flush;
     return a_out;
 }
 
