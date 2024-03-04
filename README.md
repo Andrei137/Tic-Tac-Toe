@@ -18,6 +18,10 @@
 | Depth | 9 | 8 | 6 | 5 | 4 | 4 | 4 |
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 057ff7e686eb5d3d356cca5f830de64676632678
 ### Tema 0
 
 - [x] Nume proiect (poate fi schimbat ulterior)
@@ -76,6 +80,7 @@
 <!-- - [ ] o specializare pe funcție/clasă șablon -->
 - [x] tag de `git`: de exemplu `v0.3` sau `v1.0`
 
+<<<<<<< HEAD
 
 ## Compilare
 ##### Windows
@@ -101,6 +106,8 @@ cd bin
 ./TicTacToe
 ```
 
+=======
+>>>>>>> 057ff7e686eb5d3d356cca5f830de64676632678
 ## Resurse
 
 - [Heart Model](https://github.com/liuyubobobo/heart-curve-cplusplus)
