@@ -188,7 +188,7 @@ std::vector<int> Minimax::get_moves(Board& a_board, char a_symbol, const str& a_
 int Minimax::get_random_move(Board& a_board, char a_symbol, const str& a_difficulty)
 {   
     std::vector<int> a_moves{ get_moves(a_board, a_symbol, a_difficulty) };
-    if (a_moves.empty())
+    if (a_moves == std::vector<int>{})
     {
         return -1;
     }

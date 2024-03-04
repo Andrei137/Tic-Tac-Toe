@@ -178,9 +178,7 @@ jobs:
             c: gcc
             cxx: g++
             name: "Windows 2022 MinGW GCC 11"
-            cmake_flags: >
-              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-              -S src
+            # cmake_flags:
             cmake_generator: Ninja
             # Ninja is faster
             # other generator: "\"MinGW Makefiles\""
