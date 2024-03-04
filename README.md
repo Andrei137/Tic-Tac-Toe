@@ -80,8 +80,6 @@
 <!-- - [ ] o specializare pe funcție/clasă șablon -->
 - [x] tag de `git`: de exemplu `v0.3` sau `v1.0`
 
-<<<<<<< HEAD
-
 ## Compilare
 ##### Windows
 ```bash
@@ -106,8 +104,6 @@ cd bin
 ./TicTacToe
 ```
 
-=======
->>>>>>> 057ff7e686eb5d3d356cca5f830de64676632678
 ## Resurse
 
 - [Heart Model](https://github.com/liuyubobobo/heart-curve-cplusplus)

@@ -168,7 +168,6 @@ _deps
 *.layout
 *.depend
 # generated directories
-bin/
 obj/
 
 ### Emacs ###
@@ -716,4 +715,6 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,clion,cmake,codeblocks,emacs,gcov,sublimetext,vim,visualstudio,visualstudiocode,xcode
 
-
+!bin
+TicTacToe
+TicTacToe.exe

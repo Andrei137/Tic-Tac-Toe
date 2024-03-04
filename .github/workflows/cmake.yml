@@ -23,11 +23,7 @@ env:
   BUILD_TYPE: ${{ inputs.build_type || 'Debug' }}
   # NOTE: update executable name if it is changed in CMakeLists.txt
   EXECUTABLE_NAME: "TicTacToe"
-<<<<<<< HEAD
   INPUT_FILENAME: "bin/tastatura.txt"
-=======
-  INPUT_FILENAME: "tastatura.txt"
->>>>>>> 057ff7e686eb5d3d356cca5f830de64676632678
   BUILD_DIR: "build"
   EXT_DIR: "ext"
   BIN_DIR: "bin"
