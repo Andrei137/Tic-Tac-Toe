@@ -179,7 +179,7 @@ jobs:
             cxx: g++
             name: "Windows 2022 MinGW GCC 11"
             cmake_flags: -S src
-            cmake_generator: MinGW Makefiles
+            cmake_generator: "\"MinGW Makefiles\""
             # Ninja is faster
             # other generator: "\"MinGW Makefiles\""
 
