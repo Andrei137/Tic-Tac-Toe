@@ -334,6 +334,7 @@ void Game<Size>::initialize()
             m_changed_size = size - '0';
         }
         m_gamemode = '?';
+        initialize();
     }
     return;
 }

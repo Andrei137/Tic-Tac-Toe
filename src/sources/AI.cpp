@@ -37,4 +37,3 @@ std::pair<int, int> AI::get_move(const Board& a_board) const
     }
     return convert(move, a_board.get_size());
 }
-
